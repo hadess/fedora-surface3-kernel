@@ -612,6 +612,8 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # Surface 3 patches
 
+Patch912: v3-platform-x86-surface3_power-MSHW0011-rev-eng-implementation.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
