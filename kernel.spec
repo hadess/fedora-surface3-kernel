@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1.surface3
+%global baserelease 33.surface3
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -1891,6 +1891,65 @@ fi
 #
 
 %changelog
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Disable debugging options.
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Update battery patch to v3
+- Remove _LID initial state patch, it was merged upstream
+- Remove upstreamed ACPICA AML parser patch, and ACPICA Field
+  Attrib Raw Process
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Update LID patch to Hans' latest version based on Benjamin's
+  original patch
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Add test patch for ACPI bug work-around
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Disable Wi-Fi oops fix, still causes problems
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Revert patch that caused internal audio to not work anymore
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Remove upstreamed button driver
+- Remove upstream I2C fixes from Hans
+- Remove upstreamed "DSI LP not going Low" fixes
+- Remove upstreamed "Sleeping function from invalid context" fixes
+- Rebase gpiolib hack
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Rebase designware i2c fixes
+- Rebase i915 error fixes
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Add fix for "Sleeping function from invalid context"
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Add fix for "DSI LP not going Low" error
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Potential fix for Wi-Fi crash
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Remove upstreamed touch cover fixes
+- Remove upstreamed hid sensor quirk
+- Add designware i2c fixes
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Remove upstreamed sound support and Wi-Fi stability fixes
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Remove upstreamed touchscreen driver
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Disable WIP i2c PM patch
+
+* Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
+- Patches to enable brightness control
+
 * Tue Oct 23 2018 Bastien Nocera <bnocera@redhat.com>
 - Add Surface 3 patches
 
