@@ -464,6 +464,7 @@ Source40: generate_all_configs.sh
 Source41: generate_debug_configs.sh
 
 Source42: process_configs.sh
+Source43: generate_bls_conf.sh
 
 # This file is intentionally left empty in the stock kernel. Its a nicety
 # added for those wanting to do custom rebuilds with altered config opts.
@@ -1104,6 +1105,7 @@ cp %{SOURCE1000} .
 cp %{SOURCE15} .
 cp %{SOURCE40} .
 cp %{SOURCE41} .
+cp %{SOURCE43} .
 
 %if !%{debugbuildsenabled}
 # The normal build is a really debug build and the user has explicitly requested
@@ -1518,6 +1520,9 @@ BuildKernel() {
 
     # prune junk from kernel-devel
     find $RPM_BUILD_ROOT/usr/src/kernels -name ".*.cmd" -exec rm -f {} \;
+
+    # build a BLS config for this kernel
+    ./generate_bls_conf.sh "$KernelVer" "$RPM_BUILD_ROOT" "%{?variant}"
 }
 
 ###
@@ -1829,6 +1834,7 @@ fi
 /lib/modules/%{KVERREL}%{?3:+%{3}}/build\
 /lib/modules/%{KVERREL}%{?3:+%{3}}/source\
 /lib/modules/%{KVERREL}%{?3:+%{3}}/updates\
+/lib/modules/%{KVERREL}%{?2:+%{2}}/bls.conf\
 %if %{1}\
 /lib/modules/%{KVERREL}%{?3:+%{3}}/vdso\
 /etc/ld.so.conf.d/kernel-%{KVERREL}%{?3:+%{3}}.conf\
