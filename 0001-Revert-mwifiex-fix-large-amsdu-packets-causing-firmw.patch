@@ -1,0 +1,31 @@
+From 0d5f0966ce430f69b03d04002f2ba033bcb33bd2 Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Sun, 19 Feb 2017 15:18:24 +0100
+Subject: [PATCH] Revert "mwifiex: fix large amsdu packets causing firmware
+ hang"
+
+This reverts commit c81396f3da22aa8f1e8fbf7943616a0839c4d63d.
+
+As mentioned on:
+https://www.reddit.com/r/SurfaceLinux/comments/5sw38n/surfac_book_4_keyboard_ubuntu_1610/dditqwb/
+---
+ drivers/net/wireless/marvell/mwifiex/11n_aggr.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/marvell/mwifiex/11n_aggr.c b/drivers/net/wireless/marvell/mwifiex/11n_aggr.c
+index c47d636..dc49c3d 100644
+--- a/drivers/net/wireless/marvell/mwifiex/11n_aggr.c
++++ b/drivers/net/wireless/marvell/mwifiex/11n_aggr.c
+@@ -205,8 +205,7 @@ mwifiex_11n_aggregate_pkt(struct mwifiex_private *priv,
+ 
+ 	do {
+ 		/* Check if AMSDU can accommodate this MSDU */
+-		if ((skb_aggr->len + skb_src->len + LLC_SNAP_LEN) >
+-		    adapter->tx_buf_size)
++		if (skb_tailroom(skb_aggr) < (skb_src->len + LLC_SNAP_LEN))
+ 			break;
+ 
+ 		skb_src = skb_dequeue(&pra_list->skb_head);
+-- 
+2.9.3
+
