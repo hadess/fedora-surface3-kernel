@@ -1,0 +1,108 @@
+From 72023d2508fdd513a92e9dd25d1cc0999a0f32ee Mon Sep 17 00:00:00 2001
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date: Fri, 27 May 2016 17:13:50 +0200
+Subject: [PATCH] WIP: i2c-hid enabled S0 S3
+
+---
+ drivers/hid/i2c-hid/i2c-hid.c | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+
+diff --git a/drivers/hid/i2c-hid/i2c-hid.c b/drivers/hid/i2c-hid/i2c-hid.c
+index b3ec4f2..d0b1355 100644
+--- a/drivers/hid/i2c-hid/i2c-hid.c
++++ b/drivers/hid/i2c-hid/i2c-hid.c
+@@ -154,6 +154,8 @@ struct i2c_hid {
+ 	struct mutex		reset_lock;
+ };
+ 
++static int i2c_hid_acpi_power(struct i2c_client *client, int lvl);
++
+ static int __i2c_hid_command(struct i2c_client *client,
+ 		const struct i2c_hid_cmd *command, u8 reportID,
+ 		u8 reportType, u8 *args, int args_len,
+@@ -245,6 +247,7 @@ static int i2c_hid_get_report(struct i2c_client *client, u8 reportType,
+ 
+ 	i2c_hid_dbg(ihid, "%s\n", __func__);
+ 
++	pm_runtime_get_sync(&client->dev);
+ 	if (reportID >= 0x0F) {
+ 		args[args_len++] = reportID;
+ 		reportID = 0x0F;
+@@ -261,6 +264,7 @@ static int i2c_hid_get_report(struct i2c_client *client, u8 reportType,
+ 		return ret;
+ 	}
+ 
++	pm_runtime_put(&client->dev);
+ 	return 0;
+ }
+ 
+@@ -584,6 +588,9 @@ static int i2c_hid_get_raw_report(struct hid_device *hid,
+ 
+ 	ret_count = ihid->rawbuf[0] | (ihid->rawbuf[1] << 8);
+ 
++	i2c_hid_dbg(ihid, "report (len=%d): %*ph\n",
++		    (int)ask_count, (int)ask_count, ihid->rawbuf);
++
+ 	if (ret_count <= 2)
+ 		return 0;
+ 
+@@ -789,6 +796,8 @@ static int i2c_hid_power(struct hid_device *hid, int lvl)
+ 		pm_runtime_put(&client->dev);
+ 		break;
+ 	}
++
++	i2c_hid_acpi_power(client, lvl);
+ 	return 0;
+ }
+ 
+@@ -909,12 +918,38 @@ static const struct acpi_device_id i2c_hid_acpi_match[] = {
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(acpi, i2c_hid_acpi_match);
++
++static int i2c_hid_acpi_power(struct i2c_client *client, int lvl)
++{
++	int error = 0;
++
++	pr_err("%s lvl: %d %s:%d\n", __func__, lvl, __FILE__, __LINE__);
++
++	switch (lvl) {
++	case PM_HINT_FULLON:
++		error = acpi_bus_set_power(ACPI_HANDLE(&client->dev), ACPI_STATE_D0);
++		break;
++	case PM_HINT_NORMAL:
++		error = acpi_bus_set_power(ACPI_HANDLE(&client->dev), ACPI_STATE_D3);
++		break;
++	}
++	if (error)
++		dev_warn(&client->dev, "%s: error changing power state: %d\n", __func__, error);
++
++	return 0;
++}
++
+ #else
+ static inline int i2c_hid_acpi_pdata(struct i2c_client *client,
+ 		struct i2c_hid_platform_data *pdata)
+ {
+ 	return -ENODEV;
+ }
++
++static inline int i2c_hid_acpi_power(struct i2c_client *client, int lvl)
++{
++	return 0;
++}
+ #endif
+ 
+ #ifdef CONFIG_OF
+@@ -1004,6 +1039,8 @@ static int i2c_hid_probe(struct i2c_client *client,
+ 
+ 	ihid->client = client;
+ 
++	i2c_hid_acpi_power(client, PM_HINT_FULLON);
++
+ 	hidRegister = ihid->pdata.hid_descriptor_address;
+ 	ihid->wHIDDescRegister = cpu_to_le16(hidRegister);
+ 
+-- 
+2.7.4
+

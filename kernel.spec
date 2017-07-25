@@ -614,6 +614,9 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 Patch912: v3-platform-x86-surface3_power-MSHW0011-rev-eng-implementation.patch
 
+# Causes https://bugzilla.kernel.org/show_bug.cgi?id=141611
+# Patch916: 0001-WIP-i2c-hid-enabled-S0-S3.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
