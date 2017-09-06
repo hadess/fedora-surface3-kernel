@@ -6,7 +6,7 @@ Summary: The Linux kernel
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
-%global released_kernel 1
+%global released_kernel 0
 
 # Sign modules on x86.  Make sure the config files match this setting if more
 # architectures are added.
@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -615,9 +615,6 @@ Patch312: qcom-display-iommu.patch
 # https://patchwork.kernel.org/patch/9839803/
 Patch313: qcom-Force-host-mode-for-USB-on-apq8016-sbc.patch
 
-# https://patchwork.kernel.org/patch/9850189/
-Patch314: qcom-msm-ci_hdrc_msm_probe-missing-of_node_get.patch
-
 # http://www.spinics.net/lists/dri-devel/msg132235.html
 Patch320: bcm283x-vc4-Fix-OOPSes-from-trying-to-cache-a-partially-constructed-BO..patch
 
@@ -644,7 +641,6 @@ Patch611: 0011-Input-goodix-Add-support-for-capacitive-home-button.patch
 # These patches are queued for 4.14 and can be dropped on rebase to 4.14-rc1
 Patch603: 0001-power-supply-max17042_battery-Add-support-for-ACPI-e.patch
 Patch604: 0002-power-supply-max17042_battery-Fix-ACPI-interrupt-iss.patch
-Patch613: 0013-iio-accel-bmc150-Add-support-for-BOSC0200-ACPI-devic.patch
 Patch615: 0015-i2c-cht-wc-Add-Intel-Cherry-Trail-Whiskey-Cove-SMBUS.patch
 
 # rhbz 1476467
@@ -2207,6 +2203,9 @@ fi
 #
 #
 %changelog
+* Wed Sep 06 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc0.git1.1
+- Linux v4.13-4257-ge7d0c41ecc2e
+
 * Mon Sep  4 2017 Peter Robinson <pbrobinson@fedoraproject.org>
 - Revert drop of sun8i-emac DT bindings, we support for certain devs
 

@@ -83,9 +83,9 @@ index cb09238..3cd3be9 100644
 +}
 +#endif
 +
- /* Internal, do not use. */
- int __must_check _kstrtoul(const char *s, unsigned int base, unsigned long *res);
- int __must_check _kstrtol(const char *s, unsigned int base, long *res);
+ #ifdef CONFIG_ARCH_HAS_REFCOUNT
+ void refcount_error_report(struct pt_regs *regs, const char *err);
+ #else
 diff --git a/include/linux/security.h b/include/linux/security.h
 index d3868f2..187b74b 100644
 --- a/include/linux/security.h
@@ -238,9 +238,9 @@ index 447905e..d44e60e 100644
 --- a/arch/x86/kernel/setup.c
 +++ b/arch/x86/kernel/setup.c
 @@ -69,6 +69,7 @@
- #include <linux/crash_dump.h>
  #include <linux/tboot.h>
  #include <linux/jiffies.h>
+ #include <linux/mem_encrypt.h>
 +#include <linux/security.h>
  
  #include <linux/usb/xhci-dbgp.h>
@@ -379,7 +379,7 @@ index d44e60e..f7635d0 100644
 --- a/arch/x86/kernel/setup.c
 +++ b/arch/x86/kernel/setup.c
 @@ -71,6 +71,11 @@
- #include <linux/jiffies.h>
+ #include <linux/mem_encrypt.h>
  #include <linux/security.h>
  
 +#include <linux/fips.h>
@@ -1392,7 +1392,7 @@ index 9939c3d..7c040e2 100644
 --- a/drivers/tty/serial/serial_core.c
 +++ b/drivers/tty/serial/serial_core.c
 @@ -820,6 +820,12 @@ static int uart_set_info(struct tty_struct *tty, struct tty_port *port,
- 	new_flags = new_info->flags;
+ 	new_flags = (__force upf_t)new_info->flags;
  	old_custom_divisor = uport->custom_divisor;
  
 +	if ((change_port || change_irq) && kernel_is_locked_down()) {
