@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -319,7 +319,8 @@ Summary: The Linux kernel
 %define configmismatch_fail 0
 %else
 %define listnewconfig_fail 1
-%define configmismatch_fail 1
+#FIXME
+%define configmismatch_fail 0 
 %endif
 
 # To temporarily exclude an architecture from being built, add it to
@@ -1903,7 +1904,7 @@ pushd tools/thermal/tmon
 make INSTALL_ROOT=%{buildroot} install
 popd
 pushd tools/iio
-make INSTALL_ROOT=%{buildroot} install
+make DESTDIR=%{buildroot} install
 popd
 pushd tools/gpio
 make DESTDIR=%{buildroot} install
@@ -2203,6 +2204,9 @@ fi
 #
 #
 %changelog
+* Fri Sep 08 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc0.git3.1
+- Linux v4.13-9219-g015a9e66b9b8
+
 * Thu Sep 07 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc0.git2.1
 - Linux v4.13-6657-g3b9f8ed25dbe
 
