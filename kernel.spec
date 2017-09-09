@@ -2204,6 +2204,9 @@ fi
 #
 #
 %changelog
+* Sat Sep  9 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Only build ParPort support on x86
+
 * Fri Sep 08 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc0.git3.1
 - Linux v4.13-9219-g015a9e66b9b8
 
