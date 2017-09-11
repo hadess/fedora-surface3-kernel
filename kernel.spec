@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -187,8 +187,10 @@ Summary: The Linux kernel
 # and debuginfo generation. Currently we rely on the old alldebug setting.
 %global _build_id_links alldebug
 
-# kernel PAE is only built on i686 and ARMv7.
-%ifnarch i686 armv7hl
+# kernel PAE is only built on ARMv7 in rawhide.
+# Fedora 27 and earlier still support PAE, so change this on rebases.
+# %ifnarch i686 armv7hl
+%ifnarch armv7hl
 %define with_pae 0
 %endif
 
@@ -605,13 +607,6 @@ Patch310: qcom-msm89xx-fixes.patch
 
 # https://patchwork.kernel.org/patch/9831825/
 # https://patchwork.kernel.org/patch/9833721/
-Patch311: arm-tegra-fix-gpu-iommu.patch
-
-# https://www.spinics.net/lists/linux-arm-msm/msg28203.html
-Patch312: qcom-display-iommu.patch
-
-# https://patchwork.kernel.org/patch/9839803/
-Patch313: qcom-Force-host-mode-for-USB-on-apq8016-sbc.patch
 
 # http://www.spinics.net/lists/dri-devel/msg132235.html
 Patch320: bcm283x-vc4-Fix-OOPSes-from-trying-to-cache-a-partially-constructed-BO..patch
@@ -636,16 +631,9 @@ Patch601: 0001-Input-gpio_keys-Allow-suppression-of-input-events-fo.patch
 Patch602: 0002-Input-soc_button_array-Suppress-power-button-presses.patch
 Patch610: 0010-Input-silead-Add-support-for-capactive-home-button-f.patch
 Patch611: 0011-Input-goodix-Add-support-for-capacitive-home-button.patch
-# These patches are queued for 4.14 and can be dropped on rebase to 4.14-rc1
-Patch603: 0001-power-supply-max17042_battery-Add-support-for-ACPI-e.patch
-Patch604: 0002-power-supply-max17042_battery-Fix-ACPI-interrupt-iss.patch
-Patch615: 0015-i2c-cht-wc-Add-Intel-Cherry-Trail-Whiskey-Cove-SMBUS.patch
 
 # rhbz 1476467
 Patch617: Fix-for-module-sig-verification.patch
-
-# rhbz 1485086
-Patch619: pci-mark-amd-stoney-gpu-ats-as-broken.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -2201,6 +2189,9 @@ fi
 #
 #
 %changelog
+* Mon Sep 11 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc0.git4.1
+- Linux v4.13-11197-gf007cad159e9
+
 * Sat Sep  9 2017 Peter Robinson <pbrobinson@fedoraproject.org>
 - Only build ParPort support on x86
 

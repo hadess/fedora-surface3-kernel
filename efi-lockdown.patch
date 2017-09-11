@@ -1021,7 +1021,7 @@ index 43cb680..9be3e08 100644
 +		return -EPERM;
 +
  	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
- 				     1, asus->debug.method_id,
+ 				     0, asus->debug.method_id,
  				     &input, &output);
 -- 
 2.7.4
