@@ -614,9 +614,9 @@ Patch320: bcm283x-vc4-Fix-OOPSes-from-trying-to-cache-a-partially-constructed-BO
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
-# This breaks RPi booting with a LPAE kernel, we don't support the DSI ports currently
-# Revert it while I engage upstream to work out what's going on
-Patch322: Revert-ARM-dts-bcm2835-Add-the-DSI-module-nodes-and-.patch
+# bcm2837 bluetooth support
+#
+Patch323: bcm2837-bluetooth-support.patch
 
 # 400 - IBM (ppc/s390x) patches
 
@@ -2189,6 +2189,10 @@ fi
 #
 #
 %changelog
+* Mon Sep 11 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Raspberry Pi serial console fixes, minor other Pi improvements
+- Various ARM cleanups, build mmc/pwrseq non modular
+
 * Mon Sep 11 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc0.git4.1
 - Linux v4.13-11197-gf007cad159e9
 
