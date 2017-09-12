@@ -622,6 +622,8 @@ Patch323: bcm2837-bluetooth-support.patch
 
 # 500 - Temp fixes/CVEs etc
 
+Patch501: drm-tegra-trace-fix-patch.patch
+
 # CVE-2017-7477 rhbz 1445207 1445208
 Patch502: CVE-2017-7477.patch
 
