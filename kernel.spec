@@ -2189,11 +2189,15 @@ fi
 #
 #
 %changelog
+* Tue Sep 12 2017 Peter Robinson <pbrobinson@fedoraproject.org> 4.14.0-0.rc0.git4.1
+- Enable Physlink/SFP functionality
+- Tegra DRM FTB fix
+
 * Mon Sep 11 2017 Peter Robinson <pbrobinson@fedoraproject.org>
 - Raspberry Pi serial console fixes, minor other Pi improvements
 - Various ARM cleanups, build mmc/pwrseq non modular
 
-* Mon Sep 11 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc0.git4.1
+* Mon Sep 11 2017 Justin M. Forbes <jforbes@fedoraproject.org>
 - Linux v4.13-11197-gf007cad159e9
 
 * Sat Sep  9 2017 Peter Robinson <pbrobinson@fedoraproject.org>
