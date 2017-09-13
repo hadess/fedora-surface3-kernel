@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 4
+%define gitrev 5
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -2191,6 +2191,9 @@ fi
 #
 #
 %changelog
+* Wed Sep 13 2017 Justin M. Forbes <jforbes@redhat.com> - 4.14.0-0.rc0.git5.1
+- Linux v4.13-11559-g6d8ef53e8b2f
+
 * Tue Sep 12 2017 Peter Robinson <pbrobinson@fedoraproject.org> 4.14.0-0.rc0.git4.1
 - Enable Physlink/SFP functionality
 - Tegra DRM FTB fix
