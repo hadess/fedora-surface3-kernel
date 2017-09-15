@@ -2191,6 +2191,9 @@ fi
 #
 #
 %changelog
+* Fri Sep 15 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Enable Tegra 186
+
 * Thu Sep 14 2017 Justin M. Forbes <jforbes@redhat.com> - 4.14.0-0.rc0.git6.1
 - Linux v4.13-11811-g46c1e79fee41
 
