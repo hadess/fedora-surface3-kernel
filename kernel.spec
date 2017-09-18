@@ -321,7 +321,6 @@ Summary: The Linux kernel
 %define configmismatch_fail 0
 %else
 %define listnewconfig_fail 1
-#FIXME
 %define configmismatch_fail 1
 %endif
 
