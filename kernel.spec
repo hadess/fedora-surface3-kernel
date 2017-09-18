@@ -2191,6 +2191,9 @@ fi
 #
 #
 %changelog
+* Mon Sep 18 2017 Justin M. Forbes <jforbes@fedoraproject.org>
+- Disable debugging options.
+
 * Fri Sep 15 2017 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable Tegra 186
 
