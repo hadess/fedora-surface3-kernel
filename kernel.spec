@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 0
+%global rcrev 1
 # The git snapshot level
-%define gitrev 6
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -322,7 +322,7 @@ Summary: The Linux kernel
 %else
 %define listnewconfig_fail 1
 #FIXME
-%define configmismatch_fail 0 
+%define configmismatch_fail 1
 %endif
 
 # To temporarily exclude an architecture from being built, add it to
@@ -632,10 +632,13 @@ Patch502: CVE-2017-7477.patch
 Patch601: 0001-Input-gpio_keys-Allow-suppression-of-input-events-fo.patch
 Patch602: 0002-Input-soc_button_array-Suppress-power-button-presses.patch
 Patch610: 0010-Input-silead-Add-support-for-capactive-home-button-f.patch
-Patch611: 0011-Input-goodix-Add-support-for-capacitive-home-button.patch
 
 # rhbz 1476467
 Patch617: Fix-for-module-sig-verification.patch
+
+# rhbz 1431375
+Patch618: HID-rmi-Make-sure-the-HID-device-is-opened-on-resume.patch
+Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -2191,6 +2194,9 @@ fi
 #
 #
 %changelog
+* Mon Sep 18 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc1.git0.1
+- Linux v4.14-rc1
+
 * Mon Sep 18 2017 Justin M. Forbes <jforbes@fedoraproject.org>
 - Disable debugging options.
 
