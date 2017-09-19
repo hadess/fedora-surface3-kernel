@@ -2196,6 +2196,9 @@ fi
 #
 #
 %changelog
+* Tue Sep 19 2017 Laura Abbott <labbott@redhat.com>
+- Disable CONFIG_VIRTIO_BLK_SCSI
+
 * Tue Sep 19 2017 Justin M. Forbes <jforbes@redhat.com> - 4.14.0-0.rc1.git1.1
 - Linux v4.14-rc1-13-gebb2c2437d80
 - Reenable debugging options.
