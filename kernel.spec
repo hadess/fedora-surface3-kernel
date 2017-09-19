@@ -639,6 +639,9 @@ Patch617: Fix-for-module-sig-verification.patch
 Patch618: HID-rmi-Make-sure-the-HID-device-is-opened-on-resume.patch
 Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
+# Fixes PPC build
+Patch620: Revert-KVM-Don-t-accept-obviously-wrong-gsi-values-via-KVM_IRQFD.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2196,6 +2199,7 @@ fi
 * Tue Sep 19 2017 Justin M. Forbes <jforbes@redhat.com> - 4.14.0-0.rc1.git1.1
 - Linux v4.14-rc1-13-gebb2c2437d80
 - Reenable debugging options.
+- Fix PPC build
 
 * Mon Sep 18 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc1.git0.1
 - Linux v4.14-rc1
