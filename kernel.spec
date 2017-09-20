@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 1
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -638,9 +638,6 @@ Patch617: Fix-for-module-sig-verification.patch
 # rhbz 1431375
 Patch618: HID-rmi-Make-sure-the-HID-device-is-opened-on-resume.patch
 Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
-
-# Fixes PPC build
-Patch620: Revert-KVM-Don-t-accept-obviously-wrong-gsi-values-via-KVM_IRQFD.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -2196,6 +2193,9 @@ fi
 #
 #
 %changelog
+* Wed Sep 20 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc1.git2.1
+- Linux v4.14-rc1-35-g820bf5c419e4
+
 * Tue Sep 19 2017 Laura Abbott <labbott@redhat.com>
 - Disable CONFIG_VIRTIO_BLK_SCSI
 
