@@ -596,6 +596,9 @@ Patch305: arm-imx6-hummingboard2.patch
 
 Patch306: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
 
+# https://patchwork.kernel.org/patch/9967397/
+Patch307: tegra-Use-different-MSI-target-address-for-Tegra20.patch
+
 # https://patchwork.kernel.org/patch/9815555/
 # https://patchwork.kernel.org/patch/9815651/
 # https://patchwork.kernel.org/patch/9819885/
@@ -2193,6 +2196,9 @@ fi
 #
 #
 %changelog
+* Mon Sep 25 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add patch to fix PCI on tegra20
+
 * Mon Sep 25 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc2.git0.1
 - Linux v4.14-rc2
 
