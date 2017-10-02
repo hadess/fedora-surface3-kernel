@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 2
+%global rcrev 3
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -620,8 +620,6 @@ Patch323: bcm2837-bluetooth-support.patch
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
-
-Patch501: drm-tegra-trace-fix-patch.patch
 
 # CVE-2017-7477 rhbz 1445207 1445208
 Patch502: CVE-2017-7477.patch
@@ -2193,6 +2191,9 @@ fi
 #
 #
 %changelog
+* Mon Oct 02 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc3.git0.1
+- Linux v4.14-rc3
+
 * Mon Oct 02 2017 Justin M. Forbes <jforbes@fedoraproject.org>
 - Disable debugging options.
 
