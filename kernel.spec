@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 3
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -634,7 +634,6 @@ Patch610: 0010-Input-silead-Add-support-for-capactive-home-button-f.patch
 Patch617: Fix-for-module-sig-verification.patch
 
 # rhbz 1431375
-Patch618: HID-rmi-Make-sure-the-HID-device-is-opened-on-resume.patch
 Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # END OF PATCH DEFINITIONS
@@ -2191,6 +2190,9 @@ fi
 #
 #
 %changelog
+* Thu Oct 05 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc3.git3.1
+- Linux v4.14-rc3-315-g0f380715e51f
+
 * Wed Oct 04 2017 Justin M. Forbes <jforbes@redhat.com> - 4.14.0-0.rc3.git2.1
 - Linux v4.14-rc3-102-gd81fa669e3de
 
