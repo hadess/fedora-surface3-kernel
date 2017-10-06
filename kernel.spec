@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 3
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -2197,6 +2197,9 @@ fi
 #
 #
 %changelog
+* Fri Oct 06 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc3.git4.1
+- Linux v4.14-rc3-394-gbf2db0b9f580
+
 * Fri Oct  6 2017 Peter Robinson <pbrobinson@fedoraproject.org>
 - Initial support for Socionext Synquacer platform
 
