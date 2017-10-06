@@ -617,6 +617,13 @@ Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe
 #
 Patch323: bcm2837-bluetooth-support.patch
 
+# Generic fixes and enablement for Socionext SoC and 96board
+# https://patchwork.kernel.org/patch/9980861/
+Patch331: PCI-aspm-deal-with-missing-root-ports-in-link-state-handling.patch
+
+# https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
+Patch332: arm64-socionext-96b-enablement.patch
+
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -2190,6 +2197,9 @@ fi
 #
 #
 %changelog
+* Fri Oct  6 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Initial support for Socionext Synquacer platform
+
 * Thu Oct 05 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc3.git3.1
 - Linux v4.14-rc3-315-g0f380715e51f
 
