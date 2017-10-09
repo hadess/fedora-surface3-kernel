@@ -2197,6 +2197,9 @@ fi
 #
 #
 %changelog
+* Mon Oct  9 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Enable KASLR on aarch64
+
 * Fri Oct 06 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc3.git4.1
 - Linux v4.14-rc3-394-gbf2db0b9f580
 
