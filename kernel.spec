@@ -125,7 +125,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 # Want to build a vanilla kernel build without any non-upstream patches?
 %define with_vanilla %{?_with_vanilla: 1} %{?!_with_vanilla: 0}
@@ -2197,6 +2197,9 @@ fi
 #
 #
 %changelog
+* Mon Oct 09 2017 Justin M. Forbes <jforbes@fedoraproject.org>
+- Disable debugging options.
+
 * Mon Oct  9 2017 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable KASLR on aarch64
 
