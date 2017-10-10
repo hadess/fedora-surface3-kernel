@@ -1,1 +1,1 @@
-# CONFIG_SNI_NETSEC is not set
+CONFIG_SNI_NETSEC=m
