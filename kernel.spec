@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -635,6 +635,10 @@ Patch332: arm64-socionext-96b-enablement.patch
 
 # CVE-2017-7477 rhbz 1445207 1445208
 Patch502: CVE-2017-7477.patch
+
+# rhbz 1498016 1498017
+Patch503: KEYS-don-t-let-add_key-update-an-uninstantiated-key.patch
+Patch504: KEYS-fix-race-between-updating-and-finding-negative-.patch
 
 # 600 - Patches for improved Bay and Cherry Trail device support
 # Below patches are submitted upstream, awaiting review / merging
@@ -2202,6 +2206,9 @@ fi
 #
 #
 %changelog
+* Wed Oct 11 2017 Jeremy Cline <jeremy@jcline.org>
+- Fix incorrect updates of uninstantiated keys crash the kernel (rhbz 1498017)
+
 * Wed Oct 11 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc4.git2.1
 - Linux v4.14-rc4-77-g56ae414e9d27
 
