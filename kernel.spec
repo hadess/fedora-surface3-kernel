@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -2207,7 +2207,7 @@ fi
 #
 %changelog
 * Wed Oct 11 2017 Jeremy Cline <jeremy@jcline.org>
-- Fix incorrect updates of uninstantiated keys crash the kernel (rhbz 1498017)
+- Fix incorrect updates of uninstantiated keys crash the kernel (rhbz 1498016 1498017)
 
 * Wed Oct 11 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc4.git2.1
 - Linux v4.14-rc4-77-g56ae414e9d27
