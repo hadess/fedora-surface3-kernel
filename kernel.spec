@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 4
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -654,6 +654,9 @@ Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # fix gnome 3.26+ not working under VirtualBox, submitted upstream, Cc: Stable
 Patch620: 0001-staging-vboxvideo-Fix-reporting-invalid-suggested-of.patch
+
+# Headed upstream
+Patch621: drm-i915-Boost-GPU-clocks-if-we-miss-the-pageflip-s-vblank.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -2209,6 +2212,9 @@ fi
 #
 #
 %changelog
+* Thu Oct 12 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc4.git3.1
+- Linux v4.14-rc4-84-gff5abbe799e2
+
 * Thu Oct 12 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
 - Fix vboxvideo causing gnome 3.26+ to not work under VirtualBox
 
