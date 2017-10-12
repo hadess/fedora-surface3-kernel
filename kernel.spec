@@ -652,6 +652,9 @@ Patch617: Fix-for-module-sig-verification.patch
 # rhbz 1431375
 Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
+# fix gnome 3.26+ not working under VirtualBox, submitted upstream, Cc: Stable
+Patch620: 0001-staging-vboxvideo-Fix-reporting-invalid-suggested-of.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2206,6 +2209,9 @@ fi
 #
 #
 %changelog
+* Thu Oct 12 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
+- Fix vboxvideo causing gnome 3.26+ to not work under VirtualBox
+
 * Wed Oct 11 2017 Jeremy Cline <jeremy@jcline.org>
 - Fix incorrect updates of uninstantiated keys crash the kernel (rhbz 1498016 1498017)
 
