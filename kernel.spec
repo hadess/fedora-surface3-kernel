@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 4
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -2212,6 +2212,9 @@ fi
 #
 #
 %changelog
+* Fri Oct 13 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc4.git4.1
+- Linux v4.14-rc4-143-g997301a860fc
+
 * Thu Oct 12 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc4.git3.1
 - Linux v4.14-rc4-84-gff5abbe799e2
 
