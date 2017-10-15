@@ -629,6 +629,8 @@ Patch331: PCI-aspm-deal-with-missing-root-ports-in-link-state-handling.patch
 # https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
 Patch332: arm64-socionext-96b-enablement.patch
 
+Patch335: arm-exynos-fix-usb3.patch
+
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -2212,6 +2214,9 @@ fi
 #
 #
 %changelog
+* Sun Oct 15 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Fix USB-3 Superspeed negotiation on exynos5 hardware
+
 * Fri Oct 13 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc4.git4.1
 - Linux v4.14-rc4-143-g997301a860fc
 
