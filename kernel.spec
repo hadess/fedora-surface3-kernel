@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 4
+%global rcrev 5
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -599,7 +599,6 @@ Patch305: arm-imx6-hummingboard2.patch
 Patch306: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
 
 # https://patchwork.kernel.org/patch/9967397/
-Patch307: tegra-Use-different-MSI-target-address-for-Tegra20.patch
 
 # https://patchwork.kernel.org/patch/9815555/
 # https://patchwork.kernel.org/patch/9815651/
@@ -2214,6 +2213,9 @@ fi
 #
 #
 %changelog
+* Mon Oct 16 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc5.git0.1
+- Linux v4.14-rc5
+
 * Mon Oct 16 2017 Justin M. Forbes <jforbes@fedoraproject.org>
 - Disable debugging options.
 
