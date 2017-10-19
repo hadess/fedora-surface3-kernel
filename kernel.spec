@@ -2213,6 +2213,9 @@ fi
 #
 #
 %changelog
+* Thu Oct 19 2017 Laura Abbott <labbott@redhat.com>
+- Turn off DCCP
+
 * Wed Oct 18 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc5.git2.1
 - Linux v4.14-rc5-22-g3e0cc09a3a2c
 
