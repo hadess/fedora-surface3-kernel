@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 5
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -2213,6 +2213,9 @@ fi
 #
 #
 %changelog
+* Thu Oct 19 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc5.git3.1
+- Linux v4.14-rc5-31-g73d3393ada4f
+
 * Thu Oct 19 2017 Laura Abbott <labbott@redhat.com>
 - Turn off DCCP
 

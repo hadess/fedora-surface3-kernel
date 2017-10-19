@@ -1,54 +1,17 @@
-From df7d76ae50f18d4465e59fdf7f19d3df44906cb5 Mon Sep 17 00:00:00 2001
-From: Josh Boyer <jwboyer@fedoraproject.org>
-Date: Mon, 21 Nov 2016 23:55:55 +0000
-Subject: [PATCH 07/32] efi: Add EFI_SECURE_BOOT bit
-
-UEFI machines can be booted in Secure Boot mode.  Add a EFI_SECURE_BOOT bit
-that can be passed to efi_enabled() to find out whether secure boot is
-enabled.
-
-This will be used by the SysRq+x handler, registered by the x86 arch, to find
-out whether secure boot mode is enabled so that it can be disabled.
-
-Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
- arch/x86/kernel/setup.c | 1 +
- include/linux/efi.h     | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 69780ed..447905e 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1182,6 +1182,7 @@ void __init setup_arch(char **cmdline_p)
- 			pr_info("Secure boot disabled\n");
- 			break;
- 		case efi_secureboot_mode_enabled:
-+			set_bit(EFI_SECURE_BOOT, &efi.flags);
- 			pr_info("Secure boot enabled\n");
- 			break;
- 		default:
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 94d34e0..6049600 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1069,6 +1069,7 @@ extern int __init efi_setup_pcdp_console(char *);
- #define EFI_DBG			8	/* Print additional debug info at runtime */
- #define EFI_NX_PE_DATA		9	/* Can runtime data regions be mapped non-executable? */
- #define EFI_MEM_ATTR		10	/* Did firmware publish an EFI_MEMORY_ATTRIBUTES table? */
-+#define EFI_SECURE_BOOT		11	/* Are we in Secure Boot mode? */
- 
- #ifdef CONFIG_EFI
- /*
--- 
-2.7.4
-
-From f05a90c19a9613d8d50597319ed91f691e25b689 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:50:40 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [01/27] Add the ability to lock down access to the running kernel
+ image
 From: David Howells <dhowells@redhat.com>
-Date: Mon, 21 Nov 2016 23:36:17 +0000
-Subject: [PATCH 09/32] Add the ability to lock down access to the running
- kernel image
+X-Patchwork-Id: 10017331
+Message-Id: <150842463996.7923.6815305873334959305.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:50:40 +0100
 
 Provide a single call to allow kernel code to determine whether the system
 should be locked down, thereby disallowing various accesses that might
@@ -58,49 +21,55 @@ MSR registers and disallowing hibernation,
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- include/linux/kernel.h   |  9 +++++++++
- include/linux/security.h | 11 +++++++++++
- security/Kconfig         | 15 +++++++++++++++
- security/Makefile        |  3 +++
- security/lock_down.c     | 40 ++++++++++++++++++++++++++++++++++++++++
- 5 files changed, 78 insertions(+)
+
+ include/linux/kernel.h   |   17 +++++++++++++
+ include/linux/security.h |    8 ++++++
+ security/Kconfig         |    8 ++++++
+ security/Makefile        |    3 ++
+ security/lock_down.c     |   60 ++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 96 insertions(+)
  create mode 100644 security/lock_down.c
 
 diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index cb09238..3cd3be9 100644
+index 0ad4c3044cf9..362da2e4bf53 100644
 --- a/include/linux/kernel.h
 +++ b/include/linux/kernel.h
-@@ -273,6 +273,15 @@ extern int oops_may_print(void);
- void do_exit(long error_code) __noreturn;
- void complete_and_exit(struct completion *, long) __noreturn;
+@@ -287,6 +287,23 @@ static inline void refcount_error_report(struct pt_regs *regs, const char *err)
+ { }
+ #endif
  
 +#ifdef CONFIG_LOCK_DOWN_KERNEL
-+extern bool kernel_is_locked_down(void);
++extern bool __kernel_is_locked_down(const char *what, bool first);
 +#else
-+static inline bool kernel_is_locked_down(void)
++static inline bool __kernel_is_locked_down(const char *what, bool first)
 +{
 +	return false;
 +}
 +#endif
 +
- #ifdef CONFIG_ARCH_HAS_REFCOUNT
- void refcount_error_report(struct pt_regs *regs, const char *err);
- #else
++#define kernel_is_locked_down(what)					\
++	({								\
++		static bool message_given;				\
++		bool locked_down = __kernel_is_locked_down(what, !message_given); \
++		message_given = true;					\
++		locked_down;						\
++	})
++
+ /* Internal, do not use. */
+ int __must_check _kstrtoul(const char *s, unsigned int base, unsigned long *res);
+ int __must_check _kstrtol(const char *s, unsigned int base, long *res);
 diff --git a/include/linux/security.h b/include/linux/security.h
-index d3868f2..187b74b 100644
+index ce6265960d6c..f9a894b42d4c 100644
 --- a/include/linux/security.h
 +++ b/include/linux/security.h
-@@ -1679,5 +1679,16 @@ static inline void free_secdata(void *secdata)
+@@ -1753,5 +1753,13 @@ static inline void free_secdata(void *secdata)
  { }
  #endif /* CONFIG_SECURITY */
  
 +#ifdef CONFIG_LOCK_DOWN_KERNEL
-+extern void lock_kernel_down(void);
-+#ifdef CONFIG_ALLOW_LOCKDOWN_LIFT
-+extern void lift_kernel_lockdown(void);
-+#endif
++extern void __init init_lockdown(void);
 +#else
-+static inline void lock_kernel_down(void)
++static inline void __init init_lockdown(void);
 +{
 +}
 +#endif
@@ -108,10 +77,10 @@ index d3868f2..187b74b 100644
  #endif /* ! __LINUX_SECURITY_H */
  
 diff --git a/security/Kconfig b/security/Kconfig
-index d900f47..d9b391d 100644
+index e8e449444e65..8e01fd59ae7e 100644
 --- a/security/Kconfig
 +++ b/security/Kconfig
-@@ -193,6 +193,21 @@ config STATIC_USERMODEHELPER_PATH
+@@ -205,6 +205,14 @@ config STATIC_USERMODEHELPER_PATH
  	  If you wish for all usermode helper programs to be disabled,
  	  specify an empty string here (i.e. "").
  
@@ -123,18 +92,11 @@ index d900f47..d9b391d 100644
 +	  turns off various features that might otherwise allow access to the
 +	  kernel image (eg. setting MSR registers).
 +
-+config ALLOW_LOCKDOWN_LIFT
-+	bool
-+	help
-+	  Allow the lockdown on a kernel to be lifted, thereby restoring the
-+	  ability of userspace to access the kernel image (eg. by SysRq+x under
-+	  x86).
-+
  source security/selinux/Kconfig
  source security/smack/Kconfig
  source security/tomoyo/Kconfig
 diff --git a/security/Makefile b/security/Makefile
-index f2d71cd..8c4a43e 100644
+index f2d71cdb8e19..8c4a43e3d4e0 100644
 --- a/security/Makefile
 +++ b/security/Makefile
 @@ -29,3 +29,6 @@ obj-$(CONFIG_CGROUP_DEVICE)		+= device_cgroup.o
@@ -146,10 +108,10 @@ index f2d71cd..8c4a43e 100644
 +obj-$(CONFIG_LOCK_DOWN_KERNEL)		+= lock_down.o
 diff --git a/security/lock_down.c b/security/lock_down.c
 new file mode 100644
-index 0000000..5788c60
+index 000000000000..d8595c0e6673
 --- /dev/null
 +++ b/security/lock_down.c
-@@ -0,0 +1,40 @@
+@@ -0,0 +1,60 @@
 +/* Lock down the kernel
 + *
 + * Copyright (C) 2016 Red Hat, Inc. All Rights Reserved.
@@ -164,270 +126,108 @@ index 0000000..5788c60
 +#include <linux/security.h>
 +#include <linux/export.h>
 +
-+static __read_mostly bool kernel_locked_down;
++static __ro_after_init bool kernel_locked_down;
 +
 +/*
 + * Put the kernel into lock-down mode.
 + */
-+void lock_kernel_down(void)
++static void __init lock_kernel_down(const char *where)
 +{
-+	kernel_locked_down = true;
++	if (!kernel_locked_down) {
++		kernel_locked_down = true;
++		pr_notice("Kernel is locked down from %s; see man kernel_lockdown.7\n",
++			  where);
++	}
 +}
 +
-+/*
-+ * Take the kernel out of lockdown mode.
-+ */
-+void lift_kernel_lockdown(void)
++static int __init lockdown_param(char *ignored)
 +{
-+	kernel_locked_down = false;
++	lock_kernel_down("command line");
++	return 0;
++}
++
++early_param("lockdown", lockdown_param);
++
++/*
++ * Lock the kernel down from very early in the arch setup.  This must happen
++ * prior to things like ACPI being initialised.
++ */
++void __init init_lockdown(void)
++{
++#ifdef CONFIG_LOCK_DOWN_IN_EFI_SECURE_BOOT
++	if (efi_enabled(EFI_SECURE_BOOT))
++		lock_kernel_down("EFI secure boot");
++#endif
 +}
 +
 +/**
 + * kernel_is_locked_down - Find out if the kernel is locked down
++ * @what: Tag to use in notice generated if lockdown is in effect
 + */
-+bool kernel_is_locked_down(void)
++bool __kernel_is_locked_down(const char *what, bool first)
 +{
++	if (what && first && kernel_locked_down)
++		pr_notice("Lockdown: %s is restricted; see man kernel_lockdown.7\n",
++			  what);
 +	return kernel_locked_down;
 +}
-+EXPORT_SYMBOL(kernel_is_locked_down);
--- 
-2.7.4
++EXPORT_SYMBOL(__kernel_is_locked_down);
 
-From fb6feb38e297260d050fc477c72683ac51d07ae3 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:50:47 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [02/27] Add a SysRq option to lift kernel lockdown
 From: David Howells <dhowells@redhat.com>
-Date: Mon, 21 Nov 2016 23:55:55 +0000
-Subject: [PATCH 10/32] efi: Lock down the kernel if booted in secure boot mode
+X-Patchwork-Id: 10017333
+Message-Id: <150842464774.7923.7951986297563109339.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:50:47 +0100
 
-UEFI Secure Boot provides a mechanism for ensuring that the firmware will
-only load signed bootloaders and kernels.  Certain use cases may also
-require that all kernel modules also be signed.  Add a configuration option
-that to lock down the kernel - which includes requiring validly signed
-modules - if the kernel is secure-booted.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
- arch/x86/Kconfig        | 12 ++++++++++++
- arch/x86/kernel/setup.c |  8 +++++++-
- 2 files changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 874c123..a315974 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1816,6 +1816,18 @@ config EFI_MIXED
- 
- 	   If unsure, say N.
- 
-+config EFI_SECURE_BOOT_LOCK_DOWN
-+	def_bool n
-+	depends on EFI
-+	prompt "Lock down the kernel when UEFI Secure Boot is enabled"
-+	---help---
-+	  UEFI Secure Boot provides a mechanism for ensuring that the firmware
-+	  will only load signed bootloaders and kernels.  Certain use cases may
-+	  also require that all kernel modules also be signed and that
-+	  userspace is prevented from directly changing the running kernel
-+	  image.  Say Y here to automatically lock down the kernel when a
-+	  system boots with UEFI Secure Boot enabled.
-+
- config SECCOMP
- 	def_bool y
- 	prompt "Enable seccomp to safely compute untrusted bytecode"
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 447905e..d44e60e 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -69,6 +69,7 @@
- #include <linux/tboot.h>
- #include <linux/jiffies.h>
- #include <linux/mem_encrypt.h>
-+#include <linux/security.h>
- 
- #include <linux/usb/xhci-dbgp.h>
- #include <video/edid.h>
-@@ -1183,7 +1184,12 @@ void __init setup_arch(char **cmdline_p)
- 			break;
- 		case efi_secureboot_mode_enabled:
- 			set_bit(EFI_SECURE_BOOT, &efi.flags);
--			pr_info("Secure boot enabled\n");
-+			if (IS_ENABLED(CONFIG_EFI_SECURE_BOOT_LOCK_DOWN)) {
-+				lock_kernel_down();
-+				pr_info("Secure boot enabled and kernel locked down\n");
-+			} else {
-+				pr_info("Secure boot enabled\n");
-+			}
- 			break;
- 		default:
- 			pr_info("Secure boot could not be determined\n");
--- 
-2.7.4
-
-From 7182f2f5b254d6dc6d3105d2f99219a76adf9de0 Mon Sep 17 00:00:00 2001
-From: David Howells <dhowells@redhat.com>
-Date: Wed, 23 Nov 2016 13:22:22 +0000
-Subject: [PATCH 11/32] Enforce module signatures if the kernel is locked down
-
-If the kernel is locked down, require that all modules have valid
-signatures that we can verify.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
----
- kernel/module.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/module.c b/kernel/module.c
-index 7eba6de..3331f2e 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2756,7 +2756,7 @@ static int module_sig_check(struct load_info *info, int flags)
- 	}
- 
- 	/* Not having a signature is only an error if we're strict. */
--	if (err == -ENOKEY && !sig_enforce)
-+	if (err == -ENOKEY && !sig_enforce && !kernel_is_locked_down())
- 		err = 0;
- 
- 	return err;
--- 
-2.7.4
-
-From 7e97c58bcd0b4c082b889fb093a2779147532b9f Mon Sep 17 00:00:00 2001
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Date: Tue, 22 Nov 2016 08:46:16 +0000
-Subject: [PATCH 12/32] Restrict /dev/mem and /dev/kmem when the kernel is
- locked down
-
-Allowing users to write to address space makes it possible for the kernel to
-be subverted, avoiding module loading restrictions.  Prevent this when the
-kernel has been locked down.
-
-Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
----
- drivers/char/mem.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 6d9cc2d..f814404 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -163,6 +163,9 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
- 	if (p != *ppos)
- 		return -EFBIG;
- 
-+	if (kernel_is_locked_down())
-+		return -EPERM;
-+
- 	if (!valid_phys_addr_range(p, count))
- 		return -EFAULT;
- 
-@@ -513,6 +516,9 @@ static ssize_t write_kmem(struct file *file, const char __user *buf,
- 	char *kbuf; /* k-addr because vwrite() takes vmlist_lock rwlock */
- 	int err = 0;
- 
-+	if (kernel_is_locked_down())
-+		return -EPERM;
-+
- 	if (p < (unsigned long) high_memory) {
- 		unsigned long to_write = min_t(unsigned long, count,
- 					       (unsigned long)high_memory - p);
--- 
-2.7.4
-
-From b83b68a9a13120664eaabf21a7b3ff0b065bd5b2 Mon Sep 17 00:00:00 2001
 From: Kyle McMartin <kyle@redhat.com>
-Date: Mon, 21 Nov 2016 23:55:56 +0000
-Subject: [PATCH 13/32] Add a sysrq option to exit secure boot mode
 
-Make sysrq+x exit secure boot mode on x86_64, thereby allowing the running
-kernel image to be modified.  This lifts the lockdown.
+Make an option to provide a sysrq key that will lift the kernel lockdown,
+thereby allowing the running kernel image to be accessed and modified.
 
+On x86_64 this is triggered with SysRq+x, but this key may not be available
+on all arches, so it is set by setting LOCKDOWN_LIFT_KEY in asm/setup.h.
+
+Signed-off-by: Kyle McMartin <kyle@redhat.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: x86@kernel.org
 ---
- arch/x86/Kconfig            | 10 ++++++++++
- arch/x86/kernel/setup.c     | 31 +++++++++++++++++++++++++++++++
- drivers/input/misc/uinput.c |  1 +
- drivers/tty/sysrq.c         | 19 +++++++++++++------
- include/linux/input.h       |  5 +++++
- include/linux/sysrq.h       |  8 +++++++-
- kernel/debug/kdb/kdb_main.c |  2 +-
- 7 files changed, 68 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index a315974..6931e68 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1828,6 +1828,16 @@ config EFI_SECURE_BOOT_LOCK_DOWN
- 	  image.  Say Y here to automatically lock down the kernel when a
- 	  system boots with UEFI Secure Boot enabled.
+ arch/x86/include/asm/setup.h |    2 ++
+ drivers/input/misc/uinput.c  |    1 +
+ drivers/tty/sysrq.c          |   19 +++++++++++------
+ include/linux/input.h        |    5 ++++
+ include/linux/sysrq.h        |    8 ++++++-
+ kernel/debug/kdb/kdb_main.c  |    2 +-
+ security/Kconfig             |   15 +++++++++++++
+ security/lock_down.c         |   48 ++++++++++++++++++++++++++++++++++++++++++
+ 8 files changed, 92 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/include/asm/setup.h b/arch/x86/include/asm/setup.h
+index a65cf544686a..863f77582c09 100644
+--- a/arch/x86/include/asm/setup.h
++++ b/arch/x86/include/asm/setup.h
+@@ -8,6 +8,8 @@
+ #include <linux/linkage.h>
+ #include <asm/page_types.h>
  
-+config EFI_ALLOW_SECURE_BOOT_EXIT
-+	def_bool n
-+	depends on EFI_SECURE_BOOT_LOCK_DOWN && MAGIC_SYSRQ
-+	select ALLOW_LOCKDOWN_LIFT
-+	prompt "Allow secure boot mode to be exited with SysRq+x on a keyboard"
-+	---help---
-+	  Allow secure boot mode to be exited and the kernel lockdown lifted by
-+	  typing SysRq+x on a keyboard attached to the system (not permitted
-+	  through procfs).
++#define LOCKDOWN_LIFT_KEY 'x'
 +
- config SECCOMP
- 	def_bool y
- 	prompt "Enable seccomp to safely compute untrusted bytecode"
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index d44e60e..f7635d0 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -71,6 +71,11 @@
- #include <linux/mem_encrypt.h>
- #include <linux/security.h>
+ #ifdef __i386__
  
-+#include <linux/fips.h>
-+#include <linux/cred.h>
-+#include <linux/sysrq.h>
-+#include <linux/init_task.h>
-+
- #include <linux/usb/xhci-dbgp.h>
- #include <video/edid.h>
- 
-@@ -1328,6 +1333,32 @@ void __init i386_reserve_resources(void)
- 
- #endif /* CONFIG_X86_32 */
- 
-+#ifdef CONFIG_EFI_ALLOW_SECURE_BOOT_EXIT
-+
-+static void sysrq_handle_secure_boot(int key)
-+{
-+	if (!efi_enabled(EFI_SECURE_BOOT))
-+		return;
-+
-+	pr_info("Secure boot disabled\n");
-+	lift_kernel_lockdown();
-+}
-+static struct sysrq_key_op secure_boot_sysrq_op = {
-+	.handler	=	sysrq_handle_secure_boot,
-+	.help_msg	=	"unSB(x)",
-+	.action_msg	=	"Disabling Secure Boot restrictions",
-+	.enable_mask	=	SYSRQ_DISABLE_USERSPACE,
-+};
-+static int __init secure_boot_sysrq(void)
-+{
-+	if (efi_enabled(EFI_SECURE_BOOT))
-+		register_sysrq_key('x', &secure_boot_sysrq_op);
-+	return 0;
-+}
-+late_initcall(secure_boot_sysrq);
-+#endif /*CONFIG_EFI_ALLOW_SECURE_BOOT_EXIT*/
-+
-+
- static struct notifier_block kernel_offset_notifier = {
- 	.notifier_call = dump_kernel_offset
- };
+ #include <linux/pfn.h>
 diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index 022be0e..4a054a5 100644
+index 443151de90c6..45a1f5460805 100644
 --- a/drivers/input/misc/uinput.c
 +++ b/drivers/input/misc/uinput.c
-@@ -387,6 +387,7 @@ static int uinput_allocate_device(struct uinput_device *udev)
+@@ -408,6 +408,7 @@ static int uinput_allocate_device(struct uinput_device *udev)
  	if (!udev->dev)
  		return -ENOMEM;
  
@@ -436,10 +236,10 @@ index 022be0e..4a054a5 100644
  	input_set_drvdata(udev->dev, udev);
  
 diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index 7113674..e1addc3 100644
+index 3ffc1ce29023..8b766dbad6dd 100644
 --- a/drivers/tty/sysrq.c
 +++ b/drivers/tty/sysrq.c
-@@ -479,6 +479,7 @@ static struct sysrq_key_op *sysrq_key_table[36] = {
+@@ -481,6 +481,7 @@ static struct sysrq_key_op *sysrq_key_table[36] = {
  	/* x: May be registered on mips for TLB dump */
  	/* x: May be registered on ppc/powerpc for xmon */
  	/* x: May be registered on sparc64 for global PMU dump */
@@ -447,7 +247,7 @@ index 7113674..e1addc3 100644
  	NULL,				/* x */
  	/* y: May be registered on sparc64 for global register dump */
  	NULL,				/* y */
-@@ -522,7 +523,7 @@ static void __sysrq_put_key_op(int key, struct sysrq_key_op *op_p)
+@@ -524,7 +525,7 @@ static void __sysrq_put_key_op(int key, struct sysrq_key_op *op_p)
                  sysrq_key_table[i] = op_p;
  }
  
@@ -456,7 +256,7 @@ index 7113674..e1addc3 100644
  {
  	struct sysrq_key_op *op_p;
  	int orig_log_level;
-@@ -542,11 +543,15 @@ void __handle_sysrq(int key, bool check_mask)
+@@ -544,11 +545,15 @@ void __handle_sysrq(int key, bool check_mask)
  
          op_p = __sysrq_get_key_op(key);
          if (op_p) {
@@ -473,7 +273,7 @@ index 7113674..e1addc3 100644
  			pr_cont("%s\n", op_p->action_msg);
  			console_loglevel = orig_log_level;
  			op_p->handler(key);
-@@ -578,7 +583,7 @@ void __handle_sysrq(int key, bool check_mask)
+@@ -580,7 +585,7 @@ void __handle_sysrq(int key, bool check_mask)
  void handle_sysrq(int key)
  {
  	if (sysrq_on())
@@ -482,7 +282,7 @@ index 7113674..e1addc3 100644
  }
  EXPORT_SYMBOL(handle_sysrq);
  
-@@ -659,7 +664,7 @@ static void sysrq_do_reset(unsigned long _state)
+@@ -661,7 +666,7 @@ static void sysrq_do_reset(unsigned long _state)
  static void sysrq_handle_reset_request(struct sysrq_state *state)
  {
  	if (state->reset_requested)
@@ -491,7 +291,7 @@ index 7113674..e1addc3 100644
  
  	if (sysrq_reset_downtime_ms)
  		mod_timer(&state->keyreset_timer,
-@@ -810,8 +815,10 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
+@@ -812,8 +817,10 @@ static bool sysrq_handle_keypress(struct sysrq_state *sysrq,
  
  	default:
  		if (sysrq->active && value && value != 2) {
@@ -503,7 +303,7 @@ index 7113674..e1addc3 100644
  		}
  		break;
  	}
-@@ -1095,7 +1102,7 @@ static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
+@@ -1097,7 +1104,7 @@ static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
  
  		if (get_user(c, buf))
  			return -EFAULT;
@@ -513,7 +313,7 @@ index 7113674..e1addc3 100644
  
  	return count;
 diff --git a/include/linux/input.h b/include/linux/input.h
-index a65e3b2..8b03571 100644
+index fb5e23c7ed98..9d2b45a21ade 100644
 --- a/include/linux/input.h
 +++ b/include/linux/input.h
 @@ -42,6 +42,7 @@ struct input_value {
@@ -543,7 +343,7 @@ index a65e3b2..8b03571 100644
   * Verify that we are in sync with input_device_id mod_devicetable.h #defines
   */
 diff --git a/include/linux/sysrq.h b/include/linux/sysrq.h
-index 387fa7d..f7c52a9 100644
+index 387fa7d05c98..f7c52a9ea394 100644
 --- a/include/linux/sysrq.h
 +++ b/include/linux/sysrq.h
 @@ -28,6 +28,8 @@
@@ -570,10 +370,10 @@ index 387fa7d..f7c52a9 100644
  int unregister_sysrq_key(int key, struct sysrq_key_op *op);
  struct sysrq_key_op *__sysrq_get_key_op(int key);
 diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index ca18391..c4524b8 100644
+index c8146d53ca67..b480cadf9272 100644
 --- a/kernel/debug/kdb/kdb_main.c
 +++ b/kernel/debug/kdb/kdb_main.c
-@@ -1967,7 +1967,7 @@ static int kdb_sr(int argc, const char **argv)
+@@ -1970,7 +1970,7 @@ static int kdb_sr(int argc, const char **argv)
  		return KDB_ARGCOUNT;
  
  	kdb_trap_printk++;
@@ -582,13 +382,203 @@ index ca18391..c4524b8 100644
  	kdb_trap_printk--;
  
  	return 0;
--- 
-2.7.4
+diff --git a/security/Kconfig b/security/Kconfig
+index 8e01fd59ae7e..4be6be71e075 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -213,6 +213,21 @@ config LOCK_DOWN_KERNEL
+ 	  turns off various features that might otherwise allow access to the
+ 	  kernel image (eg. setting MSR registers).
+ 
++config ALLOW_LOCKDOWN_LIFT
++	bool
++	help
++	  Allow the lockdown on a kernel to be lifted, thereby restoring the
++	  ability of userspace to access the kernel image (eg. by SysRq+x under
++	  x86).
++
++config ALLOW_LOCKDOWN_LIFT_BY_SYSRQ
++	bool "Allow the kernel lockdown to be lifted by SysRq"
++	depends on MAGIC_SYSRQ
++	help
++	  Allow the lockdown on a kernel to be lifted, by pressing a SysRq key
++	  combination on a wired keyboard.
++
++
+ source security/selinux/Kconfig
+ source security/smack/Kconfig
+ source security/tomoyo/Kconfig
+diff --git a/security/lock_down.c b/security/lock_down.c
+index d8595c0e6673..f71118c340d2 100644
+--- a/security/lock_down.c
++++ b/security/lock_down.c
+@@ -11,8 +11,13 @@
+ 
+ #include <linux/security.h>
+ #include <linux/export.h>
++#include <linux/sysrq.h>
+ 
++#ifdef CONFIG_ALLOW_LOCKDOWN_LIFT
++static __read_mostly bool kernel_locked_down;
++#else
+ static __ro_after_init bool kernel_locked_down;
++#endif
+ 
+ /*
+  * Put the kernel into lock-down mode.
+@@ -58,3 +63,46 @@ bool __kernel_is_locked_down(const char *what, bool first)
+ 	return kernel_locked_down;
+ }
+ EXPORT_SYMBOL(__kernel_is_locked_down);
++
++/*
++ * Take the kernel out of lockdown mode.
++ */
++#ifdef CONFIG_ALLOW_LOCKDOWN_LIFT
++static void lift_kernel_lockdown(void)
++{
++	pr_notice("Lifting lockdown\n");
++	kernel_locked_down = false;
++}
++#endif
++
++/*
++ * Allow lockdown to be lifted by pressing something like SysRq+x (and not by
++ * echoing the appropriate letter into the sysrq-trigger file).
++ */
++#ifdef CONFIG_ALLOW_LOCKDOWN_LIFT_BY_KEY
++
++static void sysrq_handle_lockdown_lift(int key)
++{
++	if (kernel_locked_down)
++		lift_kernel_lockdown();
++}
++
++static struct sysrq_key_op lockdown_lift_sysrq_op = {
++	.handler	= sysrq_handle_lockdown_lift,
++	.help_msg	= "unSB(x)",
++	.action_msg	= "Disabling Secure Boot restrictions",
++	.enable_mask	= SYSRQ_DISABLE_USERSPACE,
++};
++
++static int __init lockdown_lift_sysrq(void)
++{
++	if (kernel_locked_down) {
++		lockdown_lift_sysrq_op.help_msg[5] = LOCKDOWN_LIFT_KEY;
++		register_sysrq_key(LOCKDOWN_LIFT_KEY, &lockdown_lift_sysrq_op);
++	}
++	return 0;
++}
++
++late_initcall(lockdown_lift_sysrq);
++
++#endif /* CONFIG_ALLOW_LOCKDOWN_LIFT_BY_KEY */
 
-From 8884bd44932e595323fcddfb09c2a2a586134cdf Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:50:55 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [03/27] Enforce module signatures if the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017335
+Message-Id: <150842465546.7923.6762214527898273559.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:50:55 +0100
+
+If the kernel is locked down, require that all modules have valid
+signatures that we can verify.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ kernel/module.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/module.c b/kernel/module.c
+index de66ec825992..3d9a3270c179 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -2781,7 +2781,8 @@ static int module_sig_check(struct load_info *info, int flags)
+ 	}
+ 
+ 	/* Not having a signature is only an error if we're strict. */
+-	if (err == -ENOKEY && !sig_enforce)
++	if (err == -ENOKEY && !sig_enforce &&
++	    !kernel_is_locked_down("Loading of unsigned modules"))
+ 		err = 0;
+ 
+ 	return err;
+
+From patchwork Thu Oct 19 14:51:02 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [04/27] Restrict /dev/mem and /dev/kmem when the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017337
+Message-Id: <150842466261.7923.14359746674406637357.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:51:02 +0100
+
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Date: Tue, 22 Nov 2016 08:46:15 +0000
-Subject: [PATCH 14/32] kexec: Disable at runtime if the kernel is locked down
+
+Allowing users to write to address space makes it possible for the kernel to
+be subverted, avoiding module loading restrictions.  Prevent this when the
+kernel has been locked down.
+
+Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ drivers/char/mem.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/char/mem.c b/drivers/char/mem.c
+index 593a8818aca9..b7c36898b689 100644
+--- a/drivers/char/mem.c
++++ b/drivers/char/mem.c
+@@ -179,6 +179,9 @@ static ssize_t write_mem(struct file *file, const char __user *buf,
+ 	if (p != *ppos)
+ 		return -EFBIG;
+ 
++	if (kernel_is_locked_down("/dev/mem"))
++		return -EPERM;
++
+ 	if (!valid_phys_addr_range(p, count))
+ 		return -EFAULT;
+ 
+@@ -540,6 +543,9 @@ static ssize_t write_kmem(struct file *file, const char __user *buf,
+ 	char *kbuf; /* k-addr because vwrite() takes vmlist_lock rwlock */
+ 	int err = 0;
+ 
++	if (kernel_is_locked_down("/dev/kmem"))
++		return -EPERM;
++
+ 	if (p < (unsigned long) high_memory) {
+ 		unsigned long to_write = min_t(unsigned long, count,
+ 					       (unsigned long)high_memory - p);
+
+From patchwork Thu Oct 19 14:51:09 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [05/27] kexec: Disable at runtime if the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017339
+Message-Id: <150842466996.7923.17995994984545441369.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:51:09 +0100
+
+From: Matthew Garrett <matthew.garrett@nebula.com>
 
 kexec permits the loading and execution of arbitrary code in ring 0, which
 is something that lock-down is meant to prevent. It makes sense to disable
@@ -599,36 +589,47 @@ image to be booted.
 
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Dave Young <dyoung@redhat.com>
+cc: kexec@lists.infradead.org
 ---
- kernel/kexec.c | 7 +++++++
+
+ kernel/kexec.c |    7 +++++++
  1 file changed, 7 insertions(+)
 
 diff --git a/kernel/kexec.c b/kernel/kexec.c
-index 980936a..46de8e6 100644
+index e62ec4dc6620..7dadfed9b676 100644
 --- a/kernel/kexec.c
 +++ b/kernel/kexec.c
-@@ -194,6 +194,13 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+@@ -202,6 +202,13 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
  		return -EPERM;
  
  	/*
 +	 * kexec can be used to circumvent module loading restrictions, so
 +	 * prevent loading in that case
 +	 */
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("kexec of unsigned images"))
 +		return -EPERM;
 +
 +	/*
  	 * Verify we have a legal set of flags
  	 * This leaves us room for future extensions.
  	 */
--- 
-2.7.4
 
-From cace563d1743c3d2faf1e46bd4df8e63e2310207 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:51:20 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [06/27] Copy secure_boot flag in boot params across kexec reboot
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017341
+Message-Id: <150842468009.7923.5512653689857540199.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:51:20 +0100
+
 From: Dave Young <dyoung@redhat.com>
-Date: Tue, 22 Nov 2016 08:46:15 +0000
-Subject: [PATCH 15/32] Copy secure_boot flag in boot params across kexec
- reboot
 
 Kexec reboot in case secure boot being enabled does not keep the secure
 boot mode in new kernel, so later one can load unsigned kernel via legacy
@@ -643,12 +644,14 @@ stub.  Fixing this issue by copying secure_boot flag across kexec reboot.
 
 Signed-off-by: Dave Young <dyoung@redhat.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: kexec@lists.infradead.org
 ---
- arch/x86/kernel/kexec-bzimage64.c | 1 +
+
+ arch/x86/kernel/kexec-bzimage64.c |    1 +
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index d0a814a..3551bca 100644
+index fb095ba0c02f..7d0fac5bcbbe 100644
 --- a/arch/x86/kernel/kexec-bzimage64.c
 +++ b/arch/x86/kernel/kexec-bzimage64.c
 @@ -179,6 +179,7 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
@@ -659,14 +662,22 @@ index d0a814a..3551bca 100644
  	ei->efi_loader_signature = current_ei->efi_loader_signature;
  	ei->efi_systab = current_ei->efi_systab;
  	ei->efi_systab_hi = current_ei->efi_systab_hi;
--- 
-2.7.4
 
-From 08a3467acbc28bb469d1eebd0f5fd40b944d984a Mon Sep 17 00:00:00 2001
-From: "Lee, Chun-Yi" <joeyli.kernel@gmail.com>
-Date: Wed, 23 Nov 2016 13:49:19 +0000
-Subject: [PATCH 16/32] kexec_file: Disable at runtime if securelevel has been
- set
+From patchwork Thu Oct 19 14:51:27 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [07/27] kexec_file: Disable at runtime if securelevel has been set
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017343
+Message-Id: <150842468754.7923.10037578333644594134.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:51:27 +0100
+
+From: Chun-Yi Lee <joeyli.kernel@gmail.com>
 
 When KEXEC_VERIFY_SIG is not enabled, kernel should not loads image
 through kexec_file systemcall if securelevel has been set.
@@ -675,36 +686,48 @@ This code was showed in Matthew's patch but not in git:
 https://lkml.org/lkml/2015/3/13/778
 
 Cc: Matthew Garrett <mjg59@srcf.ucam.org>
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+Signed-off-by: Chun-Yi Lee <jlee@suse.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: kexec@lists.infradead.org
 ---
- kernel/kexec_file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+
+ kernel/kexec_file.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index b56a558..003cade 100644
+index 9f48f4412297..ff6523f2dcc2 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -268,6 +268,12 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+@@ -255,6 +255,13 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
  	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
  		return -EPERM;
  
 +	/* Don't permit images to be loaded into trusted kernels if we're not
 +	 * going to verify the signature on them
 +	 */
-+	if (!IS_ENABLED(CONFIG_KEXEC_VERIFY_SIG) && kernel_is_locked_down())
++	if (!IS_ENABLED(CONFIG_KEXEC_VERIFY_SIG) &&
++	    kernel_is_locked_down("kexec of unsigned images"))
 +		return -EPERM;
 +
  	/* Make sure we have a legal set of flags */
  	if (flags != (flags & KEXEC_FILE_FLAGS))
  		return -EINVAL;
--- 
-2.7.4
 
-From 925fd10d7a99a6f999dde76daf2b1ef1238b251a Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:51:34 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [08/27] hibernate: Disable when the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017345
+Message-Id: <150842469486.7923.10376463083069013490.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:51:34 +0100
+
 From: Josh Boyer <jwboyer@fedoraproject.org>
-Date: Tue, 22 Nov 2016 08:46:15 +0000
-Subject: [PATCH 17/32] hibernate: Disable when the kernel is locked down
 
 There is currently no way to verify the resume image when returning
 from hibernate.  This might compromise the signed modules trust model,
@@ -713,30 +736,41 @@ kernel is locked down.
 
 Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-pm@vger.kernel.org
 ---
- kernel/power/hibernate.c | 2 +-
+
+ kernel/power/hibernate.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/kernel/power/hibernate.c b/kernel/power/hibernate.c
-index 86385af..1629798 100644
+index a5c36e9c56a6..f2eafefeec50 100644
 --- a/kernel/power/hibernate.c
 +++ b/kernel/power/hibernate.c
-@@ -67,7 +67,7 @@ static const struct platform_hibernation_ops *hibernation_ops;
+@@ -70,7 +70,7 @@ static const struct platform_hibernation_ops *hibernation_ops;
  
  bool hibernation_available(void)
  {
 -	return (nohibernate == 0);
-+	return nohibernate == 0 && !kernel_is_locked_down();
++	return nohibernate == 0 && !kernel_is_locked_down("Hibernation");
  }
  
  /**
--- 
-2.7.4
 
-From b14fb5fcd60c84a09a15bd7ec974b6fbce68335c Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:51:42 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [09/27] uswsusp: Disable when the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017347
+Message-Id: <150842470227.7923.15293760935442172683.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:51:42 +0100
+
 From: Matthew Garrett <mjg59@srcf.ucam.org>
-Date: Wed, 23 Nov 2016 13:28:17 +0000
-Subject: [PATCH 18/32] uswsusp: Disable when the kernel is locked down
 
 uswsusp allows a user process to dump and then restore kernel state, which
 makes it possible to modify the running kernel.  Disable this if the kernel
@@ -744,32 +778,42 @@ is locked down.
 
 Signed-off-by: Matthew Garrett <mjg59@srcf.ucam.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-pm@vger.kernel.org
 ---
- kernel/power/user.c | 3 +++
+
+ kernel/power/user.c |    3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/kernel/power/user.c b/kernel/power/user.c
-index 22df9f7..e4b926d 100644
+index 22df9f7ff672..678ade9decfe 100644
 --- a/kernel/power/user.c
 +++ b/kernel/power/user.c
 @@ -52,6 +52,9 @@ static int snapshot_open(struct inode *inode, struct file *filp)
  	if (!hibernation_available())
  		return -EPERM;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("/dev/snapshot"))
 +		return -EPERM;
 +
  	lock_system_sleep();
  
  	if (!atomic_add_unless(&snapshot_device_available, -1, 0)) {
--- 
-2.7.4
 
-From d8167273e7562e5aa866d2b65e25bb1962de972c Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:51:49 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [10/27] PCI: Lock down BAR access when the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017349
+Message-Id: <150842470945.7923.134066103094708461.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:51:49 +0100
+
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Date: Tue, 22 Nov 2016 08:46:15 +0000
-Subject: [PATCH 19/32] PCI: Lock down BAR access when the kernel is locked
- down
 
 Any hardware that can potentially generate DMA has to be locked down in
 order to avoid it being possible for an attacker to modify kernel code,
@@ -779,55 +823,58 @@ sufficiently IOMMU-isolated devices.
 
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+cc: linux-pci@vger.kernel.org
 ---
- drivers/pci/pci-sysfs.c | 9 +++++++++
- drivers/pci/proc.c      | 8 +++++++-
- drivers/pci/syscall.c   | 2 +-
- 3 files changed, 17 insertions(+), 2 deletions(-)
+
+ drivers/pci/pci-sysfs.c |    9 +++++++++
+ drivers/pci/proc.c      |    9 ++++++++-
+ drivers/pci/syscall.c   |    3 ++-
+ 3 files changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
-index 0666287..b10992c 100644
+index 1eecfa301f7f..e1a3b0e765c2 100644
 --- a/drivers/pci/pci-sysfs.c
 +++ b/drivers/pci/pci-sysfs.c
-@@ -718,6 +718,9 @@ static ssize_t pci_write_config(struct file *filp, struct kobject *kobj,
+@@ -881,6 +881,9 @@ static ssize_t pci_write_config(struct file *filp, struct kobject *kobj,
  	loff_t init_off = off;
  	u8 *data = (u8 *) buf;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Direct PCI access"))
 +		return -EPERM;
 +
  	if (off > dev->cfg_size)
  		return 0;
  	if (off + count > dev->cfg_size) {
-@@ -1009,6 +1012,9 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
+@@ -1175,6 +1178,9 @@ static int pci_mmap_resource(struct kobject *kobj, struct bin_attribute *attr,
  	enum pci_mmap_state mmap_type;
  	struct resource *res = &pdev->resource[bar];
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Direct PCI access"))
 +		return -EPERM;
 +
  	if (res->flags & IORESOURCE_MEM && iomem_is_exclusive(res->start))
  		return -EINVAL;
  
-@@ -1108,6 +1114,9 @@ static ssize_t pci_write_resource_io(struct file *filp, struct kobject *kobj,
+@@ -1255,6 +1261,9 @@ static ssize_t pci_write_resource_io(struct file *filp, struct kobject *kobj,
  				     struct bin_attribute *attr, char *buf,
  				     loff_t off, size_t count)
  {
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Direct PCI access"))
 +		return -EPERM;
 +
  	return pci_resource_io(filp, kobj, attr, buf, off, count, true);
  }
  
 diff --git a/drivers/pci/proc.c b/drivers/pci/proc.c
-index f82710a..139d6f0 100644
+index 098360d7ff81..a6c53d855daa 100644
 --- a/drivers/pci/proc.c
 +++ b/drivers/pci/proc.c
 @@ -116,6 +116,9 @@ static ssize_t proc_bus_pci_write(struct file *file, const char __user *buf,
  	int size = dev->cfg_size;
  	int cnt;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Direct PCI access"))
 +		return -EPERM;
 +
  	if (pos >= size)
@@ -837,42 +884,52 @@ index f82710a..139d6f0 100644
  #endif /* HAVE_PCI_MMAP */
  	int ret = 0;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Direct PCI access"))
 +		return -EPERM;
 +
  	switch (cmd) {
  	case PCIIOC_CONTROLLER:
  		ret = pci_domain_nr(dev->bus);
-@@ -233,7 +239,7 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
+@@ -236,7 +242,8 @@ static int proc_bus_pci_mmap(struct file *file, struct vm_area_struct *vma)
  	struct pci_filp_private *fpriv = file->private_data;
  	int i, ret, write_combine = 0, res_bit = IORESOURCE_MEM;
  
 -	if (!capable(CAP_SYS_RAWIO))
-+	if (!capable(CAP_SYS_RAWIO) || kernel_is_locked_down())
++	if (!capable(CAP_SYS_RAWIO) ||
++	    kernel_is_locked_down("Direct PCI access"))
  		return -EPERM;
  
  	if (fpriv->mmap_state == pci_mmap_io) {
 diff --git a/drivers/pci/syscall.c b/drivers/pci/syscall.c
-index 9bf993e..c095247 100644
+index 9bf993e1f71e..afa01cc3ceec 100644
 --- a/drivers/pci/syscall.c
 +++ b/drivers/pci/syscall.c
-@@ -92,7 +92,7 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
+@@ -92,7 +92,8 @@ SYSCALL_DEFINE5(pciconfig_write, unsigned long, bus, unsigned long, dfn,
  	u32 dword;
  	int err = 0;
  
 -	if (!capable(CAP_SYS_ADMIN))
-+	if (!capable(CAP_SYS_ADMIN) || kernel_is_locked_down())
++	if (!capable(CAP_SYS_ADMIN) ||
++	    kernel_is_locked_down("Direct PCI access"))
  		return -EPERM;
  
  	dev = pci_get_bus_and_slot(bus, dfn);
--- 
-2.7.4
 
-From 169d13e0c5240ac6aad13aace5ecbdb3de2cfada Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:51:56 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [11/27] x86: Lock down IO port access when the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017351
+Message-Id: <150842471673.7923.7676307847318724274.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:51:56 +0100
+
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Date: Tue, 22 Nov 2016 08:46:16 +0000
-Subject: [PATCH 20/32] x86: Lock down IO port access when the kernel is locked
- down
 
 IO port access would permit users to gain access to PCI configuration
 registers, which in turn (on a lot of hardware) give access to MMIO
@@ -884,74 +941,91 @@ KDDISABIO console ioctls.
 
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+cc: x86@kernel.org
 ---
- arch/x86/kernel/ioport.c | 4 ++--
- drivers/char/mem.c       | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+
+ arch/x86/kernel/ioport.c |    6 ++++--
+ drivers/char/mem.c       |    2 ++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/kernel/ioport.c b/arch/x86/kernel/ioport.c
-index b01bc8517..4ccaace 100644
+index 9c3cf0944bce..2c0f058651c5 100644
 --- a/arch/x86/kernel/ioport.c
 +++ b/arch/x86/kernel/ioport.c
-@@ -29,7 +29,7 @@ asmlinkage long sys_ioperm(unsigned long from, unsigned long num, int turn_on)
+@@ -30,7 +30,8 @@ asmlinkage long sys_ioperm(unsigned long from, unsigned long num, int turn_on)
  
  	if ((from + num <= from) || (from + num > IO_BITMAP_BITS))
  		return -EINVAL;
 -	if (turn_on && !capable(CAP_SYS_RAWIO))
-+	if (turn_on && (!capable(CAP_SYS_RAWIO) || kernel_is_locked_down()))
++	if (turn_on && (!capable(CAP_SYS_RAWIO) ||
++			kernel_is_locked_down("ioperm")))
  		return -EPERM;
  
  	/*
-@@ -113,7 +113,7 @@ SYSCALL_DEFINE1(iopl, unsigned int, level)
+@@ -120,7 +121,8 @@ SYSCALL_DEFINE1(iopl, unsigned int, level)
  		return -EINVAL;
  	/* Trying to gain more privileges? */
  	if (level > old) {
 -		if (!capable(CAP_SYS_RAWIO))
-+		if (!capable(CAP_SYS_RAWIO) || kernel_is_locked_down())
++		if (!capable(CAP_SYS_RAWIO) ||
++		    kernel_is_locked_down("iopl"))
  			return -EPERM;
  	}
  	regs->flags = (regs->flags & ~X86_EFLAGS_IOPL) |
 diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index f814404..9afebb6 100644
+index b7c36898b689..0875b3d47773 100644
 --- a/drivers/char/mem.c
 +++ b/drivers/char/mem.c
-@@ -741,6 +741,8 @@ static loff_t memory_lseek(struct file *file, loff_t offset, int orig)
+@@ -768,6 +768,8 @@ static loff_t memory_lseek(struct file *file, loff_t offset, int orig)
  
  static int open_port(struct inode *inode, struct file *filp)
  {
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Direct ioport access"))
 +		return -EPERM;
  	return capable(CAP_SYS_RAWIO) ? 0 : -EPERM;
  }
  
--- 
-2.7.4
 
-From efd24f7e9af624b62f39efce4f60b31f0ca643d8 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:52:04 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [12/27] x86/msr: Restrict MSR access when the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017353
+Message-Id: <150842472452.7923.2592278090192179002.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:52:04 +0100
+
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Date: Tue, 22 Nov 2016 08:46:17 +0000
-Subject: [PATCH 21/32] x86: Restrict MSR access when the kernel is locked down
 
 Writing to MSRs should not be allowed if the kernel is locked down, since
 it could lead to execution of arbitrary code in kernel mode.  Based on a
 patch by Kees Cook.
 
-Cc: Kees Cook <keescook@chromium.org>
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+cc: x86@kernel.org
 ---
- arch/x86/kernel/msr.c | 7 +++++++
+
+ arch/x86/kernel/msr.c |    7 +++++++
  1 file changed, 7 insertions(+)
 
 diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
-index ef68880..fbcce02 100644
+index ef688804f80d..a05a97863286 100644
 --- a/arch/x86/kernel/msr.c
 +++ b/arch/x86/kernel/msr.c
 @@ -84,6 +84,9 @@ static ssize_t msr_write(struct file *file, const char __user *buf,
  	int err = 0;
  	ssize_t bytes = 0;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Direct MSR access"))
 +		return -EPERM;
 +
  	if (count % 8)
@@ -961,21 +1035,30 @@ index ef68880..fbcce02 100644
  			err = -EBADF;
  			break;
  		}
-+		if (kernel_is_locked_down()) {
++		if (kernel_is_locked_down("Direct MSR access")) {
 +			err = -EPERM;
 +			break;
 +		}
  		if (copy_from_user(&regs, uregs, sizeof regs)) {
  			err = -EFAULT;
  			break;
--- 
-2.7.4
 
-From 62ebdffbcb0726b98562e9f1173a6d5967755764 Mon Sep 17 00:00:00 2001
-From: Matthew Garrett <matthew.garrett@nebula.com>
-Date: Tue, 22 Nov 2016 08:46:16 +0000
-Subject: [PATCH 22/32] asus-wmi: Restrict debugfs interface when the kernel is
+From patchwork Thu Oct 19 14:52:11 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [13/27] asus-wmi: Restrict debugfs interface when the kernel is
  locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017355
+Message-Id: <150842473184.7923.9538070958624850416.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:52:11 +0100
+
+From: Matthew Garrett <matthew.garrett@nebula.com>
 
 We have no way of validating what all of the Asus WMI methods do on a given
 machine - and there's a risk that some will allow hardware state to be
@@ -985,52 +1068,64 @@ kernel is locked down.
 
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: acpi4asus-user@lists.sourceforge.net
+cc: platform-driver-x86@vger.kernel.org
 ---
- drivers/platform/x86/asus-wmi.c | 9 +++++++++
+
+ drivers/platform/x86/asus-wmi.c |    9 +++++++++
  1 file changed, 9 insertions(+)
 
 diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index 43cb680..9be3e08 100644
+index 48e1541dc8d4..ef5587469337 100644
 --- a/drivers/platform/x86/asus-wmi.c
 +++ b/drivers/platform/x86/asus-wmi.c
-@@ -1898,6 +1898,9 @@ static int show_dsts(struct seq_file *m, void *data)
+@@ -1905,6 +1905,9 @@ static int show_dsts(struct seq_file *m, void *data)
  	int err;
  	u32 retval = -1;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Asus WMI"))
 +		return -EPERM;
 +
  	err = asus_wmi_get_devstate(asus, asus->debug.dev_id, &retval);
  
  	if (err < 0)
-@@ -1914,6 +1917,9 @@ static int show_devs(struct seq_file *m, void *data)
+@@ -1921,6 +1924,9 @@ static int show_devs(struct seq_file *m, void *data)
  	int err;
  	u32 retval = -1;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Asus WMI"))
 +		return -EPERM;
 +
  	err = asus_wmi_set_devstate(asus->debug.dev_id, asus->debug.ctrl_param,
  				    &retval);
  
-@@ -1938,6 +1944,9 @@ static int show_call(struct seq_file *m, void *data)
+@@ -1945,6 +1951,9 @@ static int show_call(struct seq_file *m, void *data)
  	union acpi_object *obj;
  	acpi_status status;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("Asus WMI"))
 +		return -EPERM;
 +
  	status = wmi_evaluate_method(ASUS_WMI_MGMT_GUID,
  				     0, asus->debug.method_id,
  				     &input, &output);
--- 
-2.7.4
 
-From 31f493d03dde1854fa9e540f87a751fbeeb41cb9 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:52:19 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [14/27] ACPI: Limit access to custom_method when the kernel is locked
+ down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017357
+Message-Id: <150842473899.7923.6590815561953001126.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:52:19 +0100
+
 From: Matthew Garrett <matthew.garrett@nebula.com>
-Date: Tue, 22 Nov 2016 08:46:16 +0000
-Subject: [PATCH 23/32] ACPI: Limit access to custom_method when the kernel is
- locked down
 
 custom_method effectively allows arbitrary access to system memory, making
 it possible for an attacker to circumvent restrictions on module loading.
@@ -1038,45 +1133,59 @@ Disable it if the kernel is locked down.
 
 Signed-off-by: Matthew Garrett <matthew.garrett@nebula.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-acpi@vger.kernel.org
 ---
- drivers/acpi/custom_method.c | 3 +++
+
+ drivers/acpi/custom_method.c |    3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/drivers/acpi/custom_method.c b/drivers/acpi/custom_method.c
-index c68e724..e4d721c 100644
+index c68e72414a67..b33fba70ec51 100644
 --- a/drivers/acpi/custom_method.c
 +++ b/drivers/acpi/custom_method.c
 @@ -29,6 +29,9 @@ static ssize_t cm_write(struct file *file, const char __user * user_buf,
  	struct acpi_table_header table;
  	acpi_status status;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("ACPI custom methods"))
 +		return -EPERM;
 +
  	if (!(*ppos)) {
  		/* parse the table header to get the table length */
  		if (count <= sizeof(struct acpi_table_header))
--- 
-2.7.4
 
-From 1dec5dc62c78f78b9efe44aac3d6119d97b67017 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:52:27 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [15/27] acpi: Ignore acpi_rsdp kernel param when the kernel has been
+ locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017359
+Message-Id: <150842474713.7923.4851355698276917280.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:52:27 +0100
+
 From: Josh Boyer <jwboyer@redhat.com>
-Date: Tue, 22 Nov 2016 08:46:16 +0000
-Subject: [PATCH 24/32] acpi: Ignore acpi_rsdp kernel param when the kernel has
- been locked down
 
 This option allows userspace to pass the RSDP address to the kernel, which
-makes it possible for a user to circumvent any restrictions imposed on
-loading modules.  Ignore the option when the kernel is locked down.
+makes it possible for a user to modify the workings of hardware .  Reject
+the option when the kernel is locked down.
 
 Signed-off-by: Josh Boyer <jwboyer@redhat.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Dave Young <dyoung@redhat.com>
+cc: linux-acpi@vger.kernel.org
 ---
- drivers/acpi/osl.c | 2 +-
+
+ drivers/acpi/osl.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index db78d35..d4d4ba3 100644
+index db78d353bab1..36c6527c1b0a 100644
 --- a/drivers/acpi/osl.c
 +++ b/drivers/acpi/osl.c
 @@ -192,7 +192,7 @@ acpi_physical_address __init acpi_os_get_root_pointer(void)
@@ -1084,20 +1193,28 @@ index db78d35..d4d4ba3 100644
  
  #ifdef CONFIG_KEXEC
 -	if (acpi_rsdp)
-+	if (acpi_rsdp && !kernel_is_locked_down())
++	if (acpi_rsdp && !kernel_is_locked_down("ACPI RSDP specification"))
  		return acpi_rsdp;
  #endif
  
--- 
-2.7.4
 
-From 96eaf04100d7365d93f898013175351c7d2702a6 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:52:34 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [16/27] acpi: Disable ACPI table override if the kernel is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017361
+Message-Id: <150842475442.7923.12198790224494561644.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:52:34 +0100
+
 From: Linn Crosetto <linn@hpe.com>
-Date: Wed, 23 Nov 2016 13:32:27 +0000
-Subject: [PATCH 25/32] acpi: Disable ACPI table override if the kernel is
- locked down
 
-From the kernel documentation (initrd_table_override.txt):
+>From the kernel documentation (initrd_table_override.txt):
 
   If the ACPI_INITRD_TABLE_OVERRIDE compile option is true, it is possible
   to override nearly any ACPI table provided by the BIOS with an
@@ -1109,19 +1226,21 @@ so do not allow ACPI tables to be overridden if the kernel is locked down.
 
 Signed-off-by: Linn Crosetto <linn@hpe.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-acpi@vger.kernel.org
 ---
- drivers/acpi/tables.c | 5 +++++
+
+ drivers/acpi/tables.c |    5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/drivers/acpi/tables.c b/drivers/acpi/tables.c
-index 2604189..601096d 100644
+index 80ce2a7d224b..5cc13c42daf9 100644
 --- a/drivers/acpi/tables.c
 +++ b/drivers/acpi/tables.c
-@@ -542,6 +542,11 @@ void __init acpi_table_upgrade(void)
+@@ -526,6 +526,11 @@ void __init acpi_table_upgrade(void)
  	if (table_nr == 0)
  		return;
  
-+	if (kernel_is_locked_down()) {
++	if (kernel_is_locked_down("ACPI table override")) {
 +		pr_notice("kernel is locked down, ignoring table override\n");
 +		return;
 +	}
@@ -1129,14 +1248,23 @@ index 2604189..601096d 100644
  	acpi_tables_addr =
  		memblock_find_in_range(0, ACPI_TABLE_UPGRADE_MAX_PHYS,
  				       all_tables_size, PAGE_SIZE);
--- 
-2.7.4
 
-From 521979b819b853f7578ba8edef8b33bc2077026d Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:52:41 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [17/27] acpi: Disable APEI error injection if the kernel is locked
+ down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017363
+Message-Id: <150842476188.7923.14340260837257633120.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:52:41 +0100
+
 From: Linn Crosetto <linn@hpe.com>
-Date: Wed, 23 Nov 2016 13:39:41 +0000
-Subject: [PATCH 26/32] acpi: Disable APEI error injection if the kernel is
- locked down
 
 ACPI provides an error injection mechanism, EINJ, for debugging and testing
 the ACPI Platform Error Interface (APEI) and other RAS features.  If
@@ -1155,90 +1283,43 @@ the kernel is locked down.
 
 Signed-off-by: Linn Crosetto <linn@hpe.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-acpi@vger.kernel.org
 ---
- drivers/acpi/apei/einj.c | 3 +++
+
+ drivers/acpi/apei/einj.c |    3 +++
  1 file changed, 3 insertions(+)
 
 diff --git a/drivers/acpi/apei/einj.c b/drivers/acpi/apei/einj.c
-index ec50c32..e082718 100644
+index b38737c83a24..6d71e1e97b20 100644
 --- a/drivers/acpi/apei/einj.c
 +++ b/drivers/acpi/apei/einj.c
 @@ -518,6 +518,9 @@ static int einj_error_inject(u32 type, u32 flags, u64 param1, u64 param2,
  	int rc;
  	u64 base_addr, size;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("ACPI error injection"))
 +		return -EPERM;
 +
  	/* If user manually set "flags", make sure it is legal */
  	if (flags && (flags &
  		~(SETWA_FLAGS_APICID|SETWA_FLAGS_MEM|SETWA_FLAGS_PCIE_SBDF)))
--- 
-2.7.4
 
-From fe597dad1cba83345d62c4079c0d8861c426698c Mon Sep 17 00:00:00 2001
-From: Matthew Garrett <mjg59@coreos.com>
-Date: Wed, 23 Nov 2016 13:41:23 +0000
-Subject: [PATCH 27/32] Enable cold boot attack mitigation
+From patchwork Thu Oct 19 14:52:49 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [18/27] bpf: Restrict kernel image access functions when the kernel
+ is locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017365
+Message-Id: <150842476953.7923.18174368926573855810.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:52:49 +0100
 
----
- arch/x86/boot/compressed/eboot.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/x86/boot/compressed/eboot.c b/arch/x86/boot/compressed/eboot.c
-index 801c7a1..ef9409b 100644
---- a/arch/x86/boot/compressed/eboot.c
-+++ b/arch/x86/boot/compressed/eboot.c
-@@ -604,6 +604,31 @@ void setup_graphics(struct boot_params *boot_params)
- 	}
- }
- 
-+#define MEMORY_ONLY_RESET_CONTROL_GUID \
-+	EFI_GUID (0xe20939be, 0x32d4, 0x41be, 0xa1, 0x50, 0x89, 0x7f, 0x85, 0xd4, 0x98, 0x29)
-+
-+static void enable_reset_attack_mitigation(void)
-+{
-+	static const efi_guid_t var_guid = MEMORY_ONLY_RESET_CONTROL_GUID;
-+	static const efi_char16_t MemoryOverwriteRequestControl_name[] = {
-+		'M', 'e', 'm', 'o', 'r', 'y',
-+		'O', 'v', 'e', 'r', 'w', 'r', 'i', 't', 'e',
-+		'R', 'e', 'q', 'u', 'e', 's', 't',
-+		'C', 'o', 'n', 't', 'r', 'o', 'l',
-+		0
-+	};
-+	u8 val = 1;
-+
-+	/* Ignore the return value here - there's not really a lot we can do */
-+	efi_call_runtime(set_variable,
-+			(efi_char16_t *)MemoryOverwriteRequestControl_name,
-+			(efi_guid_t *)&var_guid,
-+			EFI_VARIABLE_NON_VOLATILE |
-+			EFI_VARIABLE_BOOTSERVICE_ACCESS |
-+			EFI_VARIABLE_RUNTIME_ACCESS,
-+			sizeof(val), val);
-+}
-+
- /*
-  * Because the x86 boot code expects to be passed a boot_params we
-  * need to create one ourselves (usually the bootloader would create
-@@ -988,6 +1013,9 @@ struct boot_params *efi_main(struct efi_config *c,
- 	else
- 		setup_boot_services32(efi_early);
- 
-+	/* Ask the firmware to clear memory if we don't have a clean shutdown */
-+	enable_reset_attack_mitigation();
-+
- 	/*
- 	 * If the boot loader gave us a value for secure_boot then we use that,
- 	 * otherwise we ask the BIOS.
--- 
-2.7.4
-
-From 04fac895731801bc6cb26a6061f1c353c80a866c Mon Sep 17 00:00:00 2001
-From: "Lee, Chun-Yi" <jlee@suse.com>
-Date: Wed, 23 Nov 2016 13:52:16 +0000
-Subject: [PATCH 28/32] bpf: Restrict kernel image access functions when the
- kernel is locked down
+From: Chun-Yi Lee <jlee@suse.com>
 
 There are some bpf functions can be used to read kernel memory:
 bpf_probe_read, bpf_probe_write_user and bpf_trace_printk.  These allow
@@ -1246,21 +1327,23 @@ private keys in kernel memory (e.g. the hibernation image signing key) to
 be read by an eBPF program.  Prohibit those functions when the kernel is
 locked down.
 
-Signed-off-by: Lee, Chun-Yi <jlee@suse.com>
+Signed-off-by: Chun-Yi Lee <jlee@suse.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: netdev@vger.kernel.org
 ---
- kernel/trace/bpf_trace.c | 11 +++++++++++
+
+ kernel/trace/bpf_trace.c |   11 +++++++++++
  1 file changed, 11 insertions(+)
 
 diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index cee9802..7fde851 100644
+index dc498b605d5d..35e85a3fdb37 100644
 --- a/kernel/trace/bpf_trace.c
 +++ b/kernel/trace/bpf_trace.c
 @@ -65,6 +65,11 @@ BPF_CALL_3(bpf_probe_read, void *, dst, u32, size, const void *, unsafe_ptr)
  {
  	int ret;
  
-+	if (kernel_is_locked_down()) {
++	if (kernel_is_locked_down("BPF")) {
 +		memset(dst, 0, size);
 +		return -EPERM;
 +	}
@@ -1272,7 +1355,7 @@ index cee9802..7fde851 100644
  BPF_CALL_3(bpf_probe_write_user, void *, unsafe_ptr, const void *, src,
  	   u32, size)
  {
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("BPF"))
 +		return -EPERM;
 +
  	/*
@@ -1282,19 +1365,26 @@ index cee9802..7fde851 100644
  	if (fmt[--fmt_size] != 0)
  		return -EINVAL;
  
-+	if (kernel_is_locked_down())
++	if (kernel_is_locked_down("BPF"))
 +		return __trace_printk(1, fmt, 0, 0, 0);
 +
  	/* check format string for allowed specifiers */
  	for (i = 0; i < fmt_size; i++) {
  		if ((!isprint(fmt[i]) && !isspace(fmt[i])) || !isascii(fmt[i]))
--- 
-2.7.4
 
-From 707d0e14c2c0d6c3139ff4bcb16ee22c462b4304 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:52:57 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [19/27] scsi: Lock down the eata driver
 From: David Howells <dhowells@redhat.com>
-Date: Tue, 22 Nov 2016 10:10:34 +0000
-Subject: [PATCH 29/32] scsi: Lock down the eata driver
+X-Patchwork-Id: 10017367
+Message-Id: <150842477698.7923.15570916285929038112.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:52:57 +0100
 
 When the kernel is running in secure boot mode, we lock down the kernel to
 prevent userspace from modifying the running kernel image.  Whilst this
@@ -1306,75 +1396,88 @@ The eata driver takes a single string parameter that contains a slew of
 settings, including hardware resource configuration.  Prohibit use of the
 parameter if the kernel is locked down.
 
-Suggested-by: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Suggested-by: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
 Signed-off-by: David Howells <dhowells@redhat.com>
 cc: Dario Ballabio <ballabio_dario@emc.com>
 cc: "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>
 cc: "Martin K. Petersen" <martin.petersen@oracle.com>
 cc: linux-scsi@vger.kernel.org
 ---
- drivers/scsi/eata.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+
+ drivers/scsi/eata.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/scsi/eata.c b/drivers/scsi/eata.c
-index 227dd2c..5c036d10 100644
+index 6501c330d8c8..72fceaa8f3da 100644
 --- a/drivers/scsi/eata.c
 +++ b/drivers/scsi/eata.c
-@@ -1552,8 +1552,13 @@ static int eata2x_detect(struct scsi_host_template *tpnt)
+@@ -1552,8 +1552,11 @@ static int eata2x_detect(struct scsi_host_template *tpnt)
  
  	tpnt->proc_name = "eata2x";
  
 -	if (strlen(boot_options))
 +	if (strlen(boot_options)) {
-+		if (kernel_is_locked_down()) {
-+			pr_err("Command line-specified device addresses, irqs and dma channels are not permitted when the kernel is locked down\n");
++		if (kernel_is_locked_down("Command line-specified device addresses, irqs and dma channels"))
 +			return -EPERM;
-+		}
  		option_setup(boot_options);
 +	}
  
  #if defined(MODULE)
  	/* io_port could have been modified when loading as a module */
--- 
-2.7.4
 
-From 07e05e0b7d806a05eba55092630bb75a92311344 Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:53:04 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [20/27] Prohibit PCMCIA CIS storage when the kernel is locked down
 From: David Howells <dhowells@redhat.com>
-Date: Fri, 25 Nov 2016 14:37:45 +0000
-Subject: [PATCH 30/32] Prohibit PCMCIA CIS storage when the kernel is locked
- down
+X-Patchwork-Id: 10017369
+Message-Id: <150842478444.7923.5111743275510836636.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:53:04 +0100
 
 Prohibit replacement of the PCMCIA Card Information Structure when the
 kernel is locked down.
 
+Suggested-by: Dominik Brodowski <linux@dominikbrodowski.net>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-pcmcia@lists.infradead.org
 ---
- drivers/pcmcia/cistpl.c | 5 +++++
- 1 file changed, 5 insertions(+)
+
+ drivers/pcmcia/cistpl.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/pcmcia/cistpl.c b/drivers/pcmcia/cistpl.c
-index 55ef7d1..193e4f7 100644
+index 55ef7d1fd8da..b7a0e42eeb25 100644
 --- a/drivers/pcmcia/cistpl.c
 +++ b/drivers/pcmcia/cistpl.c
-@@ -1578,6 +1578,11 @@ static ssize_t pccard_store_cis(struct file *filp, struct kobject *kobj,
+@@ -1578,6 +1578,9 @@ static ssize_t pccard_store_cis(struct file *filp, struct kobject *kobj,
  	struct pcmcia_socket *s;
  	int error;
  
-+	if (kernel_is_locked_down()) {
-+		pr_err("Direct CIS storage isn't permitted when the kernel is locked down\n");
++	if (kernel_is_locked_down("Direct PCMCIA CIS storage"))
 +		return -EPERM;
-+	}
 +
  	s = to_socket(container_of(kobj, struct device, kobj));
  
  	if (off)
--- 
-2.7.4
 
-From cf1e877adbe35c5f72a9d85570b494aa3f35be6a Mon Sep 17 00:00:00 2001
+From patchwork Thu Oct 19 14:53:12 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [21/27] Lock down TIOCSSERIAL
 From: David Howells <dhowells@redhat.com>
-Date: Wed, 7 Dec 2016 10:28:39 +0000
-Subject: [PATCH 31/32] Lock down TIOCSSERIAL
+X-Patchwork-Id: 10017371
+Message-Id: <150842479208.7923.3429065489239605709.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:53:12 +0100
 
 Lock down TIOCSSERIAL as that can be used to change the ioport and irq
 settings on a serial port.  This only appears to be an issue for the serial
@@ -1383,20 +1486,22 @@ ignore attempts to change port/irq or give an error.
 
 Reported-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Jiri Slaby <jslaby@suse.com>
 ---
- drivers/tty/serial/serial_core.c | 6 ++++++
+
+ drivers/tty/serial/serial_core.c |    6 ++++++
  1 file changed, 6 insertions(+)
 
 diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 9939c3d..7c040e2 100644
+index 3a14cccbd7ff..41f0922ad842 100644
 --- a/drivers/tty/serial/serial_core.c
 +++ b/drivers/tty/serial/serial_core.c
-@@ -820,6 +820,12 @@ static int uart_set_info(struct tty_struct *tty, struct tty_port *port,
+@@ -842,6 +842,12 @@ static int uart_set_info(struct tty_struct *tty, struct tty_port *port,
  	new_flags = (__force upf_t)new_info->flags;
  	old_custom_divisor = uport->custom_divisor;
  
-+	if ((change_port || change_irq) && kernel_is_locked_down()) {
-+		pr_err("Using TIOCSSERIAL to change device addresses, irqs and dma channels is not permitted when the kernel is locked down\n");
++	if ((change_port || change_irq) &&
++	    kernel_is_locked_down("Using TIOCSSERIAL to change device addresses, irqs and dma channels")) {
 +		retval = -EPERM;
 +		goto exit;
 +	}
@@ -1404,6 +1509,500 @@ index 9939c3d..7c040e2 100644
  	if (!capable(CAP_SYS_ADMIN)) {
  		retval = -EPERM;
  		if (change_irq || change_port ||
--- 
-2.7.4
 
+From patchwork Thu Oct 19 14:53:19 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [22/27] Lock down module params that specify hardware parameters (eg.
+ ioport)
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017373
+Message-Id: <150842479932.7923.8106830872069353117.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:53:19 +0100
+
+Provided an annotation for module parameters that specify hardware
+parameters (such as io ports, iomem addresses, irqs, dma channels, fixed
+dma buffers and other types).
+
+Suggested-by: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ kernel/params.c |   26 +++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/params.c b/kernel/params.c
+index 60b2d8101355..422979adb60a 100644
+--- a/kernel/params.c
++++ b/kernel/params.c
+@@ -108,13 +108,19 @@ bool parameq(const char *a, const char *b)
+ 	return parameqn(a, b, strlen(a)+1);
+ }
+ 
+-static void param_check_unsafe(const struct kernel_param *kp)
++static bool param_check_unsafe(const struct kernel_param *kp,
++			       const char *doing)
+ {
+ 	if (kp->flags & KERNEL_PARAM_FL_UNSAFE) {
+ 		pr_warn("Setting dangerous option %s - tainting kernel\n",
+ 			kp->name);
+ 		add_taint(TAINT_USER, LOCKDEP_STILL_OK);
+ 	}
++
++	if (kp->flags & KERNEL_PARAM_FL_HWPARAM &&
++	    kernel_is_locked_down("Command line-specified device addresses, irqs and dma channels"))
++		return false;
++	return true;
+ }
+ 
+ static int parse_one(char *param,
+@@ -144,8 +150,10 @@ static int parse_one(char *param,
+ 			pr_debug("handling %s with %p\n", param,
+ 				params[i].ops->set);
+ 			kernel_param_lock(params[i].mod);
+-			param_check_unsafe(&params[i]);
+-			err = params[i].ops->set(val, &params[i]);
++			if (param_check_unsafe(&params[i], doing))
++				err = params[i].ops->set(val, &params[i]);
++			else
++				err = -EPERM;
+ 			kernel_param_unlock(params[i].mod);
+ 			return err;
+ 		}
+@@ -556,6 +564,12 @@ static ssize_t param_attr_show(struct module_attribute *mattr,
+ 	return count;
+ }
+ 
++#ifdef CONFIG_MODULES
++#define mod_name(mod) (mod)->name
++#else
++#define mod_name(mod) "unknown"
++#endif
++
+ /* sysfs always hands a nul-terminated string in buf.  We rely on that. */
+ static ssize_t param_attr_store(struct module_attribute *mattr,
+ 				struct module_kobject *mk,
+@@ -568,8 +582,10 @@ static ssize_t param_attr_store(struct module_attribute *mattr,
+ 		return -EPERM;
+ 
+ 	kernel_param_lock(mk->mod);
+-	param_check_unsafe(attribute->param);
+-	err = attribute->param->ops->set(buf, attribute->param);
++	if (param_check_unsafe(attribute->param, mod_name(mk->mod)))
++		err = attribute->param->ops->set(buf, attribute->param);
++	else
++		err = -EPERM;
+ 	kernel_param_unlock(mk->mod);
+ 	if (!err)
+ 		return len;
+
+From patchwork Thu Oct 19 14:53:26 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [23/27] x86/mmiotrace: Lock down the testmmiotrace module
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017375
+Message-Id: <150842480649.7923.13997201431299349211.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:53:26 +0100
+
+The testmmiotrace module shouldn't be permitted when the kernel is locked
+down as it can be used to arbitrarily read and write MMIO space.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: David Howells <dhowells@redhat.com
+cc: Thomas Gleixner <tglx@linutronix.de>
+cc: Steven Rostedt <rostedt@goodmis.org>
+cc: Ingo Molnar <mingo@kernel.org>
+cc: "H. Peter Anvin" <hpa@zytor.com>
+cc: x86@kernel.org
+---
+
+ arch/x86/mm/testmmiotrace.c |    3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/x86/mm/testmmiotrace.c b/arch/x86/mm/testmmiotrace.c
+index f6ae6830b341..bbaad357f5d7 100644
+--- a/arch/x86/mm/testmmiotrace.c
++++ b/arch/x86/mm/testmmiotrace.c
+@@ -115,6 +115,9 @@ static int __init init(void)
+ {
+ 	unsigned long size = (read_far) ? (8 << 20) : (16 << 10);
+ 
++	if (kernel_is_locked_down("MMIO trace testing"))
++		return -EPERM;
++
+ 	if (mmio_address == 0) {
+ 		pr_err("you have to use the module argument mmio_address.\n");
+ 		pr_err("DO NOT LOAD THIS MODULE UNLESS YOU REALLY KNOW WHAT YOU ARE DOING!\n");
+
+From patchwork Thu Oct 19 14:53:33 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [24/27] debugfs: Disallow use of debugfs files when the kernel is
+ locked down
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017379
+Message-Id: <150842481363.7923.13021827051686067882.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:53:33 +0100
+
+Disallow opening of debugfs files when the kernel is locked down as various
+drivers give raw access to hardware through debugfs.
+
+Accesses to tracefs should use /sys/kernel/tracing/ rather than
+/sys/kernel/debug/tracing/.  Possibly a symlink should be emplaced.
+
+Normal device interaction should be done through configfs or a miscdev, not
+debugfs.
+
+Note that this makes it unnecessary to specifically lock down show_dsts(),
+show_devs() and show_call() in the asus-wmi driver.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+cc: acpi4asus-user@lists.sourceforge.net
+cc: platform-driver-x86@vger.kernel.org
+cc: Matthew Garrett <matthew.garrett@nebula.com>
+cc: Thomas Gleixner <tglx@linutronix.de>
+---
+
+ fs/debugfs/file.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
+index 6dabc4a10396..32b5168a7e91 100644
+--- a/fs/debugfs/file.c
++++ b/fs/debugfs/file.c
+@@ -103,6 +103,9 @@ static int open_proxy_open(struct inode *inode, struct file *filp)
+ 	const struct file_operations *real_fops = NULL;
+ 	int srcu_idx, r;
+ 
++	if (kernel_is_locked_down("debugfs"))
++		return -EPERM;
++
+ 	r = debugfs_use_file_start(dentry, &srcu_idx);
+ 	if (r) {
+ 		r = -ENOENT;
+@@ -232,6 +235,9 @@ static int full_proxy_open(struct inode *inode, struct file *filp)
+ 	struct file_operations *proxy_fops = NULL;
+ 	int srcu_idx, r;
+ 
++	if (kernel_is_locked_down("debugfs"))
++		return -EPERM;
++
+ 	r = debugfs_use_file_start(dentry, &srcu_idx);
+ 	if (r) {
+ 		r = -ENOENT;
+
+From patchwork Thu Oct 19 14:53:42 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [25/27] Lock down /proc/kcore
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017381
+Message-Id: <150842482228.7923.9630520914833154257.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:53:42 +0100
+
+Disallow access to /proc/kcore when the kernel is locked down to prevent
+access to cryptographic data.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+ fs/proc/kcore.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/fs/proc/kcore.c b/fs/proc/kcore.c
+index 45629f4b5402..176cf749e650 100644
+--- a/fs/proc/kcore.c
++++ b/fs/proc/kcore.c
+@@ -549,6 +549,8 @@ read_kcore(struct file *file, char __user *buffer, size_t buflen, loff_t *fpos)
+ 
+ static int open_kcore(struct inode *inode, struct file *filp)
+ {
++	if (kernel_is_locked_down("/proc/kcore"))
++		return -EPERM;
+ 	if (!capable(CAP_SYS_RAWIO))
+ 		return -EPERM;
+ 
+
+From patchwork Thu Oct 19 14:53:51 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [26/27] efi: Add an EFI_SECURE_BOOT flag to indicate secure boot mode
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017383
+Message-Id: <150842483172.7923.2791223614506312745.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:53:51 +0100
+
+UEFI machines can be booted in Secure Boot mode.  Add an EFI_SECURE_BOOT
+flag that can be passed to efi_enabled() to find out whether secure boot is
+enabled.
+
+Move the switch-statement in x86's setup_arch() that inteprets the
+secure_boot boot parameter to generic code and set the bit there.
+
+Suggested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+cc: linux-efi@vger.kernel.org
+---
+
+ arch/x86/kernel/setup.c           |   14 +-------------
+ drivers/firmware/efi/Makefile     |    1 +
+ drivers/firmware/efi/secureboot.c |   37 +++++++++++++++++++++++++++++++++++++
+ include/linux/efi.h               |   16 ++++++++++------
+ 4 files changed, 49 insertions(+), 19 deletions(-)
+ create mode 100644 drivers/firmware/efi/secureboot.c
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 0957dd73d127..7c2162f9e769 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1197,19 +1197,7 @@ void __init setup_arch(char **cmdline_p)
+ 	/* Allocate bigger log buffer */
+ 	setup_log_buf(1);
+ 
+-	if (efi_enabled(EFI_BOOT)) {
+-		switch (boot_params.secure_boot) {
+-		case efi_secureboot_mode_disabled:
+-			pr_info("Secure boot disabled\n");
+-			break;
+-		case efi_secureboot_mode_enabled:
+-			pr_info("Secure boot enabled\n");
+-			break;
+-		default:
+-			pr_info("Secure boot could not be determined\n");
+-			break;
+-		}
+-	}
++	efi_set_secure_boot(boot_params.secure_boot);
+ 
+ 	reserve_initrd();
+ 
+diff --git a/drivers/firmware/efi/Makefile b/drivers/firmware/efi/Makefile
+index 0329d319d89a..883f9f7eefc6 100644
+--- a/drivers/firmware/efi/Makefile
++++ b/drivers/firmware/efi/Makefile
+@@ -23,6 +23,7 @@ obj-$(CONFIG_EFI_FAKE_MEMMAP)		+= fake_mem.o
+ obj-$(CONFIG_EFI_BOOTLOADER_CONTROL)	+= efibc.o
+ obj-$(CONFIG_EFI_TEST)			+= test/
+ obj-$(CONFIG_EFI_DEV_PATH_PARSER)	+= dev-path-parser.o
++obj-$(CONFIG_EFI)			+= secureboot.o
+ obj-$(CONFIG_APPLE_PROPERTIES)		+= apple-properties.o
+ 
+ arm-obj-$(CONFIG_EFI)			:= arm-init.o arm-runtime.o
+diff --git a/drivers/firmware/efi/secureboot.c b/drivers/firmware/efi/secureboot.c
+new file mode 100644
+index 000000000000..674dcc01bb0b
+--- /dev/null
++++ b/drivers/firmware/efi/secureboot.c
+@@ -0,0 +1,37 @@
++/* Core kernel secure boot support.
++ *
++ * Copyright (C) 2017 Red Hat, Inc. All Rights Reserved.
++ * Written by David Howells (dhowells@redhat.com)
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public Licence
++ * as published by the Free Software Foundation; either version
++ * 2 of the Licence, or (at your option) any later version.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/efi.h>
++#include <linux/kernel.h>
++#include <linux/printk.h>
++
++/*
++ * Decide what to do when UEFI secure boot mode is enabled.
++ */
++void __init efi_set_secure_boot(enum efi_secureboot_mode mode)
++{
++	if (efi_enabled(EFI_BOOT)) {
++		switch (mode) {
++		case efi_secureboot_mode_disabled:
++			pr_info("Secure boot disabled\n");
++			break;
++		case efi_secureboot_mode_enabled:
++			set_bit(EFI_SECURE_BOOT, &efi.flags);
++			pr_info("Secure boot enabled\n");
++			break;
++		default:
++			pr_info("Secure boot could not be determined\n");
++			break;
++		}
++	}
++}
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 66f4a4e79f4b..7c7a7e33e4d1 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1103,6 +1103,14 @@ extern int __init efi_setup_pcdp_console(char *);
+ #define EFI_DBG			8	/* Print additional debug info at runtime */
+ #define EFI_NX_PE_DATA		9	/* Can runtime data regions be mapped non-executable? */
+ #define EFI_MEM_ATTR		10	/* Did firmware publish an EFI_MEMORY_ATTRIBUTES table? */
++#define EFI_SECURE_BOOT		11	/* Are we in Secure Boot mode? */
++
++enum efi_secureboot_mode {
++	efi_secureboot_mode_unset,
++	efi_secureboot_mode_unknown,
++	efi_secureboot_mode_disabled,
++	efi_secureboot_mode_enabled,
++};
+ 
+ #ifdef CONFIG_EFI
+ /*
+@@ -1115,6 +1123,7 @@ static inline bool efi_enabled(int feature)
+ extern void efi_reboot(enum reboot_mode reboot_mode, const char *__unused);
+ 
+ extern bool efi_is_table_address(unsigned long phys_addr);
++extern void __init efi_set_secure_boot(enum efi_secureboot_mode mode);
+ #else
+ static inline bool efi_enabled(int feature)
+ {
+@@ -1133,6 +1142,7 @@ static inline bool efi_is_table_address(unsigned long phys_addr)
+ {
+ 	return false;
+ }
++static inline void efi_set_secure_boot(enum efi_secureboot_mode mode) {}
+ #endif
+ 
+ extern int efi_status_to_err(efi_status_t status);
+@@ -1518,12 +1528,6 @@ efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
+ bool efi_runtime_disabled(void);
+ extern void efi_call_virt_check_flags(unsigned long flags, const char *call);
+ 
+-enum efi_secureboot_mode {
+-	efi_secureboot_mode_unset,
+-	efi_secureboot_mode_unknown,
+-	efi_secureboot_mode_disabled,
+-	efi_secureboot_mode_enabled,
+-};
+ enum efi_secureboot_mode efi_get_secureboot(efi_system_table_t *sys_table);
+ 
+ #ifdef CONFIG_RESET_ATTACK_MITIGATION
+
+From patchwork Thu Oct 19 14:53:59 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [27/27] efi: Lock down the kernel if booted in secure boot mode
+From: David Howells <dhowells@redhat.com>
+X-Patchwork-Id: 10017385
+Message-Id: <150842483945.7923.12778302394414653081.stgit@warthog.procyon.org.uk>
+To: linux-security-module@vger.kernel.org
+Cc: gnomes@lxorguk.ukuu.org.uk, linux-efi@vger.kernel.org,
+ matthew.garrett@nebula.com, gregkh@linuxfoundation.org,
+ linux-kernel@vger.kernel.org, dhowells@redhat.com, jforbes@redhat.com
+Date: Thu, 19 Oct 2017 15:53:59 +0100
+
+UEFI Secure Boot provides a mechanism for ensuring that the firmware will
+only load signed bootloaders and kernels.  Certain use cases may also
+require that all kernel modules also be signed.  Add a configuration option
+that to lock down the kernel - which includes requiring validly signed
+modules - if the kernel is secure-booted.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+cc: linux-efi@vger.kernel.org
+---
+
+ arch/x86/kernel/setup.c |    6 ++++--
+ security/Kconfig        |   14 ++++++++++++++
+ security/lock_down.c    |    1 +
+ 3 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 7c2162f9e769..4e38327efb2e 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -64,6 +64,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/ctype.h>
+ #include <linux/uaccess.h>
++#include <linux/security.h>
+ 
+ #include <linux/percpu.h>
+ #include <linux/crash_dump.h>
+@@ -1039,6 +1040,9 @@ void __init setup_arch(char **cmdline_p)
+ 	if (efi_enabled(EFI_BOOT))
+ 		efi_init();
+ 
++	efi_set_secure_boot(boot_params.secure_boot);
++	init_lockdown();
++
+ 	dmi_scan_machine();
+ 	dmi_memdev_walk();
+ 	dmi_set_dump_stack_arch_desc();
+@@ -1197,8 +1201,6 @@ void __init setup_arch(char **cmdline_p)
+ 	/* Allocate bigger log buffer */
+ 	setup_log_buf(1);
+ 
+-	efi_set_secure_boot(boot_params.secure_boot);
+-
+ 	reserve_initrd();
+ 
+ 	acpi_table_upgrade();
+diff --git a/security/Kconfig b/security/Kconfig
+index 4be6be71e075..e1756039dc0a 100644
+--- a/security/Kconfig
++++ b/security/Kconfig
+@@ -227,6 +227,20 @@ config ALLOW_LOCKDOWN_LIFT_BY_SYSRQ
+ 	  Allow the lockdown on a kernel to be lifted, by pressing a SysRq key
+ 	  combination on a wired keyboard.
+ 
++config LOCK_DOWN_IN_EFI_SECURE_BOOT
++	bool "Lock down the kernel in EFI Secure Boot mode"
++	default n
++	select LOCK_DOWN_KERNEL
++	depends on EFI
++	help
++	  UEFI Secure Boot provides a mechanism for ensuring that the firmware
++	  will only load signed bootloaders and kernels.  Secure boot mode may
++	  be determined from EFI variables provided by the system firmware if
++	  not indicated by the boot parameters.
++
++	  Enabling this option turns on results in kernel lockdown being
++	  triggered if EFI Secure Boot is set.
++
+ 
+ source security/selinux/Kconfig
+ source security/smack/Kconfig
+diff --git a/security/lock_down.c b/security/lock_down.c
+index f71118c340d2..12c3bc204c4e 100644
+--- a/security/lock_down.c
++++ b/security/lock_down.c
+@@ -12,6 +12,7 @@
+ #include <linux/security.h>
+ #include <linux/export.h>
+ #include <linux/sysrq.h>
++#include <linux/efi.h>
+ 
+ #ifdef CONFIG_ALLOW_LOCKDOWN_LIFT
+ static __read_mostly bool kernel_locked_down;
