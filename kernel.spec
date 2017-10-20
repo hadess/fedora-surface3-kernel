@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 5
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -639,7 +639,6 @@ Patch502: CVE-2017-7477.patch
 
 # rhbz 1498016 1498017
 Patch503: KEYS-don-t-let-add_key-update-an-uninstantiated-key.patch
-Patch504: KEYS-fix-race-between-updating-and-finding-negative-.patch
 
 # 600 - Patches for improved Bay and Cherry Trail device support
 # Below patches are submitted upstream, awaiting review / merging
@@ -2213,6 +2212,9 @@ fi
 #
 #
 %changelog
+* Fri Oct 20 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc5.git4.1
+- Linux v4.14-rc5-94-g9a27ded2195a
+
 * Thu Oct 19 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc5.git3.1
 - Linux v4.14-rc5-31-g73d3393ada4f
 
