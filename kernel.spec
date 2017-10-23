@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 5
+%global rcrev 6
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -638,7 +638,7 @@ Patch335: arm-exynos-fix-usb3.patch
 Patch502: CVE-2017-7477.patch
 
 # rhbz 1498016 1498017
-Patch503: KEYS-don-t-let-add_key-update-an-uninstantiated-key.patch
+#Patch503: KEYS-don-t-let-add_key-update-an-uninstantiated-key.patch
 
 # 600 - Patches for improved Bay and Cherry Trail device support
 # Below patches are submitted upstream, awaiting review / merging
@@ -2212,6 +2212,9 @@ fi
 #
 #
 %changelog
+* Mon Oct 23 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc6.git0.1
+- Linux v4.14-rc6
+
 * Mon Oct 23 2017 Justin M. Forbes <jforbes@fedoraproject.org>
 - Disable debugging options.
 
