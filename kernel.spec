@@ -658,6 +658,9 @@ Patch620: 0001-staging-vboxvideo-Fix-reporting-invalid-suggested-of.patch
 # Headed upstream
 Patch621: drm-i915-Boost-GPU-clocks-if-we-miss-the-pageflip-s-vblank.patch
 
+# rhbz 1497861, submitted upstream, Cc: Stable
+Patch622: 0001-platform-x86-peaq-wmi-Add-DMI-check-before-binding-t.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2212,6 +2215,9 @@ fi
 #
 #
 %changelog
+* Mon Oct 30 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
+- Fix for peaq_wmi nul spew (rhbz 1497861)
+
 * Fri Oct 27 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc6.git4.1
 - Linux v4.14-rc6-53-g15f859ae5c43
 
