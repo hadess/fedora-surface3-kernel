@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 6
+%global rcrev 7
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -660,6 +660,8 @@ Patch621: drm-i915-Boost-GPU-clocks-if-we-miss-the-pageflip-s-vblank.patch
 
 # rhbz 1497861, submitted upstream, Cc: Stable
 Patch622: 0001-platform-x86-peaq-wmi-Add-DMI-check-before-binding-t.patch
+
+Patch623: 0001-PATCH-staging-rtl8822be-fix-wrong-dma-unmap-len.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -2215,6 +2217,9 @@ fi
 #
 #
 %changelog
+* Mon Oct 30 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc7.git0.1
+- Linux v4.14-rc7
+
 * Mon Oct 30 2017 Justin M. Forbes <jforbes@fedoraproject.org>
 - Disable debugging options.
 
