@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 7
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -2217,6 +2217,9 @@ fi
 #
 #
 %changelog
+* Wed Nov 01 2017 Jeremy Cline <jeremy@jcline.org> - 4.14.0-0.rc7.git2.1
+- Linux v4.14-rc7-39-g4f2ba5dc183b
+
 * Tue Oct 31 2017 Jeremy Cline <jeremy@jcline.org> - 4.14.0-0.rc7.git1.1
 - Linux v4.14-rc7-8-g5f479447d983
 - Reenable debugging options.
