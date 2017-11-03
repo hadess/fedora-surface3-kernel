@@ -325,6 +325,7 @@ index c61be97..7d5a23e 100644
 --- a/drivers/pci/dwc/Makefile
 +++ b/drivers/pci/dwc/Makefile
 @@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
  obj-$(CONFIG_PCIE_DW) += pcie-designware.o
  obj-$(CONFIG_PCIE_DW_HOST) += pcie-designware-host.o
 +obj-$(CONFIG_PCIE_DW_HOST_ECAM) += pcie-designware-ecam.o
