@@ -4,12 +4,32 @@
 # and debug to form the necessary $PACKAGE_NAME<version>-<arch>-<variant>.config
 # files for building RHEL kernels, based on the contents of a control file
 
-PACKAGE_NAME=kernel # defines the package name used
+PACKAGE_NAME="${1:-kernel}" # defines the package name used
+KVERREL="${2:-}"
+SUBARCH="${3:-}" # defines a specific arch for use with rh-configs-arch-prep target
+SCRIPT="$(readlink -f $0)"
+OUTPUT_DIR="$PWD"
+SCRIPT_DIR="$(dirname $SCRIPT)"
+
+# to handle this script being a symlink
+cd $SCRIPT_DIR
 
 set errexit
 set nounset
 
 control_file="config_generation"
+
+cleanup()
+{
+	rm -f config-*
+}
+
+die()
+{
+	echo "$1"
+	cleanup
+	exit 1
+}
 
 function combine_config_layer()
 {
@@ -29,14 +49,27 @@ function merge_configs()
 	archvar=$1
 	arch=$(echo "$archvar" | cut -f1 -d"-")
 	configs=$2
-	name=$PACKAGE_NAME-$archvar.config
+	name=$OUTPUT_DIR/$PACKAGE_NAME-$archvar.config
 	echo -n "Building $name ... "
 	touch config-merging config-merged
+
+	# apply base first
 	for config in $(echo $configs | sed -e 's/:/ /g')
 	do
+		perl merge.pl config-base-$config config-merging > config-merged
+		if [ ! $? -eq 0 ]; then
+			die "Failed to merge base"
+		fi
+		mv config-merged config-merging
+	done
+	for config in $(echo $configs | sed -e 's/:/ /g')
+	do
+		# not all override files exist
+		test -e config-$config || continue
+
 		perl merge.pl config-$config config-merging > config-merged
 		if [ ! $? -eq 0 ]; then
-			exit
+			die "Failed to merge configs"
 		fi
 		mv config-merged config-merging
 	done
@@ -60,10 +93,12 @@ function merge_configs()
 	echo "done"
 }
 
-glist=$(find baseconfig -type d)
-dlist=$(find debugconfig -type d)
+glist=$(find base-generic -type d)
+dlist=$(find base-debug -type d)
+gllist=$(test -d generic && find generic -type d)
+dllist=$(test -d debug && find debug -type d)
 
-for d in $glist $dlist
+for d in $glist $dlist $gllist $dllist
 do
 	combine_config_layer $d
 done
@@ -86,4 +121,15 @@ do
 	fi
 done < $control_file
 
-rm -f config-*
+# A passed in kernel version implies copy to final location
+# otherwise defer to another script
+if test -n "$KVERREL"
+then
+	for i in kernel-*.config
+	do
+		NEW="$(echo $i | sed "s/$PACKAGE_NAME-$SUBARCH/$PACKAGE_NAME-$KVERREL-$SUBARCH/")"
+		mv $i $NEW
+	done
+fi
+
+cleanup

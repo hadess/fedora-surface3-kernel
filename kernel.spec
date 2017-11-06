@@ -478,7 +478,7 @@ Source39: kernel-x86_64-debug.config
 Source40: generate_all_configs.sh
 Source41: generate_debug_configs.sh
 
-Source42: check_configs.awk
+Source42: process_configs.sh
 
 # This file is intentionally left empty in the stock kernel. Its a nicety
 # added for those wanting to do custom rebuilds with altered config opts.
@@ -1225,6 +1225,24 @@ xzcat %{SOURCE5000} | patch -p1 -F1 -s
 git commit -a -m "Stable update"
 %endif
 
+# Note: Even in the "nopatches" path some patches (build tweaks and compile
+# fixes) will always get applied; see patch defition above for details
+
+git am %{patches}
+
+# END OF PATCH APPLICATIONS
+
+# Any further pre-build tree manipulations happen here.
+
+chmod +x scripts/checkpatch.pl
+
+# This Prevents scripts/setlocalversion from mucking with our version numbers.
+touch .scmversion
+
+# Deal with configs stuff
+mkdir configs
+cd configs
+
 # Drop some necessary files from the source dir into the buildroot
 cp $RPM_SOURCE_DIR/kernel-*.config .
 cp %{SOURCE1000} .
@@ -1255,24 +1273,8 @@ do
 done
 %endif
 
-# Note: Even in the "nopatches" path some patches (build tweaks and compile
-# fixes) will always get applied; see patch defition above for details
-
-git am %{patches}
-
-# END OF PATCH APPLICATIONS
-
-# Any further pre-build tree manipulations happen here.
-
-chmod +x scripts/checkpatch.pl
-
-# This Prevents scripts/setlocalversion from mucking with our version numbers.
-touch .scmversion
-
 # only deal with configs if we are going to build for the arch
 %ifnarch %nobuildarches
-
-mkdir configs
 
 %if !%{debugbuildsenabled}
 rm -f kernel-%{version}-*debug.config
@@ -1291,30 +1293,20 @@ CheckConfigs() {
 }
 
 cp %{SOURCE42} .
-# now run oldconfig over all the config files
-for i in *.config
-do
-  cat $i > temp-$i
-  mv $i .config
-  Arch=`head -1 .config | cut -b 3-`
-  make ARCH=$Arch listnewconfig | grep -E '^CONFIG_' >.newoptions || true
+OPTS=""
 %if %{listnewconfig_fail}
-  if [ -s .newoptions ]; then
-    cat .newoptions
-    exit 1
-  fi
+	OPTS="$OPTS -n"
 %endif
-  rm -f .newoptions
-  make ARCH=$Arch oldnoconfig
-  echo "# $Arch" > configs/$i
-  cat .config >> configs/$i
 %if %{configmismatch_fail}
-  CheckConfigs configs/$i temp-$i
+	OPTS="$OPTS -c"
 %endif
-  rm temp-$i
-done
+./process_configs.sh $OPTS kernel %{rpmversion}
+
 # end of kernel config
 %endif
+
+cd ..
+# End of Configs stuff
 
 # get rid of unwanted files resulting from patch fuzz
 find . \( -name "*.orig" -o -name "*~" \) -exec rm -f {} \; >/dev/null
