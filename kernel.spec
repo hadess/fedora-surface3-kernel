@@ -661,6 +661,9 @@ Patch623: 0001-PATCH-staging-rtl8822be-fix-wrong-dma-unmap-len.patch
 Patch624: v3-1-2-Input-synaptics-rmi4---RMI4-can-also-use-SMBUS-version-3.patch
 Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 
+# rhbz 1490803
+Patch626: 1-2-kvm-vmx-Reinstate-support-for-CPUs-without-virtual-NMI.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2217,6 +2220,7 @@ fi
 %changelog
 * Mon Nov 06 2017 Laura Abbott <labbott@redhat.com>
 - Patches for ThinkPad X1 Carbon Gen5 Touchpad (rhbz 1509461)
+- Fix for KVM regression on some machines (rhbz 1490803)
 
 * Mon Nov 06 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc8.git0.1
 - Linux v4.14-rc8
