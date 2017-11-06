@@ -125,7 +125,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 # Want to build a vanilla kernel build without any non-upstream patches?
 %define with_vanilla %{?_with_vanilla: 1} %{?!_with_vanilla: 0}
@@ -611,9 +611,6 @@ Patch310: qcom-msm89xx-fixes.patch
 # https://patchwork.kernel.org/patch/9831825/
 # https://patchwork.kernel.org/patch/9833721/
 
-# http://www.spinics.net/lists/dri-devel/msg132235.html
-Patch320: bcm283x-vc4-Fix-OOPSes-from-trying-to-cache-a-partially-constructed-BO..patch
-
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
@@ -633,9 +630,6 @@ Patch335: arm-exynos-fix-usb3.patch
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
-
-# CVE-2017-7477 rhbz 1445207 1445208
-Patch502: CVE-2017-7477.patch
 
 # rhbz 1498016 1498017
 #Patch503: KEYS-don-t-let-add_key-update-an-uninstantiated-key.patch
@@ -2217,6 +2211,9 @@ fi
 #
 #
 %changelog
+* Mon Nov 06 2017 Justin M. Forbes <jforbes@fedoraproject.org>
+- Disable debugging options.
+
 * Fri Nov 03 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc7.git4.1
 - Linux v4.14-rc7-129-g81ca2caefc6d
 
