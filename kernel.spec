@@ -657,6 +657,10 @@ Patch622: 0001-platform-x86-peaq-wmi-Add-DMI-check-before-binding-t.patch
 
 Patch623: 0001-PATCH-staging-rtl8822be-fix-wrong-dma-unmap-len.patch
 
+# rhbz 1509461
+Patch624: v3-1-2-Input-synaptics-rmi4---RMI4-can-also-use-SMBUS-version-3.patch
+Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2211,6 +2215,9 @@ fi
 #
 #
 %changelog
+* Mon Nov 06 2017 Laura Abbott <labbott@redhat.com>
+- Patches for ThinkPad X1 Carbon Gen5 Touchpad (rhbz 1509461)
+
 * Mon Nov 06 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-0.rc8.git0.1
 - Linux v4.14-rc8
 
