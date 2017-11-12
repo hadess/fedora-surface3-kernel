@@ -598,24 +598,16 @@ Patch305: arm-imx6-hummingboard2.patch
 
 Patch306: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
 
-# https://patchwork.kernel.org/patch/9967397/
-
-# https://patchwork.kernel.org/patch/9815555/
-# https://patchwork.kernel.org/patch/9815651/
-# https://patchwork.kernel.org/patch/9819885/
 # https://patchwork.kernel.org/patch/9820417/
-# https://patchwork.kernel.org/patch/9821151/
-# https://patchwork.kernel.org/patch/9821157/
 Patch310: qcom-msm89xx-fixes.patch
 
-# https://patchwork.kernel.org/patch/9831825/
-# https://patchwork.kernel.org/patch/9833721/
+# https://patchwork.kernel.org/patch/10054387/
+Patch311: USB-ulpi-fix-bus-node-lookup.patch
 
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
 # bcm2837 bluetooth support
-#
 Patch323: bcm2837-bluetooth-support.patch
 
 # Generic fixes and enablement for Socionext SoC and 96board
