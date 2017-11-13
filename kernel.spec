@@ -17,7 +17,7 @@ Summary: The Linux kernel
 %else
 %global signkernel 0
 %global signmodules 1
-%global zipmodules 0
+%global zipmodules 1
 %endif
 
 %if %{zipmodules}
@@ -2209,6 +2209,9 @@ fi
 #
 #
 %changelog
+* Mon Nov 13 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Compress modules on all arches
+
 * Mon Nov 13 2017 Justin M. Forbes <jforbes@fedoraproject.org> - 4.14.0-1
 - Linux v4.14
 - Disable debugging options.
