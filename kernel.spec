@@ -6,7 +6,7 @@ Summary: The Linux kernel
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
-%global released_kernel 1
+%global released_kernel 0
 
 # Sign modules on x86.  Make sure the config files match this setting if more
 # architectures are added.
@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -2201,6 +2201,9 @@ fi
 #
 #
 %changelog
+* Mon Nov 13 2017 Laura Abbott <labbott@redhat.com> - 4.14.0-0.rc0.git1.1
+- Linux v4.14-104-g1e19bded7f5d
+
 * Mon Nov 13 2017 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 
