@@ -955,6 +955,7 @@ Provides: installonlypkg(kernel)\
 
 # Now, each variant package.
 
+%if %{with_pae}
 %ifnarch armv7hl
 %define variant_summary The Linux kernel compiled for PAE capable machines
 %kernel_variant_package %{pae}
@@ -984,7 +985,7 @@ Install the kernel-PAE package if your machine has more than 4GB of memory.
 This variant of the kernel has numerous debugging options enabled.
 It should only be installed when trying to gather additional information
 on kernel bugs, as some of these options impact performance noticably.
-
+%endif
 
 %define variant_summary The Linux kernel compiled with extra debugging enabled
 %kernel_variant_package debug
@@ -2018,11 +2019,13 @@ fi}\
 %kernel_variant_preun
 %kernel_variant_post -r kernel-smp
 
+%if %{with_pae}
 %kernel_variant_preun %{pae}
 %kernel_variant_post -v %{pae} -r (kernel|kernel-smp)
 
 %kernel_variant_post -v %{pae}debug -r (kernel|kernel-smp)
 %kernel_variant_preun %{pae}debug
+%endif
 
 %kernel_variant_preun debug
 %kernel_variant_post -v debug
