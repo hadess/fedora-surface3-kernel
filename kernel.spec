@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -617,7 +617,8 @@ Patch331: PCI-aspm-deal-with-missing-root-ports-in-link-state-handling.patch
 # https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
 Patch332: arm64-socionext-96b-enablement.patch
 
-Patch335: arm-exynos-fix-usb3.patch
+# This needs a rebase
+# Patch335: arm-exynos-fix-usb3.patch
 
 # 400 - IBM (ppc/s390x) patches
 
@@ -638,22 +639,20 @@ Patch617: Fix-for-module-sig-verification.patch
 # rhbz 1431375
 Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
-# fix gnome 3.26+ not working under VirtualBox, submitted upstream, Cc: Stable
-Patch620: 0001-staging-vboxvideo-Fix-reporting-invalid-suggested-of.patch
-
 # Headed upstream
 Patch621: drm-i915-Boost-GPU-clocks-if-we-miss-the-pageflip-s-vblank.patch
 
 # rhbz 1497861, submitted upstream, Cc: Stable
 Patch622: 0001-platform-x86-peaq-wmi-Add-DMI-check-before-binding-t.patch
 
-Patch623: 0001-PATCH-staging-rtl8822be-fix-wrong-dma-unmap-len.patch
-
 # rhbz 1509461
 Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 
 # rhbz 1490803
 Patch626: 1-2-kvm-vmx-Reinstate-support-for-CPUs-without-virtual-NMI.patch
+
+# Pointed to by Eric Anholt
+Patch627: rpi-graphics-fix.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -2204,6 +2203,10 @@ fi
 #
 #
 %changelog
+* Tue Nov 14 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git2.1
+- Linux v4.14-2229-g894025f24bd0
+- Include fix for RPi graphics
+
 * Mon Nov 13 2017 Laura Abbott <labbott@redhat.com> - 4.14.0-0.rc0.git1.1
 - Linux v4.14-104-g1e19bded7f5d
 
