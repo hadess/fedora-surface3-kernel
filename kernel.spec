@@ -2203,6 +2203,9 @@ fi
 #
 #
 %changelog
+* Wed Nov 15 2017 Laura Abbott <labbott@redhat.com>
+- Disable IPX and NCPFS
+
 * Wed Nov 15 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git3.1
 - Linux v4.14-4050-g37cb8e1f8e10
 
