@@ -205,17 +205,17 @@ index a65cf544686a..863f77582c09 100644
 
  #include <linux/pfn.h>
 diff --git a/drivers/input/misc/uinput.c b/drivers/input/misc/uinput.c
-index 443151de90c6..45a1f5460805 100644
+index 39ddd9a73feb..0afeef1672bc 100644
 --- a/drivers/input/misc/uinput.c
 +++ b/drivers/input/misc/uinput.c
-@@ -408,6 +408,7 @@ static int uinput_allocate_device(struct uinput_device *udev)
- 	if (!udev->dev)
- 		return -ENOMEM;
-
-+	udev->dev->flags |= INPUTDEV_FLAGS_SYNTHETIC;
- 	udev->dev->event = uinput_dev_event;
+@@ -362,6 +362,7 @@ static int uinput_create_device(struct uinput_device *udev)
+ 		dev->flush = uinput_dev_flush;
+ 	}
+ 
++	dev->flags |= INPUTDEV_FLAGS_SYNTHETIC;
+ 	dev->event = uinput_dev_event;
+ 
  	input_set_drvdata(udev->dev, udev);
-
 diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
 index 3ffc1ce29023..8b766dbad6dd 100644
 --- a/drivers/tty/sysrq.c
