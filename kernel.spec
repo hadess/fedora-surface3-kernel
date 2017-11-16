@@ -654,6 +654,10 @@ Patch626: 1-2-kvm-vmx-Reinstate-support-for-CPUs-without-virtual-NMI.patch
 # Pointed to by Eric Anholt
 Patch627: rpi-graphics-fix.patch
 
+# For https://fedoraproject.org/wiki/Changes/ImprovedLaptopBatteryLife
+# Queued in bluetooth-next for merging into 4.16
+Patch628: 0001-Bluetooth-btusb-Add-a-Kconfig-option-to-enable-USB-a.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2203,6 +2207,10 @@ fi
 #
 #
 %changelog
+* Thu Nov 16 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
+- Enable USB autosuspend for USB bluetooth receivers by default, use
+  btusb.enable_autosuspend=n on the kernel cmdline to disable
+
 * Wed Nov 15 2017 Laura Abbott <labbott@redhat.com>
 - Disable IPX and NCPFS
 
