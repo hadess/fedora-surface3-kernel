@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -577,11 +577,6 @@ Patch211: drm-i915-hush-check-crtc-state.patch
 
 # 300 - ARM patches
 
-# Reduces a number of primarily info logs to dmesg
-# https://patchwork.freedesktop.org/patch/180737/
-# https://patchwork.freedesktop.org/patch/180554/
-Patch300: drm-cma-reduce-dmesg-logs.patch
-
 # http://www.spinics.net/lists/linux-tegra/msg26029.html
 Patch301: usb-phy-tegra-Add-38.4MHz-clock-table-entry.patch
 
@@ -610,10 +605,6 @@ Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe
 # bcm2837 bluetooth support
 Patch323: bcm2837-bluetooth-support.patch
 
-# Generic fixes and enablement for Socionext SoC and 96board
-# https://patchwork.kernel.org/patch/9980861/
-Patch331: PCI-aspm-deal-with-missing-root-ports-in-link-state-handling.patch
-
 # https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
 Patch332: arm64-socionext-96b-enablement.patch
 
@@ -638,9 +629,6 @@ Patch617: Fix-for-module-sig-verification.patch
 
 # rhbz 1431375
 Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
-
-# Headed upstream
-Patch621: drm-i915-Boost-GPU-clocks-if-we-miss-the-pageflip-s-vblank.patch
 
 # rhbz 1497861, submitted upstream, Cc: Stable
 Patch622: 0001-platform-x86-peaq-wmi-Add-DMI-check-before-binding-t.patch
@@ -2207,6 +2195,9 @@ fi
 #
 #
 %changelog
+* Thu Nov 16 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git4.1
+- Linux v4.14-9248-ge60e1ee60630
+
 * Thu Nov 16 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
 - Enable USB autosuspend for USB bluetooth receivers by default, use
   btusb.enable_autosuspend=n on the kernel cmdline to disable
