@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 4
+%define gitrev 5
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -586,8 +586,6 @@ Patch302: arm-revert-mmc-omap_hsmmc-Use-dma_request_chan-for-reque.patch
 # http://patchwork.ozlabs.org/patch/587554/
 Patch303: ARM-tegra-usb-no-reset.patch
 
-Patch304: allwinner-net-emac.patch
-
 # https://www.spinics.net/lists/arm-kernel/msg554183.html
 Patch305: arm-imx6-hummingboard2.patch
 
@@ -601,9 +599,6 @@ Patch311: USB-ulpi-fix-bus-node-lookup.patch
 
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
-
-# bcm2837 bluetooth support
-Patch323: bcm2837-bluetooth-support.patch
 
 # https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
 Patch332: arm64-socionext-96b-enablement.patch
@@ -2195,6 +2190,9 @@ fi
 #
 #
 %changelog
+* Sat Nov 18 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git5.1
+- Linux v4.14-12375-g2dcd9c71c1ff
+
 * Thu Nov 16 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git4.1
 - Linux v4.14-9248-ge60e1ee60630
 
