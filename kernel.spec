@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 5
+%define gitrev 6
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -624,9 +624,6 @@ Patch617: Fix-for-module-sig-verification.patch
 
 # rhbz 1431375
 Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
-
-# rhbz 1497861, submitted upstream, Cc: Stable
-Patch622: 0001-platform-x86-peaq-wmi-Add-DMI-check-before-binding-t.patch
 
 # rhbz 1509461
 Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
@@ -2190,6 +2187,9 @@ fi
 #
 #
 %changelog
+* Mon Nov 20 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git6.1
+- Linux v4.14-12891-gc8a0739b185d
+
 * Sat Nov 18 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git5.1
 - Linux v4.14-12375-g2dcd9c71c1ff
 
