@@ -1,13 +1,13 @@
-From patchwork Thu Nov 23 02:15:03 2017
+From patchwork Thu Nov 23 02:41:54 2017
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: drm/ttm: don't attempt to use hugepages if dma32 requested
+Subject: drm/ttm: don't attempt to use hugepages if dma32 requested (v2)
 From: Dave Airlie <airlied@gmail.com>
-X-Patchwork-Id: 189811
-Message-Id: <20171123021503.24227-1-airlied@gmail.com>
+X-Patchwork-Id: 189812
+Message-Id: <20171123024154.10023-1-airlied@gmail.com>
 To: dri-devel@lists.freedesktop.org
-Date: Thu, 23 Nov 2017 12:15:03 +1000
+Date: Thu, 23 Nov 2017 12:41:54 +1000
 
 From: Dave Airlie <airlied@redhat.com>
 
@@ -55,19 +55,41 @@ This fixes an oops:
 [   30.133245] RIP: __alloc_pages_nodemask+0x35e/0x430 RSP: ffffa7818222bba8
 [   30.133836] ---[ end trace d4f1deb60784f40a ]---
 
+v2: handle free path as well.
+
 Reported-by: Laura Abbott <labbott@redhat.com>
 Reported-by: Adam Williamson <awilliam@redhat.com>
 Fixes: 0284f1ead87463bc17cf5e81a24fc65c052486f3 (drm/ttm: add transparent huge page support for cached allocations v2)
 Signed-off-by: Dave Airlie <airlied@redhat.com>
 ---
- drivers/gpu/drm/ttm/ttm_page_alloc.c | 24 +++++++++++++-----------
- 1 file changed, 13 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/ttm/ttm_page_alloc.c | 36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/gpu/drm/ttm/ttm_page_alloc.c b/drivers/gpu/drm/ttm/ttm_page_alloc.c
-index 316f831..1d3dfce 100644
+index 316f831..b0551aa 100644
 --- a/drivers/gpu/drm/ttm/ttm_page_alloc.c
 +++ b/drivers/gpu/drm/ttm/ttm_page_alloc.c
-@@ -865,20 +865,22 @@ static int ttm_get_pages(struct page **pages, unsigned npages, int flags,
+@@ -744,12 +744,14 @@ static void ttm_put_pages(struct page **pages, unsigned npages, int flags,
+ 			}
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-			for (j = 0; j < HPAGE_PMD_NR; ++j)
+-				if (p++ != pages[i + j])
+-				    break;
++			if (!(flags & TTM_PAGE_FLAG_DMA32)) {
++				for (j = 0; j < HPAGE_PMD_NR; ++j)
++					if (p++ != pages[i + j])
++					    break;
+ 
+-			if (j == HPAGE_PMD_NR)
+-				order = HPAGE_PMD_ORDER;
++				if (j == HPAGE_PMD_NR)
++					order = HPAGE_PMD_ORDER;
++			}
+ #endif
+ 
+ 			if (page_count(pages[i]) != 1)
+@@ -865,20 +867,22 @@ static int ttm_get_pages(struct page **pages, unsigned npages, int flags,
  
  		i = 0;
  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
