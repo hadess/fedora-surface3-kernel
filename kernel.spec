@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -637,6 +637,9 @@ Patch627: rpi-graphics-fix.patch
 # For https://fedoraproject.org/wiki/Changes/ImprovedLaptopBatteryLife
 # Queued in bluetooth-next for merging into 4.16
 Patch628: 0001-Bluetooth-btusb-Add-a-Kconfig-option-to-enable-USB-a.patch
+
+# rhbz 1516584
+Patch629: drm-ttm-don-t-attempt-to-use-hugepages-if-dma32-requested.mbox
 
 # END OF PATCH DEFINITIONS
 
@@ -2187,6 +2190,9 @@ fi
 #
 #
 %changelog
+* Thu Nov 23 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git7.2
+- Fix for TTM regression (rhbz 1516584)
+
 * Tue Nov 21 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git7.1
 - Linux v4.14-12995-g0c86a6bd85ff
 

@@ -1,0 +1,103 @@
+From patchwork Thu Nov 23 02:15:03 2017
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: drm/ttm: don't attempt to use hugepages if dma32 requested
+From: Dave Airlie <airlied@gmail.com>
+X-Patchwork-Id: 189811
+Message-Id: <20171123021503.24227-1-airlied@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Date: Thu, 23 Nov 2017 12:15:03 +1000
+
+From: Dave Airlie <airlied@redhat.com>
+
+The commit below introduced thp support for ttm allocations, however it didn't
+take into account the case where dma32 was requested. Some drivers always request
+dma32, and the bochs driver is one of those.
+
+This fixes an oops:
+
+[   30.108507] ------------[ cut here ]------------
+[   30.108920] kernel BUG at ./include/linux/gfp.h:408!
+[   30.109356] invalid opcode: 0000 [#1] SMP
+[   30.109700] Modules linked in: fuse nf_conntrack_netbios_ns nf_conntrack_broadcast xt_CT ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 xt_conntrack devlink ip_set nfnetlink ebtable_nat ebtable_broute bridge ip6table_nat nf_conntrack_ipv6 nf_defrag_ipv6 nf_nat_ipv6 ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_conntrack_ipv4 nf_defrag_ipv4 nf_nat_ipv4 nf_nat nf_conntrack libcrc32c iptable_mangle iptable_raw iptable_security ebtable_filter ebtables ip6table_filter ip6_tables snd_hda_codec_generic kvm_intel kvm snd_hda_intel snd_hda_codec irqbypass ppdev snd_hda_core snd_hwdep snd_seq snd_seq_device snd_pcm bochs_drm ttm joydev drm_kms_helper virtio_balloon snd_timer snd parport_pc drm soundcore parport i2c_piix4 nls_utf8 isofs squashfs zstd_decompress xxhash 8021q garp mrp stp llc virtio_net
+[   30.115605]  virtio_console virtio_scsi crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel serio_raw virtio_pci virtio_ring virtio ata_generic pata_acpi qemu_fw_cfg sunrpc scsi_transport_iscsi loop
+[   30.117425] CPU: 0 PID: 1347 Comm: gnome-shell Not tainted 4.15.0-0.rc0.git6.1.fc28.x86_64 #1
+[   30.118141] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-2.fc27 04/01/2014
+[   30.118866] task: ffff923a77e03380 task.stack: ffffa78182228000
+[   30.119366] RIP: 0010:__alloc_pages_nodemask+0x35e/0x430
+[   30.119810] RSP: 0000:ffffa7818222bba8 EFLAGS: 00010202
+[   30.120250] RAX: 0000000000000001 RBX: 00000000014382c6 RCX: 0000000000000006
+[   30.120840] RDX: 0000000000000000 RSI: 0000000000000009 RDI: 0000000000000000
+[   30.121443] RBP: ffff923a760d6000 R08: 0000000000000000 R09: 0000000000000006
+[   30.122039] R10: 0000000000000040 R11: 0000000000000300 R12: ffff923a729273c0
+[   30.122629] R13: 0000000000000000 R14: 0000000000000000 R15: ffff923a7483d400
+[   30.123223] FS:  00007fe48da7dac0(0000) GS:ffff923a7cc00000(0000) knlGS:0000000000000000
+[   30.123896] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   30.124373] CR2: 00007fe457b73000 CR3: 0000000078313000 CR4: 00000000000006f0
+[   30.124968] Call Trace:
+[   30.125186]  ttm_pool_populate+0x19b/0x400 [ttm]
+[   30.125578]  ttm_bo_vm_fault+0x325/0x570 [ttm]
+[   30.125964]  __do_fault+0x19/0x11e
+[   30.126255]  __handle_mm_fault+0xcd3/0x1260
+[   30.126609]  handle_mm_fault+0x14c/0x310
+[   30.126947]  __do_page_fault+0x28c/0x530
+[   30.127282]  do_page_fault+0x32/0x270
+[   30.127593]  async_page_fault+0x22/0x30
+[   30.127922] RIP: 0033:0x7fe48aae39a8
+[   30.128225] RSP: 002b:00007ffc21c4d928 EFLAGS: 00010206
+[   30.128664] RAX: 00007fe457b73000 RBX: 000055cd4c1041a0 RCX: 00007fe457b73040
+[   30.129259] RDX: 0000000000300000 RSI: 0000000000000000 RDI: 00007fe457b73000
+[   30.129855] RBP: 0000000000000300 R08: 000000000000000c R09: 0000000100000000
+[   30.130457] R10: 0000000000000001 R11: 0000000000000246 R12: 000055cd4c1041a0
+[   30.131054] R13: 000055cd4bdfe990 R14: 000055cd4c104110 R15: 0000000000000400
+[   30.131648] Code: 11 01 00 0f 84 a9 00 00 00 65 ff 0d 6d cc dd 44 e9 0f ff ff ff 40 80 cd 80 e9 99 fe ff ff 48 89 c7 e8 e7 f6 01 00 e9 b7 fe ff ff <0f> 0b 0f ff e9 40 fd ff ff 65 48 8b 04 25 80 d5 00 00 8b 40 4c
+[   30.133245] RIP: __alloc_pages_nodemask+0x35e/0x430 RSP: ffffa7818222bba8
+[   30.133836] ---[ end trace d4f1deb60784f40a ]---
+
+Reported-by: Laura Abbott <labbott@redhat.com>
+Reported-by: Adam Williamson <awilliam@redhat.com>
+Fixes: 0284f1ead87463bc17cf5e81a24fc65c052486f3 (drm/ttm: add transparent huge page support for cached allocations v2)
+Signed-off-by: Dave Airlie <airlied@redhat.com>
+---
+ drivers/gpu/drm/ttm/ttm_page_alloc.c | 24 +++++++++++++-----------
+ 1 file changed, 13 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/ttm/ttm_page_alloc.c b/drivers/gpu/drm/ttm/ttm_page_alloc.c
+index 316f831..1d3dfce 100644
+--- a/drivers/gpu/drm/ttm/ttm_page_alloc.c
++++ b/drivers/gpu/drm/ttm/ttm_page_alloc.c
+@@ -865,20 +865,22 @@ static int ttm_get_pages(struct page **pages, unsigned npages, int flags,
+ 
+ 		i = 0;
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-		while (npages >= HPAGE_PMD_NR) {
+-			gfp_t huge_flags = gfp_flags;
++		if (!(gfp_flags & GFP_DMA32)) {
++			while (npages >= HPAGE_PMD_NR) {
++				gfp_t huge_flags = gfp_flags;
+ 
+-			huge_flags |= GFP_TRANSHUGE;
+-			huge_flags &= ~__GFP_MOVABLE;
+-			huge_flags &= ~__GFP_COMP;
+-			p = alloc_pages(huge_flags, HPAGE_PMD_ORDER);
+-			if (!p)
+-				break;
++				huge_flags |= GFP_TRANSHUGE;
++				huge_flags &= ~__GFP_MOVABLE;
++				huge_flags &= ~__GFP_COMP;
++				p = alloc_pages(huge_flags, HPAGE_PMD_ORDER);
++				if (!p)
++					break;
+ 
+-			for (j = 0; j < HPAGE_PMD_NR; ++j)
+-				pages[i++] = p++;
++				for (j = 0; j < HPAGE_PMD_NR; ++j)
++					pages[i++] = p++;
+ 
+-			npages -= HPAGE_PMD_NR;
++				npages -= HPAGE_PMD_NR;
++			}
+ 		}
+ #endif
+ 
