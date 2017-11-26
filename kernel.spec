@@ -641,6 +641,13 @@ Patch628: 0001-Bluetooth-btusb-Add-a-Kconfig-option-to-enable-USB-a.patch
 # rhbz 1516584
 Patch629: drm-ttm-don-t-attempt-to-use-hugepages-if-dma32-requested.mbox
 
+# Fix left-button not working with some hid-multitouch touchpads
+# Adding these suggested by Benjamin Tissoires
+# Queued in hid.git/for-4.16/hid-quirks-cleanup/multitouch for merging into 4.16
+Patch630: 0001-HID-multitouch-Properly-deal-with-Win8-PTP-reports-w.patch
+Patch631: 0002-HID-multitouch-Only-look-at-non-touch-fields-in-firs.patch
+Patch632: 0003-HID-multitouch-Combine-all-left-button-events-in-a-f.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2190,6 +2197,9 @@ fi
 #
 #
 %changelog
+* Sun Nov 26 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
+- Fix left-button not working with some hid-multitouch touchpads
+
 * Thu Nov 23 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc0.git7.2
 - Fix for TTM regression (rhbz 1516584)
 
