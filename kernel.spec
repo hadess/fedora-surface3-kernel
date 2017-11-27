@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 0
+%global rcrev 1
 # The git snapshot level
-%define gitrev 7
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -627,9 +627,6 @@ Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1509461
 Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
-
-# rhbz 1490803
-Patch626: 1-2-kvm-vmx-Reinstate-support-for-CPUs-without-virtual-NMI.patch
 
 # Pointed to by Eric Anholt
 Patch627: rpi-graphics-fix.patch
@@ -2197,6 +2194,9 @@ fi
 #
 #
 %changelog
+* Mon Nov 27 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc1.git0.1
+- Linux v4.15-rc1
+
 * Mon Nov 27 2017 Laura Abbott <labbott@redhat.com>
 - Disable debugging options.
 
