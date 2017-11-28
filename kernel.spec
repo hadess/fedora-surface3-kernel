@@ -615,9 +615,6 @@ Patch332: arm64-socionext-96b-enablement.patch
 
 # 600 - Patches for improved Bay and Cherry Trail device support
 # Below patches are submitted upstream, awaiting review / merging
-# This one needs to be rebased
-# Patch601: 0001-Input-gpio_keys-Allow-suppression-of-input-events-fo.patch
-Patch602: 0002-Input-soc_button_array-Suppress-power-button-presses.patch
 Patch610: 0010-Input-silead-Add-support-for-capactive-home-button-f.patch
 
 # rhbz 1476467
