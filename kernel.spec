@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 1
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -626,15 +626,9 @@ Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 # rhbz 1509461
 Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 
-# Pointed to by Eric Anholt
-Patch627: rpi-graphics-fix.patch
-
 # For https://fedoraproject.org/wiki/Changes/ImprovedLaptopBatteryLife
 # Queued in bluetooth-next for merging into 4.16
 Patch628: 0001-Bluetooth-btusb-Add-a-Kconfig-option-to-enable-USB-a.patch
-
-# rhbz 1516584
-Patch629: drm-ttm-don-t-attempt-to-use-hugepages-if-dma32-requested.mbox
 
 # Fix left-button not working with some hid-multitouch touchpads
 # Adding these suggested by Benjamin Tissoires
@@ -2193,6 +2187,9 @@ fi
 #
 #
 %changelog
+* Wed Nov 29 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc1.git1.1
+- Linux v4.15-rc1-24-g43570f0383d6
+
 * Wed Nov 29 2017 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 
