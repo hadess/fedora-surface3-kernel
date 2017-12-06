@@ -636,6 +636,11 @@ Patch630: 0001-HID-multitouch-Properly-deal-with-Win8-PTP-reports-w.patch
 Patch631: 0002-HID-multitouch-Only-look-at-non-touch-fields-in-firs.patch
 Patch632: 0003-HID-multitouch-Combine-all-left-button-events-in-a-f.patch
 
+# Reported upstream
+Patch633: 0001-x86-PCI-fix-infinity-loop-in-search-for-64bit-BAR-pl.patch
+Patch634: 0002-x86-PCI-only-enable-a-64bit-BAR-on-single-socket-AMD.patch
+Patch635: 0003-x86-PCI-limit-the-size-of-the-64bit-BAR-to-256GB.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
