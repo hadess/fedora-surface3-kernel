@@ -2187,6 +2187,9 @@ fi
 #
 #
 %changelog
+* Wed Dec  6 2017 Peter Robinson <pbrobinson@fedoraproject.org>
+- Disable IrDA (broken, being dropped upstream)
+
 * Mon Dec 04 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc2.git0.1
 - Linux v4.15-rc2
 
