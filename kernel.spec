@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 2
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -595,9 +595,6 @@ Patch307: arm64-Revert-allwinner-a64-pine64-Use-dcdc1-regulato.patch
 
 # https://patchwork.kernel.org/patch/9820417/
 Patch310: qcom-msm89xx-fixes.patch
-
-# https://patchwork.kernel.org/patch/10054387/
-Patch311: USB-ulpi-fix-bus-node-lookup.patch
 
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
@@ -2189,6 +2186,9 @@ fi
 #
 #
 %changelog
+* Wed Dec 06 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc2.git1.1
+- Linux v4.15-rc2-174-g328b4ed93b69
+
 * Wed Dec 06 2017 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 
