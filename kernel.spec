@@ -591,6 +591,8 @@ Patch305: arm-imx6-hummingboard2.patch
 
 Patch306: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
 
+Patch307: arm64-Revert-allwinner-a64-pine64-Use-dcdc1-regulato.patch
+
 # https://patchwork.kernel.org/patch/9820417/
 Patch310: qcom-msm89xx-fixes.patch
 
