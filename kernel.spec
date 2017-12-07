@@ -2113,6 +2113,7 @@ fi
 %files -n kernel-tools-libs-devel
 %{_libdir}/libcpupower.so
 %{_includedir}/cpufreq.h
+%{_includedir}/cpuidle.h
 %endif
 %endif # with_perf
 
