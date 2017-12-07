@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 2
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -2191,6 +2191,9 @@ fi
 #
 #
 %changelog
+* Thu Dec 07 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc2.git2.1
+- Linux v4.15-rc2-252-g968edbd93c0c
+
 * Wed Dec 06 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc2.git1.1
 - Linux v4.15-rc2-174-g328b4ed93b69
 
