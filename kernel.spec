@@ -2192,6 +2192,9 @@ fi
 #
 #
 %changelog
+* Fri Dec 15 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
+- Enable CONFIG_REGULATOR on x86_64, fixing USB PD charging on some devices
+
 * Thu Dec 14 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc3.git3.1
 - Linux v4.15-rc3-45-g7c5cac1bc717
 
