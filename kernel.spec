@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 3
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -637,8 +637,6 @@ Patch631: 0002-HID-multitouch-Only-look-at-non-touch-fields-in-firs.patch
 Patch632: 0003-HID-multitouch-Combine-all-left-button-events-in-a-f.patch
 
 # Reported upstream
-Patch633: 0001-x86-PCI-fix-infinity-loop-in-search-for-64bit-BAR-pl.patch
-Patch634: 0002-x86-PCI-only-enable-a-64bit-BAR-on-single-socket-AMD.patch
 Patch635: 0003-x86-PCI-limit-the-size-of-the-64bit-BAR-to-256GB.patch
 
 # END OF PATCH DEFINITIONS
@@ -2192,6 +2190,9 @@ fi
 #
 #
 %changelog
+* Fri Dec 15 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc3.git4.1
+- Linux v4.15-rc3-86-g032b4cc8ff84
+
 * Fri Dec 15 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
 - Enable CONFIG_REGULATOR on x86_64, fixing USB PD charging on some devices
 
