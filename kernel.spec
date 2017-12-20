@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 4
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -2191,6 +2191,9 @@ fi
 #
 #
 %changelog
+* Wed Dec 20 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc4.git2.1
+- Linux v4.15-rc4-42-g10a7e9d84915
+
 * Wed Dec 20 2017 Jeremy Cline <jeremy@jcline.org>
 - Backport fix e1000_check_for_copper_link_ich8lan return value
 
