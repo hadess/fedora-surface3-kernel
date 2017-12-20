@@ -609,8 +609,9 @@ Patch332: arm64-socionext-96b-enablement.patch
 
 # 500 - Temp fixes/CVEs etc
 
-# rhbz 1498016 1498017
-#Patch503: KEYS-don-t-let-add_key-update-an-uninstantiated-key.patch
+# rhbz 1525523
+# https://patchwork.kernel.org/patch/10104349/
+Patch500: e1000e-Fix-e1000_check_for_copper_link_ich8lan-return-value..patch
 
 # 600 - Patches for improved Bay and Cherry Trail device support
 # Below patches are submitted upstream, awaiting review / merging
@@ -2190,6 +2191,9 @@ fi
 #
 #
 %changelog
+* Wed Dec 20 2017 Jeremy Cline <jeremy@jcline.org>
+- Backport fix e1000_check_for_copper_link_ich8lan return value
+
 * Tue Dec 19 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc4.git1.1
 - Linux v4.15-rc4-41-gace52288edf0
 
