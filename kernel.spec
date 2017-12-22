@@ -640,6 +640,13 @@ Patch632: 0003-HID-multitouch-Combine-all-left-button-events-in-a-f.patch
 # Reported upstream
 Patch635: 0003-x86-PCI-limit-the-size-of-the-64bit-BAR-to-256GB.patch
 
+# Make SATA link powermanagement policy configurable for:
+# https://fedoraproject.org/wiki/Changes/ImprovedLaptopBatteryLife
+# Queued upstream for merging into 4.16
+Patch636: 0001-ahci-Annotate-PCI-ids-for-mobile-Intel-chipsets-as-s.patch
+Patch637: 0002-ahci-Add-PCI-ids-for-Intel-Bay-Trail-Cherry-Trail-an.patch
+Patch638: 0003-ahci-Allow-setting-a-default-LPM-policy-for-mobile-c.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2191,6 +2198,10 @@ fi
 #
 #
 %changelog
+* Fri Dec 22 2017 Hans de Goede <jwrdegoede@fedoraproject.org>
+- Add patches which allow specifying a default SATA linkpower management policy
+  for mobile chipsets and set the default LPM policy to "med_power_with_dipm"
+
 * Fri Dec 22 2017 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc4.git4.1
 - Linux v4.15-rc4-202-gead68f216110
 
