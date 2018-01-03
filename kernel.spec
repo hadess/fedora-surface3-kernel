@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 2
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -646,6 +646,9 @@ Patch635: 0003-x86-PCI-limit-the-size-of-the-64bit-BAR-to-256GB.patch
 Patch636: 0001-ahci-Annotate-PCI-ids-for-mobile-Intel-chipsets-as-s.patch
 Patch637: 0002-ahci-Add-PCI-ids-for-Intel-Bay-Trail-Cherry-Trail-an.patch
 Patch638: 0003-ahci-Allow-setting-a-default-LPM-policy-for-mobile-c.patch
+
+# KPTI Fixups
+Patch639: kpti-fix.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -2198,6 +2201,9 @@ fi
 #
 #
 %changelog
+* Wed Jan 03 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc6.git0.2
+- KPTI Fix
+
 * Mon Jan 01 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc6.git0.1
 - Linux v4.15-rc6
 
