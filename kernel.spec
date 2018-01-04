@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 3
+%global baserelease 1
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 6
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -646,9 +646,6 @@ Patch635: 0003-x86-PCI-limit-the-size-of-the-64bit-BAR-to-256GB.patch
 Patch636: 0001-ahci-Annotate-PCI-ids-for-mobile-Intel-chipsets-as-s.patch
 Patch637: 0002-ahci-Add-PCI-ids-for-Intel-Bay-Trail-Cherry-Trail-an.patch
 Patch638: 0003-ahci-Allow-setting-a-default-LPM-policy-for-mobile-c.patch
-
-# KPTI Fixups
-Patch639: kpti-fix.patch
 
 # rhbz1514969, submitted upstream
 Patch640: 0001-platform-x86-dell-laptop-Filter-out-spurious-keyboar.patch
@@ -2207,6 +2204,9 @@ fi
 #
 #
 %changelog
+* Thu Jan 04 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc6.git1.1
+- Linux v4.15-rc6-18-g00a5ae218d57
+
 * Thu Jan 04 2018 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 
