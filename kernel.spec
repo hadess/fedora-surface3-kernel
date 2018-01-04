@@ -650,6 +650,12 @@ Patch638: 0003-ahci-Allow-setting-a-default-LPM-policy-for-mobile-c.patch
 # KPTI Fixups
 Patch639: kpti-fix.patch
 
+# rhbz1514969, submitted upstream
+Patch640: 0001-platform-x86-dell-laptop-Filter-out-spurious-keyboar.patch
+
+# rhbz1514836, submitted upstream
+Patch641: 0001-Bluetooth-btusb-Disable-autosuspend-on-QCA-Rome-devi.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -2201,6 +2207,10 @@ fi
 #
 #
 %changelog
+* Thu Jan 04 2018 Hans de Goede <hdegoede@redhat.com>
+- Add a patch to filter false positive kbd backlight change events (#1514969)
+- Add a patch to disable runtime-pm for QCA bluetooth devices (#1514836)
+
 * Wed Jan 03 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc6.git0.3
 - Yet another KPTI fix
 
