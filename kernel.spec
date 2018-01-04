@@ -125,7 +125,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 1
+%define debugbuildsenabled 0
 
 # Want to build a vanilla kernel build without any non-upstream patches?
 %define with_vanilla %{?_with_vanilla: 1} %{?!_with_vanilla: 0}
@@ -2207,6 +2207,9 @@ fi
 #
 #
 %changelog
+* Thu Jan 04 2018 Laura Abbott <labbott@redhat.com>
+- Reenable debugging options.
+
 * Thu Jan 04 2018 Hans de Goede <hdegoede@redhat.com>
 - Add a patch to filter false positive kbd backlight change events (#1514969)
 - Add a patch to disable runtime-pm for QCA bluetooth devices (#1514836)
