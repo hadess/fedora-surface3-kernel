@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 6
+%global rcrev 7
 # The git snapshot level
-%define gitrev 2
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1888,6 +1888,9 @@ fi
 #
 #
 %changelog
+* Mon Jan 08 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc7.git0.1
+- Linux v4.15-rc7
+
 * Mon Jan 08 2018 Laura Abbott <labbott@redhat.com>
 - Disable debugging options.
 
