@@ -1891,6 +1891,9 @@ fi
 #
 #
 %changelog
+* Mon Jan 08 2018 Laura Abbott <labbott@redhat.com>
+- Disable CONFIG_RESET_ATTACK_MITIGATION (rhbz 1532058)
+
 * Mon Jan 08 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.15.0-0.rc7.git0.1
 - First round of Speculative Execution variant 1 patches
 
