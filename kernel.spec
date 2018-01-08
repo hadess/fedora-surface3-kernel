@@ -630,6 +630,9 @@ Patch640: 0001-platform-x86-dell-laptop-Filter-out-spurious-keyboar.patch
 # rhbz1514836, submitted upstream
 Patch641: 0001-Bluetooth-btusb-Disable-autosuspend-on-QCA-Rome-devi.patch
 
+# Speculative Execution patches
+Patch642: prevent-bounds-check-bypass-via-speculative-execution.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -1888,7 +1891,10 @@ fi
 #
 #
 %changelog
-* Mon Jan 08 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc7.git0.1
+* Mon Jan 08 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.15.0-0.rc7.git0.1
+- First round of Speculative Execution variant 1 patches
+
+* Mon Jan 08 2018 Laura Abbott <labbott@redhat.com>
 - Linux v4.15-rc7
 
 * Mon Jan 08 2018 Laura Abbott <labbott@redhat.com>
