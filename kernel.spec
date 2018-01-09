@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 7
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -585,10 +585,6 @@ Patch332: arm64-socionext-96b-enablement.patch
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
-
-# rhbz 1525523
-# https://patchwork.kernel.org/patch/10104349/
-Patch500: e1000e-Fix-e1000_check_for_copper_link_ich8lan-return-value..patch
 
 # 600 - Patches for improved Bay and Cherry Trail device support
 # Below patches are submitted upstream, awaiting review / merging
@@ -1891,6 +1887,9 @@ fi
 #
 #
 %changelog
+* Tue Jan 09 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc7.git1.1
+- Linux v4.15-rc7-79-gef7f8cec80a0
+
 * Tue Jan 09 2018 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 
