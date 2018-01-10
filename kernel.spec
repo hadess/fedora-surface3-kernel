@@ -584,9 +584,10 @@ Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe
 # https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
 Patch332: arm64-socionext-96b-enablement.patch
 
-# This needs a rebase
-# Patch335: arm-exynos-fix-usb3.patch
+# Fix Raspberry Pi and possibly some other dwc2/dwc3 users
+# https://patchwork.kernel.org/patch/10149439/
 
+Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -1892,6 +1893,9 @@ fi
 #
 #
 %changelog
+* Wed Jan 10 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Fix USB on Raspberry Pi (and possibly other dwc2 devices)
+
 * Tue Jan 09 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc7.git1.1
 - Linux v4.15-rc7-79-gef7f8cec80a0
 
