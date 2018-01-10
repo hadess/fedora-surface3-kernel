@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 7
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -587,7 +587,7 @@ Patch332: arm64-socionext-96b-enablement.patch
 # Fix Raspberry Pi and possibly some other dwc2/dwc3 users
 # https://patchwork.kernel.org/patch/10149439/
 
-Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
+# Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -1893,6 +1893,9 @@ fi
 #
 #
 %changelog
+* Wed Jan 10 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc7.git2.1
+- Linux v4.15-rc7-102-gcf1fb158230e
+
 * Wed Jan 10 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Fix USB on Raspberry Pi (and possibly other dwc2 devices)
 
