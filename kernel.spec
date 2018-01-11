@@ -586,6 +586,7 @@ Patch332: arm64-socionext-96b-enablement.patch
 
 # Fix Raspberry Pi and possibly some other dwc2/dwc3 users
 # https://patchwork.kernel.org/patch/10149439/
+Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
 
 # Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
 # 400 - IBM (ppc/s390x) patches
