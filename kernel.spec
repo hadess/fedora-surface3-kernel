@@ -635,6 +635,12 @@ Patch641: 0001-Bluetooth-btusb-Disable-autosuspend-on-QCA-Rome-devi.patch
 
 # Speculative Execution patches
 Patch642: prevent-bounds-check-bypass-via-speculative-execution.patch
+Patch643: 0001-x86-cpufeatures-Add-X86_BUG_SPECTRE_V-12.patch
+Patch644: 0002-sysfs-cpu-Add-vulnerability-folder.patch
+Patch645: 0001-x86-cpu-AMD-Make-LFENCE-a-serializing-instruction.patch
+Patch646: 0002-x86-cpu-AMD-Use-LFENCE_RDTSC-in-preference-to-MFENCE.patch
+Patch647: retpoline.patch
+
 
 # END OF PATCH DEFINITIONS
 
@@ -1894,6 +1900,9 @@ fi
 #
 #
 %changelog
+* Thu Jan 11 2018 Justin M. Forbes <jforbes@fedoraproject.org>
+- Initial retpoline patches for Spectre v2
+
 * Wed Jan 10 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc7.git2.1
 - Linux v4.15-rc7-102-gcf1fb158230e
 
