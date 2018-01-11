@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 7
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -588,7 +588,6 @@ Patch332: arm64-socionext-96b-enablement.patch
 # https://patchwork.kernel.org/patch/10149439/
 Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
 
-# Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -1900,6 +1899,9 @@ fi
 #
 #
 %changelog
+* Thu Jan 11 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc7.git3.1
+- Linux v4.15-rc7-111-g5f615b97cdea
+
 * Thu Jan 11 2018 Justin M. Forbes <jforbes@fedoraproject.org>
 - Initial retpoline patches for Spectre v2
 
