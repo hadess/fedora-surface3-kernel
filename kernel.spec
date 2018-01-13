@@ -584,6 +584,9 @@ Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe
 # https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
 Patch332: arm64-socionext-96b-enablement.patch
 
+# https://patchwork.kernel.org/patch/10149775/ MMC support for Synquacer
+Patch333: arm64-mmc-sdhci_f_sdh30-add-ACPI-support.patch
+
 # Fix Raspberry Pi and possibly some other dwc2/dwc3 users
 # https://patchwork.kernel.org/patch/10149439/
 Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
