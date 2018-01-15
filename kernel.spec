@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 7
+%global rcrev 8
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -619,9 +619,6 @@ Patch630: 0001-HID-multitouch-Properly-deal-with-Win8-PTP-reports-w.patch
 Patch631: 0002-HID-multitouch-Only-look-at-non-touch-fields-in-firs.patch
 Patch632: 0003-HID-multitouch-Combine-all-left-button-events-in-a-f.patch
 
-# Reported upstream
-Patch635: 0003-x86-PCI-limit-the-size-of-the-64bit-BAR-to-256GB.patch
-
 # Make SATA link powermanagement policy configurable for:
 # https://fedoraproject.org/wiki/Changes/ImprovedLaptopBatteryLife
 # Queued upstream for merging into 4.16
@@ -637,11 +634,6 @@ Patch641: 0001-Bluetooth-btusb-Disable-autosuspend-on-QCA-Rome-devi.patch
 
 # Speculative Execution patches
 Patch642: prevent-bounds-check-bypass-via-speculative-execution.patch
-Patch643: 0001-x86-cpufeatures-Add-X86_BUG_SPECTRE_V-12.patch
-Patch644: 0002-sysfs-cpu-Add-vulnerability-folder.patch
-Patch645: 0001-x86-cpu-AMD-Make-LFENCE-a-serializing-instruction.patch
-Patch646: 0002-x86-cpu-AMD-Use-LFENCE_RDTSC-in-preference-to-MFENCE.patch
-Patch647: retpoline.patch
 
 
 # END OF PATCH DEFINITIONS
@@ -1902,6 +1894,9 @@ fi
 #
 #
 %changelog
+* Mon Jan 15 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc8.git0.1
+- Linux v4.15-rc8
+
 * Mon Jan 15 2018 Laura Abbott <labbott@redhat.com>
 - Disable debugging options.
 
