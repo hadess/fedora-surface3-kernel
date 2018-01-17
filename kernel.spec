@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 8
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1903,6 +1903,9 @@ fi
 #
 #
 %changelog
+* Wed Jan 17 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc8.git1.1
+- Linux v4.15-rc8-72-g8cbab92dff77
+
 * Wed Jan 17 2018 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 
