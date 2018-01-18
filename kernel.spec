@@ -1903,6 +1903,9 @@ fi
 #
 #
 %changelog
+* Thu Jan 18 2018 Laura Abbott <labbott@redhat.com>
+- Enable CONFIG_IP6_NF_TARGET_NPT (rhbz 1435884)
+
 * Thu Jan 18 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc8.git2.1
 - Linux v4.15-rc8-104-g1d966eb4d632
 
