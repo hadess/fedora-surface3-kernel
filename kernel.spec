@@ -1269,7 +1269,7 @@ BuildKernel() {
     Arch=`head -1 .config | cut -b 3-`
     echo USING ARCH=$Arch
 
-    make %{?make_opts} ARCH=$Arch oldnoconfig >/dev/null
+    make %{?make_opts} ARCH=$Arch olddefconfig >/dev/null
     %{make} %{?make_opts} ARCH=$Arch %{?_smp_mflags} $MakeTarget %{?sparse_mflags} %{?kernel_mflags}
     %{make} %{?make_opts} ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
 
