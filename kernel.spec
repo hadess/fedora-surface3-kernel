@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 8
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1903,6 +1903,9 @@ fi
 #
 #
 %changelog
+* Fri Jan 19 2018 Laura Abbott <labbott@redhat.com> - 4.15.0-0.rc8.git3.1
+- Linux v4.15-rc8-120-gdda3e15231b3
+
 * Thu Jan 18 2018 Laura Abbott <labbott@redhat.com>
 - Enable CONFIG_IP6_NF_TARGET_NPT (rhbz 1435884)
 
