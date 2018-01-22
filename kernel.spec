@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 8
+%global rcrev 9
 # The git snapshot level
-%define gitrev 3
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -595,10 +595,6 @@ Patch332: arm64-socionext-96b-enablement.patch
 
 # https://patchwork.kernel.org/patch/10149775/ MMC support for Synquacer
 Patch333: arm64-mmc-sdhci_f_sdh30-add-ACPI-support.patch
-
-# Fix Raspberry Pi and possibly some other dwc2/dwc3 users
-# https://patchwork.kernel.org/patch/10149439/
-Patch399: phy-work-around-phys-references-to-usb-phy-devices.patch
 
 # 400 - IBM (ppc/s390x) patches
 
@@ -1903,6 +1899,9 @@ fi
 #
 #
 %changelog
+* Mon Jan 22 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.15.0-0.rc9.git0.1
+- Linux v4.15-rc9
+
 * Mon Jan 22 2018 Justin M. Forbes <jforbes@fedoraproject.org>
 - Disable debugging options.
 
