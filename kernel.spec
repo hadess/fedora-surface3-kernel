@@ -567,6 +567,7 @@ Patch210: disable-i8042-check-on-apple-mac.patch
 Patch211: drm-i915-hush-check-crtc-state.patch
 
 # 300 - ARM patches
+Patch300: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
 
 # http://www.spinics.net/lists/linux-tegra/msg26029.html
 Patch301: usb-phy-tegra-Add-38.4MHz-clock-table-entry.patch
@@ -578,23 +579,24 @@ Patch302: arm-revert-mmc-omap_hsmmc-Use-dma_request_chan-for-reque.patch
 Patch303: ARM-tegra-usb-no-reset.patch
 
 # https://www.spinics.net/lists/arm-kernel/msg554183.html
-Patch305: arm-imx6-hummingboard2.patch
+Patch304: arm-imx6-hummingboard2.patch
 
-Patch306: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
-
-Patch307: arm64-Revert-allwinner-a64-pine64-Use-dcdc1-regulato.patch
+Patch305: arm64-Revert-allwinner-a64-pine64-Use-dcdc1-regulato.patch
 
 # https://patchwork.kernel.org/patch/9820417/
-Patch310: qcom-msm89xx-fixes.patch
+Patch306: qcom-msm89xx-fixes.patch
+
+# https://patchwork.kernel.org/patch/10173115/
+Patch307: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
-Patch321: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
+Patch308: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
 # https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
-Patch332: arm64-socionext-96b-enablement.patch
+Patch330: arm64-socionext-96b-enablement.patch
 
 # https://patchwork.kernel.org/patch/10149775/ MMC support for Synquacer
-Patch333: arm64-mmc-sdhci_f_sdh30-add-ACPI-support.patch
+Patch331: arm64-mmc-sdhci_f_sdh30-add-ACPI-support.patch
 
 # 400 - IBM (ppc/s390x) patches
 
