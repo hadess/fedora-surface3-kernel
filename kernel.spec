@@ -644,6 +644,9 @@ Patch642: prevent-bounds-check-bypass-via-speculative-execution.patch
 # Fix crash on Xwayland using nouveau
 Patch650: dma-buf-fix-reservation_object_wait_timeout_rcu-once-more-v2.patch
 
+# CVE-2018-5750 rhbz 1539706 1539708
+Patch651: ACPI-sbshc-remove-raw-pointer-from-printk-message.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -1902,6 +1905,9 @@ fi
 #
 #
 %changelog
+* Mon Jan 29 2018 Justin M. Forbes <jforbes@fedoraproject.org>
+- Fix CVE-2018-5750 (rhbz 1539706 1539708)
+
 * Mon Jan 29 2018 Laura Abbott <labbott@redhat.com>  - 4.15.0-1
 - Linux v4.15
 - Disable debugging options.
