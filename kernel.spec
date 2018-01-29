@@ -1905,6 +1905,9 @@ fi
 #
 #
 %changelog
+* Mon Jan 29 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Filter GPU bridge drivers on all arches, re-enable adv7511
+
 * Mon Jan 29 2018 Justin M. Forbes <jforbes@fedoraproject.org>
 - Fix CVE-2018-5750 (rhbz 1539706 1539708)
 
