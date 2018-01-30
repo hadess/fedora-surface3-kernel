@@ -6,7 +6,7 @@ Summary: The Linux kernel
 # For a stable, released kernel, released_kernel should be 1. For rawhide
 # and/or a kernel built from an rc or git snapshot, released_kernel should
 # be 0.
-%global released_kernel 1
+%global released_kernel 0
 
 # Sign modules on x86.  Make sure the config files match this setting if more
 # architectures are added.
@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -124,7 +124,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 1
+%define debugbuildsenabled 0
 
 %if %{with_verbose}
 %define make_opts V=1
@@ -593,9 +593,6 @@ Patch308: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe
 
 # https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
 Patch330: arm64-socionext-96b-enablement.patch
-
-# https://patchwork.kernel.org/patch/10149775/ MMC support for Synquacer
-Patch331: arm64-mmc-sdhci_f_sdh30-add-ACPI-support.patch
 
 # 400 - IBM (ppc/s390x) patches
 
@@ -1905,6 +1902,10 @@ fi
 #
 #
 %changelog
+* Tue Jan 30 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git1.1
+- Linux v4.15-1549-g6304672b7f0a
+- Reenable debugging options.
+
 * Mon Jan 29 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Filter GPU bridge drivers on all arches, re-enable adv7511
 
