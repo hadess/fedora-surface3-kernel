@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -621,13 +621,6 @@ Patch628: 0001-Bluetooth-btusb-Add-a-Kconfig-option-to-enable-USB-a.patch
 Patch630: 0001-HID-multitouch-Properly-deal-with-Win8-PTP-reports-w.patch
 Patch631: 0002-HID-multitouch-Only-look-at-non-touch-fields-in-firs.patch
 Patch632: 0003-HID-multitouch-Combine-all-left-button-events-in-a-f.patch
-
-# Make SATA link powermanagement policy configurable for:
-# https://fedoraproject.org/wiki/Changes/ImprovedLaptopBatteryLife
-# Queued upstream for merging into 4.16
-Patch636: 0001-ahci-Annotate-PCI-ids-for-mobile-Intel-chipsets-as-s.patch
-Patch637: 0002-ahci-Add-PCI-ids-for-Intel-Bay-Trail-Cherry-Trail-an.patch
-Patch638: 0003-ahci-Allow-setting-a-default-LPM-policy-for-mobile-c.patch
 
 # rhbz1514969, submitted upstream
 Patch640: 0001-platform-x86-dell-laptop-Filter-out-spurious-keyboar.patch
@@ -1902,6 +1895,9 @@ fi
 #
 #
 %changelog
+* Wed Jan 31 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git2.1
+- Linux v4.15-2341-g3da90b159b14
+
 * Tue Jan 30 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git1.1
 - Linux v4.15-1549-g6304672b7f0a
 - Reenable debugging options.
