@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -591,9 +591,6 @@ Patch307: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch308: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
-# https://git.kernel.org/pub/scm/linux/kernel/git/ardb/linux.git/log/?h=synquacer-netsec
-Patch330: arm64-socionext-96b-enablement.patch
-
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -611,22 +608,8 @@ Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 # rhbz 1509461
 Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 
-# For https://fedoraproject.org/wiki/Changes/ImprovedLaptopBatteryLife
-# Queued in bluetooth-next for merging into 4.16
-Patch628: 0001-Bluetooth-btusb-Add-a-Kconfig-option-to-enable-USB-a.patch
-
-# Fix left-button not working with some hid-multitouch touchpads
-# Adding these suggested by Benjamin Tissoires
-# Queued in hid.git/for-4.16/hid-quirks-cleanup/multitouch for merging into 4.16
-Patch630: 0001-HID-multitouch-Properly-deal-with-Win8-PTP-reports-w.patch
-Patch631: 0002-HID-multitouch-Only-look-at-non-touch-fields-in-firs.patch
-Patch632: 0003-HID-multitouch-Combine-all-left-button-events-in-a-f.patch
-
 # rhbz1514969, submitted upstream
 Patch640: 0001-platform-x86-dell-laptop-Filter-out-spurious-keyboar.patch
-
-# rhbz1514836, submitted upstream
-Patch641: 0001-Bluetooth-btusb-Disable-autosuspend-on-QCA-Rome-devi.patch
 
 # Speculative Execution patches
 Patch642: prevent-bounds-check-bypass-via-speculative-execution.patch
@@ -1895,6 +1878,9 @@ fi
 #
 #
 %changelog
+* Thu Feb 01 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git3.1
+- Linux v4.15-6064-g255442c93843
+
 * Wed Jan 31 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git2.1
 - Linux v4.15-2341-g3da90b159b14
 
