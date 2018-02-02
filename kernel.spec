@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -577,9 +577,6 @@ Patch302: arm-revert-mmc-omap_hsmmc-Use-dma_request_chan-for-reque.patch
 # http://patchwork.ozlabs.org/patch/587554/
 Patch303: ARM-tegra-usb-no-reset.patch
 
-# https://www.spinics.net/lists/arm-kernel/msg554183.html
-Patch304: arm-imx6-hummingboard2.patch
-
 Patch305: arm64-Revert-allwinner-a64-pine64-Use-dcdc1-regulato.patch
 
 # https://patchwork.kernel.org/patch/9820417/
@@ -597,7 +594,6 @@ Patch308: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe
 
 # 600 - Patches for improved Bay and Cherry Trail device support
 # Below patches are submitted upstream, awaiting review / merging
-Patch610: 0010-Input-silead-Add-support-for-capactive-home-button-f.patch
 
 # rhbz 1476467
 Patch617: Fix-for-module-sig-verification.patch
@@ -613,9 +609,6 @@ Patch640: 0001-platform-x86-dell-laptop-Filter-out-spurious-keyboar.patch
 
 # Speculative Execution patches
 Patch642: prevent-bounds-check-bypass-via-speculative-execution.patch
-
-# Fix crash on Xwayland using nouveau
-Patch650: dma-buf-fix-reservation_object_wait_timeout_rcu-once-more-v2.patch
 
 # CVE-2018-5750 rhbz 1539706 1539708
 Patch651: ACPI-sbshc-remove-raw-pointer-from-printk-message.patch
@@ -1878,6 +1871,9 @@ fi
 #
 #
 %changelog
+* Fri Feb 02 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git4.1
+- Linux v4.15-9939-g4bf772b14675
+
 * Thu Feb 01 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git3.1
 - Linux v4.15-6064-g255442c93843
 
