@@ -388,7 +388,7 @@ Requires: kernel-modules-uname-r = %{KVERREL}%{?variant}
 #
 BuildRequires: kmod, patch, bash, tar, git
 BuildRequires: bzip2, xz, findutils, gzip, m4, perl-interpreter, perl-Carp, perl-devel, perl-generators, make, diffutils, gawk
-BuildRequires: gcc, binutils, redhat-rpm-config, hmaccalc
+BuildRequires: gcc, binutils, redhat-rpm-config, hmaccalc, bison, flex
 BuildRequires: net-tools, hostname, bc, elfutils-devel
 %if %{with_sparse}
 BuildRequires: sparse
