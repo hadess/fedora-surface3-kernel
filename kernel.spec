@@ -507,6 +507,8 @@ Patch001: 0001-tools-lib-subcmd-pager.c-do-not-alias-select-params.patch
 # ongoing complaint, full discussion delayed until ksummit/plumbers
 Patch002: 0001-iio-Use-event-header-from-kernel-tree.patch
 
+Patch003: arm-gcc-8-build-fixes.patch
+
 %if !%{nopatches}
 
 # Git trees.
