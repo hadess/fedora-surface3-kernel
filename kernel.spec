@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 4
+%define gitrev 5
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -502,6 +502,7 @@ Source5000: patch-4.%{base_sublevel}-git%{gitrev}.xz
 ## Patches needed for building this package
 
 ## compile fixes
+Patch001: 0001-tools-lib-subcmd-pager.c-do-not-alias-select-params.patch
 
 # ongoing complaint, full discussion delayed until ksummit/plumbers
 Patch002: 0001-iio-Use-event-header-from-kernel-tree.patch
@@ -606,9 +607,6 @@ Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 
 # rhbz1514969, submitted upstream
 Patch640: 0001-platform-x86-dell-laptop-Filter-out-spurious-keyboar.patch
-
-# Speculative Execution patches
-Patch642: prevent-bounds-check-bypass-via-speculative-execution.patch
 
 # CVE-2018-5750 rhbz 1539706 1539708
 Patch651: ACPI-sbshc-remove-raw-pointer-from-printk-message.patch
@@ -1871,6 +1869,9 @@ fi
 #
 #
 %changelog
+* Mon Feb 05 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git5.1
+- Linux v4.15-10668-g35277995e179
+
 * Fri Feb 02 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git4.1
 - Linux v4.15-9939-g4bf772b14675
 
