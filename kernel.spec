@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 6
+%define gitrev 7
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -502,7 +502,6 @@ Source5000: patch-4.%{base_sublevel}-git%{gitrev}.xz
 ## Patches needed for building this package
 
 ## compile fixes
-Patch001: 0001-tools-lib-subcmd-pager.c-do-not-alias-select-params.patch
 
 # ongoing complaint, full discussion delayed until ksummit/plumbers
 Patch002: 0001-iio-Use-event-header-from-kernel-tree.patch
@@ -606,9 +605,6 @@ Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1509461
 Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
-
-# rhbz1514969, submitted upstream
-Patch640: 0001-platform-x86-dell-laptop-Filter-out-spurious-keyboar.patch
 
 # CVE-2018-5750 rhbz 1539706 1539708
 Patch651: ACPI-sbshc-remove-raw-pointer-from-printk-message.patch
@@ -1871,6 +1867,9 @@ fi
 #
 #
 %changelog
+* Wed Feb 07 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git7.1
+- Linux v4.15-11704-ga2e5790d8416
+
 * Wed Feb 07 2018 Hans de Goede <hdegoede@redhat.com>
 - Set CONFIG_VBOXGUEST=m
 
