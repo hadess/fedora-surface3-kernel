@@ -1871,6 +1871,9 @@ fi
 #
 #
 %changelog
+* Wed Feb 07 2018 Hans de Goede <hdegoede@redhat.com>
+- Set CONFIG_VBOXGUEST=m
+
 * Mon Feb 05 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git6.1
 - Linux v4.15-10701-g2deb41b24532
 
