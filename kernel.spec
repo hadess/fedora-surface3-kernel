@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 8
+%define gitrev 9
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -605,9 +605,6 @@ Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1509461
 Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
-
-# CVE-2018-5750 rhbz 1539706 1539708
-Patch651: ACPI-sbshc-remove-raw-pointer-from-printk-message.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1867,6 +1864,9 @@ fi
 #
 #
 %changelog
+* Fri Feb 09 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git9.1
+- Linux v4.15-12216-gf9f1e414128e
+
 * Thu Feb 08 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git8.1
 - Linux v4.15-11930-g581e400ff935
 
