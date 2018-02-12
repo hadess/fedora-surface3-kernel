@@ -590,6 +590,13 @@ Patch307: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch308: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
+# https://www.spinics.net/lists/stable/msg214527.html
+Patch311: arm-clk-bcm2835-hdmi-fixes.patch
+
+# https://www.spinics.net/lists/arm-kernel/msg632925.html
+Patch312: arm-sun4i_ss_prng-fixes.patch
+Patch313: arm-crypto-sunxi-ss-Add-MODULE_ALIAS-to-sun4i-ss.patch
+
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -1864,6 +1871,10 @@ fi
 #
 #
 %changelog
+* Sun Feb 11 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Improvements/fixes for Raspberry Pi HDMI monitor detection
+- Fix regression with AllWinner (sunxi) crypto PRNG, and module loading
+
 * Fri Feb 09 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.16.0-0.rc0.git9.1
 - Linux v4.15-12216-gf9f1e414128e
 
