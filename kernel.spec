@@ -1664,9 +1664,6 @@ make DESTDIR=$RPM_BUILD_ROOT bootwrapper_install WRAPPER_OBJDIR=%{_libdir}/kerne
 ### clean
 ###
 
-%clean
-rm -rf $RPM_BUILD_ROOT
-
 ###
 ### scripts
 ###
