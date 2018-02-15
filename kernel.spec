@@ -1866,6 +1866,9 @@ fi
 #
 #
 %changelog
+* Thu Feb 15 2018 François Cami <fcami@fedoraproject.org>
+- Enable CONFIG_DRM_AMDGPU_SI
+
 * Thu Feb 15 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc1.git3.1
 - Linux v4.16-rc1-88-ge525de3ab046
 
