@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 1
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1866,6 +1866,9 @@ fi
 #
 #
 %changelog
+* Fri Feb 16 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc1.git4.1
+- Linux v4.16-rc1-100-g1388c80438e6
+
 * Thu Feb 15 2018 François Cami <fcami@fedoraproject.org>
 - Enable CONFIG_DRM_AMDGPU_SI
 
