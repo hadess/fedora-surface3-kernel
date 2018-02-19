@@ -1872,6 +1872,9 @@ fi
 #
 #
 %changelog
+* Mon Feb 19 2018 Laura Abbott <labbott@redhat.com>
+- Enable IMA (rhbz 790008)
+
 * Mon Feb 19 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc2.git0.1
 - Linux v4.16-rc2
 
