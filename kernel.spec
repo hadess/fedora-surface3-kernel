@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 2
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -124,7 +124,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 1
+%define debugbuildsenabled 0
 
 %if %{with_verbose}
 %define make_opts V=1
@@ -1522,7 +1522,7 @@ BuildKernel() {
     find $RPM_BUILD_ROOT/usr/src/kernels -name ".*.cmd" -exec rm -f {} \;
 
     # build a BLS config for this kernel
-    ./generate_bls_conf.sh "$KernelVer" "$RPM_BUILD_ROOT" "%{?variant}"
+    %{SOURCE43} "$KernelVer" "$RPM_BUILD_ROOT" "%{?variant}"
 }
 
 ###
@@ -1834,7 +1834,7 @@ fi
 /lib/modules/%{KVERREL}%{?3:+%{3}}/build\
 /lib/modules/%{KVERREL}%{?3:+%{3}}/source\
 /lib/modules/%{KVERREL}%{?3:+%{3}}/updates\
-/lib/modules/%{KVERREL}%{?2:+%{2}}/bls.conf\
+/lib/modules/%{KVERREL}%{?3:+%{3}}/bls.conf\
 %if %{1}\
 /lib/modules/%{KVERREL}%{?3:+%{3}}/vdso\
 /etc/ld.so.conf.d/kernel-%{KVERREL}%{?3:+%{3}}.conf\
@@ -1872,6 +1872,11 @@ fi
 #
 #
 %changelog
+* Tue Feb 20 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc2.git1.1
+- Linux v4.16-rc2-62-g79c0ef3e85c0
+- Reenable debugging options
+- Fix build problems with BLS
+
 * Mon Feb 19 2018 Laura Abbott <labbott@redhat.com>
 - Enable IMA (rhbz 790008)
 
