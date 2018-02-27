@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 3
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -124,7 +124,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 1
+%define debugbuildsenabled 0
 
 %if %{with_verbose}
 %define make_opts V=1
@@ -507,7 +507,6 @@ Source5000: patch-4.%{base_sublevel}-git%{gitrev}.xz
 # ongoing complaint, full discussion delayed until ksummit/plumbers
 Patch002: 0001-iio-Use-event-header-from-kernel-tree.patch
 
-Patch003: arm-gcc-8-build-fixes.patch
 
 %if !%{nopatches}
 
@@ -1878,6 +1877,10 @@ fi
 #
 #
 %changelog
+* Tue Feb 27 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc3.git1.1
+- Linux v4.16-rc3-88-g6f70eb2b00eb
+- Re-enable debugging options
+
 * Mon Feb 26 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc3.git0.1
 - Linux v4.16-rc3
 
