@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 3
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -601,9 +601,6 @@ Patch313: arm-crypto-sunxi-ss-Add-MODULE_ALIAS-to-sun4i-ss.patch
 
 # CVE-2018-7273 rhbz 1547384 1547386
 Patch500: floppy-Don-t-print-kernel-addresses-to-log-in-show_f.patch
-
-# Fix keyboard on Dell XPS 9360 https://patchwork.kernel.org/patch/10236253/
-Patch501: platform-x86-Only-activate-tablet-mode-switch-on-2-i.patch
 
 # 600 - Patches for improved Bay and Cherry Trail device support
 # Below patches are submitted upstream, awaiting review / merging
@@ -1866,6 +1863,9 @@ fi
 #
 #
 %changelog
+* Fri Mar 02 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc3.git4.1
+- Linux v4.16-rc3-245-g5d60e057d127
+
 * Thu Mar 01 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc3.git3.1
 - Linux v4.16-rc3-167-g97ace515f014
 
