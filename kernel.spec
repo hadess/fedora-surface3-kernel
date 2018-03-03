@@ -24,7 +24,7 @@ Summary: The Linux kernel
 %global zipsed -e 's/\.ko$/\.ko.xz/'
 %endif
 
-# define buildid .local
+%define buildid .rpi3
 
 # baserelease defines which build revision of this kernel version we're
 # building.  We used to call this fedora_build, but the magical name
@@ -594,6 +594,20 @@ Patch311: arm-clk-bcm2835-hdmi-fixes.patch
 
 # https://www.spinics.net/lists/arm-kernel/msg632925.html
 Patch313: arm-crypto-sunxi-ss-Add-MODULE_ALIAS-to-sun4i-ss.patch
+
+Patch314: bcm283x-gpio-expander.patch
+
+# https://www.spinics.net/lists/arm-kernel/msg621982.html
+Patch315: bcm283x-Fix-probing-of-bcm2835-i2s.patch
+
+# https://www.spinics.net/lists/arm-kernel/msg633942.html
+Patch316: mmc-sdhci-iproc-Disable-preset-values-for-BCM2835.patch
+
+# https://www.spinics.net/lists/arm-kernel/msg633945.html
+Patch317: bcm2835-hwrng-Handle-deferred-clock-properly.patch
+
+# https://www.spinics.net/lists/linux-bluetooth/msg74414.html
+Patch318: bcm2835-fix-bluetooth.patch
 
 # 400 - IBM (ppc/s390x) patches
 
@@ -1863,6 +1877,12 @@ fi
 #
 #
 %changelog
+* Sat Mar  3 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add GPIO expander driver for Raspberry Pi 3
+- Some Raspberry Pi fixes
+- Switch OMAP serial driver to new 8250 driver
+- General ARM updates
+
 * Fri Mar 02 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc3.git4.1
 - Linux v4.16-rc3-245-g5d60e057d127
 
