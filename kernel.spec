@@ -616,17 +616,14 @@ Patch318: bcm2835-fix-bluetooth.patch
 # CVE-2018-7273 rhbz 1547384 1547386
 Patch500: floppy-Don-t-print-kernel-addresses-to-log-in-show_f.patch
 
-# 600 - Patches for improved Bay and Cherry Trail device support
-# Below patches are submitted upstream, awaiting review / merging
-
 # rhbz 1476467
-Patch617: Fix-for-module-sig-verification.patch
+Patch501: Fix-for-module-sig-verification.patch
 
 # rhbz 1431375
-Patch619: input-rmi4-remove-the-need-for-artifical-IRQ.patch
+Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1509461
-Patch625: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
+Patch503: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 
 # END OF PATCH DEFINITIONS
 
