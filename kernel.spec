@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 3
+%global rcrev 4
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -124,7 +124,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 %if %{with_verbose}
 %define make_opts V=1
@@ -1874,6 +1874,10 @@ fi
 #
 #
 %changelog
+* Mon Mar 05 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc4.git0.1
+- Linux v4.16-rc4
+- Disable debugging options.
+
 * Sat Mar  3 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add GPIO expander driver for Raspberry Pi 3
 - Some Raspberry Pi fixes
