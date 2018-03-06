@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 4
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -124,7 +124,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 1
+%define debugbuildsenabled 0
 
 %if %{with_verbose}
 %define make_opts V=1
@@ -605,9 +605,6 @@ Patch316: mmc-sdhci-iproc-Disable-preset-values-for-BCM2835.patch
 
 # https://www.spinics.net/lists/arm-kernel/msg633945.html
 Patch317: bcm2835-hwrng-Handle-deferred-clock-properly.patch
-
-# https://www.spinics.net/lists/linux-bluetooth/msg74414.html
-Patch318: bcm2835-fix-bluetooth.patch
 
 # 400 - IBM (ppc/s390x) patches
 
@@ -1874,6 +1871,10 @@ fi
 #
 #
 %changelog
+* Tue Mar 06 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc4.git1.1
+- Linux v4.16-rc4-120-gce380619fab9
+- Re-enable debugging options.
+
 * Mon Mar 05 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc4.git0.1
 - Linux v4.16-rc4
 - Disable debugging options.
