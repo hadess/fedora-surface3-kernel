@@ -1871,6 +1871,9 @@ fi
 #
 #
 %changelog
+* Mon Mar 12 2018 Justin M. Forbes <jforbes@fedoraproject.org>
+- Update efi-lockdown patch with current.
+
 * Fri Mar 09 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc4.git3.1
 - Linux v4.16-rc4-159-g1b88accf6a65
 
