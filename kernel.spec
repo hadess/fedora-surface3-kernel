@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 2
+%global baserelease 1
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 5
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -623,9 +623,6 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1509461
 Patch503: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
-
-# rhbz 1554954
-Patch504: mm-page_alloc-fix-boot-hang-in-memmap_init_zone.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1876,6 +1873,9 @@ fi
 #
 #
 %changelog
+* Thu Mar 15 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc5.git2.1
+- Linux v4.16-rc5-60-g0aa3fdb8b3a6
+
 * Wed Mar 14 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc5.git1.2
 - Fix boot hang on aarch64
 
