@@ -160,4 +160,56 @@ index 000000000000..46ad2023cccf
 +#include "arm/bcm2837-rpi-3-b-plus.dts"
 -- 
 2.16.2
+From patchwork Tue Feb 20 12:19:35 2018
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [v5,5/5] ARM: dts: bcm2837-rpi-3-b: add GPIO expander
+From: Baruch Siach <baruch@tkos.co.il>
+X-Patchwork-Id: 10229995
+Message-Id: <a6d59692dc4847e0b1639a26542e28c95ad5240f.1519128054.git.baruch@tkos.co.il>
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Dave Stevenson <dave.stevenson@raspberrypi.org>,
+ Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>
+Cc: devicetree@vger.kernel.org, Baruch Siach <baruch@tkos.co.il>,
+ linux-gpio@vger.kernel.org, Michael Zoran <mzoran@crowfest.net>,
+ Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org,
+ Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
+Date: Tue, 20 Feb 2018 14:19:35 +0200
+
+Add a description of the RPi3 GPIO expander that the VC4 firmware controls.
+
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+---
+ arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+index 3e4ed7c5b0b3..0b31d995a066 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+@@ -25,6 +25,23 @@
+ 	};
+ };
+ 
++&firmware {
++	expgpio: gpio {
++		compatible = "raspberrypi,firmware-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "BT_ON",
++				  "WL_ON",
++				  "STATUS_LED",
++				  "LAN_RUN",
++				  "HPD_N",
++				  "CAM_GPIO0",
++				  "CAM_GPIO1",
++				  "PWR_LOW_N";
++		status = "okay";
++	};
++};
++
+ /* uart0 communicates with the BT module */
+ &uart0 {
+ 	pinctrl-names = "default";
 
