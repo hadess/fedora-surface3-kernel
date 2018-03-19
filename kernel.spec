@@ -1873,6 +1873,9 @@ fi
 #
 #
 %changelog
+* Sun Mar 18 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Initial Raspberry Pi 3+ support
+
 * Fri Mar 16 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc5.git3.1
 - Linux v4.16-rc5-86-gdf09348f78dc
 
