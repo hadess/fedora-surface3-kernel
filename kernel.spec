@@ -608,6 +608,8 @@ Patch316: mmc-sdhci-iproc-Disable-preset-values-for-BCM2835.patch
 # https://www.spinics.net/lists/arm-kernel/msg633945.html
 Patch317: bcm2835-hwrng-Handle-deferred-clock-properly.patch
 
+Patch318: bcm2837-rpi-initial-support-for-the-3.patch
+
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
