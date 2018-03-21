@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 6
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -613,9 +613,6 @@ Patch318: bcm2837-rpi-initial-support-for-the-3.patch
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
-
-# CVE-2018-7273 rhbz 1547384 1547386
-Patch500: floppy-Don-t-print-kernel-addresses-to-log-in-show_f.patch
 
 # rhbz 1476467
 Patch501: Fix-for-module-sig-verification.patch
@@ -1927,6 +1924,9 @@ fi
 #
 #
 %changelog
+* Wed Mar 21 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc6.git2.1
+- Linux v4.16-rc6-75-g3215b9d57a2c
+
 * Tue Mar 20 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc6.git1.1
 - Linux v4.16-rc6-35-g1b5f3ba415fe
 - Re-enable debugging options
