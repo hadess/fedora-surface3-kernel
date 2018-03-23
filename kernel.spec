@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 6
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1875,6 +1875,9 @@ fi
 #
 #
 %changelog
+* Fri Mar 23 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc6.git3.1
+- Linux v4.16-rc6-384-gf36b7534b833
+
 * Thu Mar 22 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Wifi fixes for QCom DragonBoard 410c
 
