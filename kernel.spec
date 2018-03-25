@@ -1875,6 +1875,9 @@ fi
 #
 #
 %changelog
+* Sun Mar 25 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Enable initial config for Xilinx ZynqMP platforms
+
 * Fri Mar 23 2018 Jeremy Cline <jeremy@jcline.org> - 4.16.0-0.rc6.git3.1
 - Linux v4.16-rc6-384-gf36b7534b833
 
