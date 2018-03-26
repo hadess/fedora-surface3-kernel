@@ -124,7 +124,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 %if %{with_verbose}
 %define make_opts V=1
@@ -1875,6 +1875,9 @@ fi
 #
 #
 %changelog
+* Mon Mar 26 2018 Jeremy Cline <jeremy@jcline.org>
+- Disable debugging options.
+
 * Sun Mar 25 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable initial config for Xilinx ZynqMP platforms
 
