@@ -1422,14 +1422,14 @@ index 3bb46cb24a99..3d3b59b97f31 100644
 --- a/drivers/acpi/osl.c
 +++ b/drivers/acpi/osl.c
 @@ -192,7 +192,7 @@ acpi_physical_address __init acpi_os_get_root_pointer(void)
- 	acpi_physical_address pa = 0;
+ 	acpi_physical_address pa;
 
  #ifdef CONFIG_KEXEC
 -	if (acpi_rsdp)
 +	if (acpi_rsdp && !kernel_is_locked_down("ACPI RSDP specification"))
  		return acpi_rsdp;
  #endif
-
+ 	pa = acpi_arch_get_root_pointer();
 -- 
 2.14.3
 
