@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -585,12 +585,6 @@ Patch305: qcom-msm89xx-fixes.patch
 # https://patchwork.kernel.org/patch/10173115/
 Patch306: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 
-# http://patches.linaro.org/patch/131764/
-Patch308: wcn36xx-Fix-firmware-crash-due-to-corrupted-buffer-address.patch
-
-# https://patchwork.kernel.org/patch/10245303/
-Patch309: wcn36xx-reduce-verbosity-of-drivers-messages.patch
-
 # https://www.spinics.net/lists/arm-kernel/msg632925.html
 Patch313: arm-crypto-sunxi-ss-Add-MODULE_ALIAS-to-sun4i-ss.patch
 
@@ -599,9 +593,6 @@ Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe
 
 # https://www.spinics.net/lists/arm-kernel/msg621982.html
 Patch321: bcm283x-Fix-probing-of-bcm2835-i2s.patch
-
-# https://www.spinics.net/lists/arm-kernel/msg633942.html
-Patch322: mmc-sdhci-iproc-Disable-preset-values-for-BCM2835.patch
 
 # https://www.spinics.net/lists/arm-kernel/msg633945.html
 Patch323: bcm2835-hwrng-Handle-deferred-clock-properly.patch
@@ -1879,6 +1870,9 @@ fi
 #
 #
 %changelog
+* Wed Apr 04 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git2.1
+- Linux v4.16-5456-g17dec0a94915
+
 * Tue Apr 03 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git1.1
 - Linux v4.16-2520-g642e7fd23353
 - Reenable debugging options.
