@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -585,17 +585,11 @@ Patch305: qcom-msm89xx-fixes.patch
 # https://patchwork.kernel.org/patch/10173115/
 Patch306: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 
-# https://www.spinics.net/lists/arm-kernel/msg632925.html
-Patch313: arm-crypto-sunxi-ss-Add-MODULE_ALIAS-to-sun4i-ss.patch
-
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
 # https://www.spinics.net/lists/arm-kernel/msg621982.html
 Patch321: bcm283x-Fix-probing-of-bcm2835-i2s.patch
-
-# https://www.spinics.net/lists/arm-kernel/msg633945.html
-Patch323: bcm2835-hwrng-Handle-deferred-clock-properly.patch
 
 Patch324: bcm283x-clk-audio-fixes.patch
 
@@ -1870,6 +1864,9 @@ fi
 #
 #
 %changelog
+* Thu Apr 05 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git3.1
+- Linux v4.16-7248-g06dd3dfeea60
+
 * Wed Apr 04 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git2.1
 - Linux v4.16-5456-g17dec0a94915
 
