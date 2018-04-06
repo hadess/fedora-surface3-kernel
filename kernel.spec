@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -588,14 +588,10 @@ Patch306: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
-# https://www.spinics.net/lists/arm-kernel/msg621982.html
-Patch321: bcm283x-Fix-probing-of-bcm2835-i2s.patch
-
 Patch324: bcm283x-clk-audio-fixes.patch
 
 # Enabling Patches for the RPi3+
 Patch330: bcm2837-rpi-initial-support-for-the-3.patch
-Patch331: bcm2837-gpio-expander.patch
 Patch332: bcm2837-enable-pmu.patch
 Patch333: bcm2837-lan78xx-fixes.patch
 
@@ -611,9 +607,6 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1509461
 Patch503: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
-
-# rhbz 1558977
-Patch504: sunrpc-remove-incorrect-HMAC-request-initialization.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1864,6 +1857,9 @@ fi
 #
 #
 %changelog
+* Fri Apr 06 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git4.1
+- Linux v4.16-9576-g38c23685b273
+
 * Thu Apr 05 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git3.1
 - Linux v4.16-7248-g06dd3dfeea60
 
