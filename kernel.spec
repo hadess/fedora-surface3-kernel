@@ -580,6 +580,9 @@ Patch303: qcom-msm89xx-fixes.patch
 # https://patchwork.kernel.org/patch/10173115/
 Patch304: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 
+# https://marc.info/?l=linux-kernel&m=152328880417846&w=2
+Patch308: arm64-thunderx-crypto-zip-fixes.patch
+
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
@@ -1852,6 +1855,9 @@ fi
 #
 #
 %changelog
+* Mon Apr  9 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Fixes for Cavium ThunderX ZIP driver stability
+
 * Mon Apr 09 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git5.1
 - Linux v4.16-10608-gf8cf2f16a7c9
 
