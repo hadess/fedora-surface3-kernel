@@ -30,7 +30,7 @@ usbdrvs="atm image misc serial wusbcore"
 
 fsdrvs="affs befs coda cramfs dlm ecryptfs hfs hfsplus jfs jffs2 minix ncpfs nilfs2 ocfs2 reiserfs romfs squashfs sysv ubifs ufs"
 
-netprots="6lowpan appletalk atm ax25 batman-adv bluetooth can dccp dsa ieee802154 irda l2tp mac80211 mac802154 mpls netrom nfc rds rfkill rose sctp wireless"
+netprots="6lowpan appletalk atm ax25 batman-adv bluetooth can dccp dsa ieee802154 irda l2tp mac80211 mac802154 mpls netrom nfc rds rfkill rose sctp smc wireless"
 
 drmdrvs="amd ast gma500 i2c i915 mgag200 nouveau radeon via "
 

@@ -1858,6 +1858,7 @@ fi
 %changelog
 * Wed Apr 11 2018 Laura Abbott <labbott@redhat.com>
 - Enable JFFS2 and some MTD modules (rhbz 1474493)
+- Enable a few infiniband options (rhbz 1291902)
 
 * Wed Apr 11 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git7.1
 - Linux v4.16-11490-gb284d4d5a678
