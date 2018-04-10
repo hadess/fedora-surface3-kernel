@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 5
+%define gitrev 6
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1855,6 +1855,9 @@ fi
 #
 #
 %changelog
+* Tue Apr 10 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git6.1
+- Linux v4.16-10929-gc18bb396d3d2
+
 * Mon Apr  9 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Fixes for Cavium ThunderX ZIP driver stability
 
