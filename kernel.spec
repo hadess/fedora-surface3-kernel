@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 6
+%define gitrev 7
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1074,6 +1074,7 @@ git am %{patches}
 
 chmod +x scripts/checkpatch.pl
 chmod +x tools/objtool/sync-check.sh
+mv COPYING COPYING-%{version}
 
 # This Prevents scripts/setlocalversion from mucking with our version numbers.
 touch .scmversion
@@ -1803,7 +1804,7 @@ fi
 %if %{2}\
 %{expand:%%files -f kernel-%{?3:%{3}-}core.list %{?1:-f kernel-%{?3:%{3}-}ldsoconf.list} %{?3:%{3}-}core}\
 %{!?_licensedir:%global license %%doc}\
-%license linux-%{KVERREL}/COPYING\
+%license linux-%{KVERREL}/COPYING-%{version}\
 /lib/modules/%{KVERREL}%{?3:+%{3}}/%{?-k:%{-k*}}%{!?-k:vmlinuz}\
 %ghost /%{image_install_path}/%{?-k:%{-k*}}%{!?-k:vmlinuz}-%{KVERREL}%{?3:+%{3}}\
 /lib/modules/%{KVERREL}%{?3:+%{3}}/.vmlinuz.hmac \
@@ -1855,6 +1856,9 @@ fi
 #
 #
 %changelog
+* Wed Apr 11 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git7.1
+- Linux v4.16-11490-gb284d4d5a678
+
 * Tue Apr 10 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git6.1
 - Linux v4.16-10929-gc18bb396d3d2
 
