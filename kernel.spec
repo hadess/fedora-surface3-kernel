@@ -583,7 +583,13 @@ Patch304: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 # https://marc.info/?l=linux-kernel&m=152328880417846&w=2
 Patch308: arm64-thunderx-crypto-zip-fixes.patch
 
-Patch309: arm-tegra-fix-nouveau-crash.patch
+# https://www.spinics.net/lists/linux-crypto/msg32725.html
+Patch309: crypto-testmgr-Allow-different-compression-results.patch
+
+Patch310: arm-tegra-fix-nouveau-crash.patch
+
+# https://patchwork.kernel.org/patch/10311335/
+Patch312: clk-ti-fix-flag-space-conflict-with-clkctrl-clocks.patch
 
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
@@ -1864,6 +1870,9 @@ fi
 * Thu Apr 12 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Patch to fix nouveau on Tegra platforms
 - Enable IOMMU on Exynos now upstream does
+- Disable tps65217-charger on BeagleBone to fix USB-OTG port rhbz 1487399
+- Add fix for the BeagleBone boot failure
+- Further fix for ThunderX ZIP driver
 
 * Wed Apr 11 2018 Laura Abbott <labbott@redhat.com>
 - Enable JFFS2 and some MTD modules (rhbz 1474493)
