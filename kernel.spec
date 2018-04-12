@@ -583,6 +583,8 @@ Patch304: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 # https://marc.info/?l=linux-kernel&m=152328880417846&w=2
 Patch308: arm64-thunderx-crypto-zip-fixes.patch
 
+Patch309: arm-tegra-fix-nouveau-crash.patch
+
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
@@ -1856,6 +1858,10 @@ fi
 #
 #
 %changelog
+* Thu Apr 12 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Patch to fix nouveau on Tegra platforms
+- Enable IOMMU on Exynos now upstream does
+
 * Wed Apr 11 2018 Laura Abbott <labbott@redhat.com>
 - Enable JFFS2 and some MTD modules (rhbz 1474493)
 - Enable a few infiniband options (rhbz 1291902)
