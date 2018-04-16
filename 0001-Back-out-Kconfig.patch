@@ -1,0 +1,37 @@
+From c49af822e6713efff10f2911ce12e5cebcd028b5 Mon Sep 17 00:00:00 2001
+From: Fedora Kernel Team <kernel-team@fedoraproject.org>
+Date: Mon, 16 Apr 2018 10:19:18 -0500
+Subject: [PATCH] Back out Kconfig
+
+---
+ scripts/kconfig/conf.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/scripts/kconfig/conf.c b/scripts/kconfig/conf.c
+index 283eeed..4e08121 100644
+--- a/scripts/kconfig/conf.c
++++ b/scripts/kconfig/conf.c
+@@ -422,18 +422,8 @@ static void check_conf(struct menu *menu)
+ 		if (sym_is_changable(sym) ||
+ 		    (sym_is_choice(sym) && sym_get_tristate_value(sym) == yes)) {
+ 			if (input_mode == listnewconfig) {
+-				if (sym->name) {
+-					const char *str;
+-
+-					if (sym->type == S_STRING) {
+-						str = sym_get_string_value(sym);
+-						str = sym_escape_string_value(str);
+-						printf("%s%s=%s\n", CONFIG_, sym->name, str);
+-						free((void *)str);
+-					} else {
+-						str = sym_get_string_value(sym);
+-						printf("%s%s=%s\n", CONFIG_, sym->name, str);
+-					}
++				if (sym->name && !sym_is_choice_value(sym)) {
++					printf("%s%s\n", CONFIG_, sym->name);
+ 				}
+ 			} else {
+ 				if (!conf_cnt++)
+-- 
+2.14.3
+

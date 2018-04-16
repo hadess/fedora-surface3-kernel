@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 0
+%global rcrev 1
 # The git snapshot level
-%define gitrev 9
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -124,7 +124,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 1
+%define debugbuildsenabled 0
 
 %if %{with_verbose}
 %define make_opts V=1
@@ -588,9 +588,6 @@ Patch309: crypto-testmgr-Allow-different-compression-results.patch
 
 Patch310: arm-tegra-fix-nouveau-crash.patch
 
-# https://patchwork.kernel.org/patch/10311335/
-Patch312: clk-ti-fix-flag-space-conflict-with-clkctrl-clocks.patch
-
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
@@ -613,6 +610,9 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1509461
 Patch503: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
+
+# Drop this when configs are updated
+Patch504: 0001-Back-out-Kconfig.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1864,7 +1864,9 @@ fi
 #
 #
 %changelog
-* Mon Apr 16 2018 Justin M. Forbes <jforbes@fedoraproject.org>
+
+* Mon Apr 16 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc1.git0.1
+- Linux v4.17-rc1
 - Disable debugging options.
 
 * Fri Apr 13 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc0.git9.1
