@@ -1862,6 +1862,9 @@ fi
 #
 #
 %changelog
+* Tue Apr 17 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Enable drivers for Xilinx ZYMQ-MP Ultra96
+
 * Tue Apr 17 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc1.git1.1
 - Linux v4.17-rc1-21-ga27fc14219f2
 - Reenable debugging options.
