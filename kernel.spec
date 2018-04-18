@@ -617,6 +617,10 @@ Patch503: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 # Drop this when configs are updated
 Patch504: 0001-Back-out-Kconfig.patch
 
+# rhbz 1565354
+Patch505: 0001-qxl-fix-qxl_release_-map-unmap.patch
+Patch506: 0002-qxl-keep-separate-release_bo-pointer.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -1865,6 +1869,9 @@ fi
 #
 #
 %changelog
+* Wed Apr 18 2018 Justin M. Forbes <jforbes@fedoraproject.org>
+- Fix rhbz 1565354
+
 * Tue Apr 17 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable drivers for Xilinx ZYMQ-MP Ultra96
 - Initial support for PocketBeagle
