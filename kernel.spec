@@ -588,6 +588,9 @@ Patch309: crypto-testmgr-Allow-different-compression-results.patch
 
 Patch310: arm-tegra-fix-nouveau-crash.patch
 
+# https://patchwork.kernel.org/patch/10346089/
+Patch311: arm-dts-Add-am335x-pocketbeagle.patch
+
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
@@ -1864,6 +1867,7 @@ fi
 %changelog
 * Tue Apr 17 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable drivers for Xilinx ZYMQ-MP Ultra96
+- Initial support for PocketBeagle
 
 * Tue Apr 17 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc1.git1.1
 - Linux v4.17-rc1-21-ga27fc14219f2
