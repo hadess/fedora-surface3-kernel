@@ -1869,6 +1869,9 @@ fi
 #
 #
 %changelog
+* Thu Apr 19 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Enable UFS storage options on ARM
+
 * Wed Apr 18 2018 Justin M. Forbes <jforbes@fedoraproject.org>
 - Fix rhbz 1565354
 
