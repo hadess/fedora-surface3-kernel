@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 1
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1869,6 +1869,9 @@ fi
 #
 #
 %changelog
+* Thu Apr 19 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc1.git2.1
+- Linux v4.17-rc1-28-g87ef12027b9b
+
 * Thu Apr 19 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable UFS storage options on ARM
 
