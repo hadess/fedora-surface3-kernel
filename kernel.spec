@@ -580,6 +580,9 @@ Patch303: qcom-msm89xx-fixes.patch
 # https://patchwork.kernel.org/patch/10173115/
 Patch304: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 
+# https://patchwork.kernel.org/patch/10351797/
+Patch305: ACPI-scan-Fix-regression-related-to-X-Gene-UARTs.patch
+
 # https://marc.info/?l=linux-kernel&m=152328880417846&w=2
 Patch308: arm64-thunderx-crypto-zip-fixes.patch
 
@@ -1869,6 +1872,9 @@ fi
 #
 #
 %changelog
+* Sun Apr 22 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add quirk patch to fix X-Gene 1 console on HP m400/Mustang (RHBZ 1531140)
+
 * Fri Apr 20 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc1.git3.1
 - Linux v4.17-rc1-93-g43f70c960180
 
