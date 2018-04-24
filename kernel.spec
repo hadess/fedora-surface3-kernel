@@ -594,13 +594,19 @@ Patch310: arm-tegra-fix-nouveau-crash.patch
 # https://patchwork.kernel.org/patch/10346089/
 Patch311: arm-dts-Add-am335x-pocketbeagle.patch
 
+# https://patchwork.kernel.org/patch/10354521/
+# https://patchwork.kernel.org/patch/10354187/
+# https://patchwork.kernel.org/patch/10306793/
+# https://patchwork.kernel.org/patch/10133165/
+Patch315: mvebu-a37xx-fixes.patch
+
 # Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
 Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
 
 Patch324: bcm283x-clk-audio-fixes.patch
 
 # Enabling Patches for the RPi3+
-Patch330: bcm2837-rpi-initial-support-for-the-3.patch
+Patch330: bcm2837-rpi-initial-3plus-support.patch
 Patch332: bcm2837-enable-pmu.patch
 Patch333: bcm2837-lan78xx-fixes.patch
 
@@ -1872,6 +1878,11 @@ fi
 #
 #
 %changelog
+* Mon Apr 24 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add fixes for Marvell a37xx EspressoBin
+- Update to latest Raspberry Pi 3+ fixes
+- More fixes for lan78xx on the Raspberry Pi 3+
+
 * Tue Apr 24 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc2.git1.1
 - Linux v4.17-rc2-58-g24cac7009cb1
 - Reenable debugging options.
