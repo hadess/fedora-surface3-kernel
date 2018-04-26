@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 2
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1878,7 +1878,10 @@ fi
 #
 #
 %changelog
-* Mon Apr 24 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+* Thu Apr 26 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc2.git2.1
+- Linux v4.17-rc2-104-g69bfd470f462
+
+* Wed Apr 25 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add fixes for Marvell a37xx EspressoBin
 - Update to latest Raspberry Pi 3+ fixes
 - More fixes for lan78xx on the Raspberry Pi 3+
