@@ -1878,6 +1878,9 @@ fi
 #
 #
 %changelog
+* Fri Apr 27 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Enable QLogic NICs on ARM
+
 * Thu Apr 26 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc2.git2.1
 - Linux v4.17-rc2-104-g69bfd470f462
 
