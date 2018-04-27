@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 2
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1878,6 +1878,9 @@ fi
 #
 #
 %changelog
+* Fri Apr 27 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc2.git3.1
+- Linux v4.17-rc2-155-g0644f186fc9d
+
 * Fri Apr 27 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable QLogic NICs on ARM
 
