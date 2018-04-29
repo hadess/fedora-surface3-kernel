@@ -600,9 +600,6 @@ Patch311: arm-dts-Add-am335x-pocketbeagle.patch
 # https://patchwork.kernel.org/patch/10133165/
 Patch315: mvebu-a37xx-fixes.patch
 
-# Fix USB on the RPi https://patchwork.kernel.org/patch/9879371/
-Patch320: bcm283x-dma-mapping-skip-USB-devices-when-configuring-DMA-during-probe.patch
-
 Patch324: bcm283x-clk-audio-fixes.patch
 
 # Enabling Patches for the RPi3+
