@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 2
+%global rcrev 3
 # The git snapshot level
-%define gitrev 3
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -622,10 +622,6 @@ Patch503: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 
 # Drop this when configs are updated
 Patch504: 0001-Back-out-Kconfig.patch
-
-# rhbz 1565354
-Patch505: 0001-qxl-fix-qxl_release_-map-unmap.patch
-Patch506: 0002-qxl-keep-separate-release_bo-pointer.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1875,6 +1871,9 @@ fi
 #
 #
 %changelog
+* Mon Apr 30 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc3.git0.1
+- Linux v4.17-rc3
+
 * Mon Apr 30 2018 Justin M. Forbes <jforbes@fedoraproject.org>
 - Disable debugging options.
 
