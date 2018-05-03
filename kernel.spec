@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 3
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -524,8 +524,6 @@ Patch113: no-pcspkr-modalias.patch
 Patch114: silence-fbcon-logo.patch
 
 Patch115: Kbuild-Add-an-option-to-enable-GCC-VTA.patch
-
-Patch116: crash-driver.patch
 
 Patch117: lis3-improve-handling-of-null-rate.patch
 
@@ -1871,6 +1869,9 @@ fi
 #
 #
 %changelog
+* Thu May 03 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc3.git3.1
+- Linux v4.17-rc3-36-gc15f6d8d4715
+
 * Wed May 02 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc3.git2.1
 - Linux v4.17-rc3-13-g2d618bdf7163
 
