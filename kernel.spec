@@ -95,8 +95,6 @@ Summary: The Linux kernel
 %define with_cross_headers   %{?_without_cross_headers:   0} %{?!_without_cross_headers:   1}
 # kernel-debuginfo
 %define with_debuginfo %{?_without_debuginfo: 0} %{?!_without_debuginfo: 1}
-# kernel-bootwrapper (for creating zImages from kernel + initrd)
-%define with_bootwrapper %{?_without_bootwrapper: 0} %{?!_without_bootwrapper: 1}
 # Want to build a the vsdo directories installed
 %define with_vdso_install %{?_without_vdso_install: 0} %{?!_without_vdso_install: 1}
 #
@@ -176,7 +174,6 @@ Summary: The Linux kernel
 %endif
 
 %if %{nopatches}
-%define with_bootwrapper 0
 %define variant -vanilla
 %endif
 
@@ -241,10 +238,8 @@ Summary: The Linux kernel
 %define all_arch_configs kernel-%{version}-*.config
 %endif
 
-# bootwrapper is only on ppc
 # sparse blows up on ppc
 %ifnarch %{power64}
-%define with_bootwrapper 0
 %define with_sparse 0
 %endif
 
@@ -682,13 +677,6 @@ header files define structures and constants that are needed for
 building most standard programs and are also needed for rebuilding the
 cross-glibc package.
 
-
-%package bootwrapper
-Summary: Boot wrapper files for generating combined kernel + initrd images
-Requires: gzip binutils
-%description bootwrapper
-Kernel-bootwrapper contains the wrapper code which makes bootable "zImage"
-files combining both kernel and initial ramdisk.
 
 %package debuginfo-common-%{_target_cpu}
 Summary: Kernel source files used by %{name}-debuginfo packages
@@ -1673,10 +1661,6 @@ done
 rm -rf $RPM_BUILD_ROOT/usr/tmp-headers
 %endif
 
-%if %{with_bootwrapper}
-make DESTDIR=$RPM_BUILD_ROOT bootwrapper_install WRAPPER_OBJDIR=%{_libdir}/kernel-wrapper WRAPPER_DTSDIR=%{_libdir}/kernel-wrapper/dts
-%endif
-
 ###
 ### clean
 ###
@@ -1797,12 +1781,6 @@ fi
 %if %{with_cross_headers}
 %files cross-headers
 /usr/*-linux-gnu/include/*
-%endif
-
-%if %{with_bootwrapper}
-%files bootwrapper
-/usr/sbin/*
-%{_libdir}/kernel-wrapper
 %endif
 
 # empty meta-package
