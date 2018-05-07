@@ -591,6 +591,9 @@ Patch310: arm-tegra-fix-nouveau-crash.patch
 # https://patchwork.kernel.org/patch/10346089/
 Patch311: arm-dts-Add-am335x-pocketbeagle.patch
 
+# https://www.spinics.net/lists/linux-tegra/msg32920.html
+Patch312: arm-tegra-USB-driver-dependency-fix.patch
+
 # https://patchwork.kernel.org/patch/10354521/
 # https://patchwork.kernel.org/patch/10354187/
 # https://patchwork.kernel.org/patch/10306793/
@@ -1869,6 +1872,9 @@ fi
 #
 #
 %changelog
+* Sat May  5 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Fix USB-2 on Tegra devices
+
 * Fri May 04 2018 Laura Abbott <labbott@redhat.com>
 - Fix for building out of tree modules on powerpc (rhbz 1574604)
 
