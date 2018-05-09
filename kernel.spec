@@ -594,6 +594,9 @@ Patch311: arm-dts-Add-am335x-pocketbeagle.patch
 # https://www.spinics.net/lists/linux-tegra/msg32920.html
 Patch312: arm-tegra-USB-driver-dependency-fix.patch
 
+# rhbz 1574718
+Patch313: ACPI-irq-Workaround-firmware-issue-on-X-Gene-based-m400.patch
+
 # https://patchwork.kernel.org/patch/10354521/
 # https://patchwork.kernel.org/patch/10354187/
 # https://patchwork.kernel.org/patch/10306793/
@@ -1872,6 +1875,9 @@ fi
 #
 #
 %changelog
+* Wed May 09 2018 Jeremy Cline <jeremy@jcline.org>
+- Workaround for m400 uart irq firmware description (rhbz 1574718)
+
 * Wed May 09 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc4.git2.1
 - Linux v4.17-rc4-31-g036db8bd9637
 
