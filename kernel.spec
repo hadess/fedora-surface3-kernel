@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 4
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1875,6 +1875,9 @@ fi
 #
 #
 %changelog
+* Thu May 10 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc4.git3.1
+- Linux v4.17-rc4-38-g008464a9360e
+
 * Wed May 09 2018 Jeremy Cline <jeremy@jcline.org>
 - Workaround for m400 uart irq firmware description (rhbz 1574718)
 
