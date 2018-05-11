@@ -42,7 +42,7 @@ Summary: The Linux kernel
 # For non-released -rc kernels, this will be appended after the rcX and
 # gitX tags, so a 3 here would become part of release "0.rcX.gitX.3"
 #
-%global baserelease 1
+%global baserelease 1.arm1
 %global fedora_build %{baserelease}
 
 # base_sublevel is the kernel version we're starting with and patching
@@ -567,41 +567,42 @@ Patch300: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
 
 # http://www.spinics.net/lists/linux-tegra/msg26029.html
 Patch301: usb-phy-tegra-Add-38.4MHz-clock-table-entry.patch
-
 # http://patchwork.ozlabs.org/patch/587554/
 Patch302: ARM-tegra-usb-no-reset.patch
 
+# https://patchwork.kernel.org/patch/10351797/
+Patch303: ACPI-scan-Fix-regression-related-to-X-Gene-UARTs.patch
+# rhbz 1574718
+Patch304: ACPI-irq-Workaround-firmware-issue-on-X-Gene-based-m400.patch
+
 # https://patchwork.kernel.org/patch/9820417/
-Patch303: qcom-msm89xx-fixes.patch
+Patch305: qcom-msm89xx-fixes.patch
 
 # https://patchwork.kernel.org/patch/10173115/
-Patch304: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
-
-# https://patchwork.kernel.org/patch/10351797/
-Patch305: ACPI-scan-Fix-regression-related-to-X-Gene-UARTs.patch
+Patch306: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 
 # https://marc.info/?l=linux-kernel&m=152328880417846&w=2
-Patch308: arm64-thunderx-crypto-zip-fixes.patch
+Patch307: arm64-thunderx-crypto-zip-fixes.patch
 
 # https://www.spinics.net/lists/linux-crypto/msg32725.html
-Patch309: crypto-testmgr-Allow-different-compression-results.patch
+Patch308: crypto-testmgr-Allow-different-compression-results.patch
 
-Patch310: arm-tegra-fix-nouveau-crash.patch
+Patch309: arm-tegra-fix-nouveau-crash.patch
 
 # https://patchwork.kernel.org/patch/10346089/
-Patch311: arm-dts-Add-am335x-pocketbeagle.patch
+Patch310: arm-dts-Add-am335x-pocketbeagle.patch
 
 # https://www.spinics.net/lists/linux-tegra/msg32920.html
-Patch312: arm-tegra-USB-driver-dependency-fix.patch
+Patch311: arm-tegra-USB-driver-dependency-fix.patch
 
-# rhbz 1574718
-Patch313: ACPI-irq-Workaround-firmware-issue-on-X-Gene-based-m400.patch
+# In linux-next, due in stable
+Patch312: arm64-dts-marvell-armada-cp110-fix-hang.patch
 
 # https://patchwork.kernel.org/patch/10354521/
 # https://patchwork.kernel.org/patch/10354187/
 # https://patchwork.kernel.org/patch/10306793/
 # https://patchwork.kernel.org/patch/10133165/
-Patch315: mvebu-a37xx-fixes.patch
+Patch313: mvebu-a37xx-fixes.patch
 
 Patch324: bcm283x-clk-audio-fixes.patch
 
@@ -1875,6 +1876,9 @@ fi
 #
 #
 %changelog
+* Thu May 10 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add fix from linux-next for mvebu Armada 8K macbin boot regression
+
 * Thu May 10 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc4.git3.1
 - Linux v4.17-rc4-38-g008464a9360e
 
