@@ -519,6 +519,8 @@ Patch114: silence-fbcon-logo.patch
 
 Patch115: Kbuild-Add-an-option-to-enable-GCC-VTA.patch
 
+Patch116: crash-driver.patch
+
 Patch117: lis3-improve-handling-of-null-rate.patch
 
 Patch118: scsi-sd_revalidate_disk-prevent-NULL-ptr-deref.patch
@@ -618,9 +620,6 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1509461
 Patch503: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
-
-# Drop this when configs are updated
-Patch504: 0001-Back-out-Kconfig.patch
 
 # END OF PATCH DEFINITIONS
 
