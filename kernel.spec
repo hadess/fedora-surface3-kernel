@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 5
+%global rcrev 6
 # The git snapshot level
-%define gitrev 3
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -122,7 +122,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 %if %{with_verbose}
 %define make_opts V=1
@@ -591,9 +591,6 @@ Patch310: arm-dts-Add-am335x-pocketbeagle.patch
 
 # https://www.spinics.net/lists/linux-tegra/msg32920.html
 Patch311: arm-tegra-USB-driver-dependency-fix.patch
-
-# In linux-next, due in stable
-Patch312: arm64-dts-marvell-armada-cp110-fix-hang.patch
 
 # https://patchwork.kernel.org/patch/10354521/
 # https://patchwork.kernel.org/patch/10354187/
@@ -1856,6 +1853,10 @@ fi
 #
 #
 %changelog
+* Mon May 21 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc6.git0.1
+- Linux v4.17-rc6
+- Disable debugging options.
+
 * Sun May 20 2018 Hans de Goede <hdegoede@redhat.com>
 - Enable GPIO_AMDPT, PINCTRL_AMD and X86_AMD_PLATFORM_DEVICE Kconfig options
   to fix i2c and GPIOs not working on AMD based laptops (rhbz#1510649)
