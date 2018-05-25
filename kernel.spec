@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 6
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1857,6 +1857,9 @@ fi
 #
 #
 %changelog
+* Fri May 25 2018 Jeremy Cline <jcline@redhat.com> - 4.17.0-0.rc6.git3.1
+- Linux v4.17-rc6-224-g62d18ecfa641
+
 * Fri May 25 2018 Jeremy Cline <jeremy@jcline.org>
 - Fix for incorrect error message about parsing PCCT (rhbz 1435837)
 
