@@ -618,6 +618,10 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 # rhbz 1509461
 Patch503: v3-2-2-Input-synaptics---Lenovo-X1-Carbon-5-should-use-SMBUS-RMI.patch
 
+# rbhz 1435837
+# https://www.spinics.net/lists/linux-acpi/msg82405.html
+Patch504: mailbox-ACPI-erroneous-error-message-when-parsing-ACPI.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -1853,6 +1857,9 @@ fi
 #
 #
 %changelog
+* Fri May 25 2018 Jeremy Cline <jeremy@jcline.org>
+- Fix for incorrect error message about parsing PCCT (rhbz 1435837)
+
 * Thu May 24 2018 Justin M. Forbes <jforbes@redhat.com> - 4.17.0-0.rc6.git2.1
 - Linux v4.17-rc6-158-gbee797529d7c
 - Reenable debugging options.
