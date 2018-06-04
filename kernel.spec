@@ -605,6 +605,8 @@ Patch330: bcm2837-rpi-initial-3plus-support.patch
 Patch332: bcm2837-enable-pmu.patch
 Patch333: bcm2837-lan78xx-fixes.patch
 
+Patch335: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
+
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -1854,6 +1856,9 @@ fi
 #
 #
 %changelog
+* Sun Jun  3 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Initial support for Raspberry Pi cpufreq driver
+
 * Thu May 31 2018 Justin M. Forbes <jforbes@fedoraproject.org> - 4.17.0-0.rc7.git2.1
 - Linux v4.17-rc7-43-gdd52cb879063
 
