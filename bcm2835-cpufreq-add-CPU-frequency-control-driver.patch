@@ -271,3 +271,31 @@ index 000000000000..046efc822a59
 -- 
 2.17.0
 
+From 40a82f71737891581dcbe45331d15a29dd3e7805 Mon Sep 17 00:00:00 2001
+From: Peter Robinson <pbrobinson@gmail.com>
+Date: Mon, 4 Jun 2018 09:14:10 +0100
+Subject: [PATCH 7/7] add 1.4 ghz OPP for the 3B+
+
+Signed-off-by: Peter Robinson <pbrobinson@gmail.com>
+---
+ arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+index 4adb85e66be3..aaefb078f391 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+@@ -106,3 +106,10 @@
+ 	pinctrl-0 = <&uart1_gpio14>;
+ 	status = "okay";
+ };
++
++&cpu0_opp_table {
++	opp@1400000000 {
++		opp-hz = /bits/ 64 <1400000000>;
++		clock-latency-ns = <355000>;
++	};
++};
+-- 
+2.17.1
+
