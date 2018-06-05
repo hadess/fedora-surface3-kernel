@@ -1852,6 +1852,9 @@ fi
 #
 #
 %changelog
+* Tue Jun 05 2018 Jeremy Cline <jeremy@jcline.org>
+- Enable CONFIG_SCSI_DH on s390x (rhbz 1586189)
+
 * Tue Jun 05 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc0.git2.1
 - Linux v4.17-1535-g5037be168f0e
 
