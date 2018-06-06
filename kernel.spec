@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -578,19 +578,10 @@ Patch305: qcom-msm89xx-fixes.patch
 # https://patchwork.kernel.org/patch/10173115/
 Patch306: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 
-# https://marc.info/?l=linux-kernel&m=152328880417846&w=2
-Patch307: arm64-thunderx-crypto-zip-fixes.patch
-
-# https://www.spinics.net/lists/linux-crypto/msg32725.html
-Patch308: crypto-testmgr-Allow-different-compression-results.patch
-
 Patch309: arm-tegra-fix-nouveau-crash.patch
 
 # https://patchwork.kernel.org/patch/10346089/
 Patch310: arm-dts-Add-am335x-pocketbeagle.patch
-
-# https://www.spinics.net/lists/linux-tegra/msg32920.html
-Patch311: arm-tegra-USB-driver-dependency-fix.patch
 
 # https://patchwork.kernel.org/patch/10354521/
 # https://patchwork.kernel.org/patch/10354187/
@@ -1852,6 +1843,9 @@ fi
 #
 #
 %changelog
+* Wed Jun 06 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc0.git3.1
+- Linux v4.17-3754-g135c5504a600
+
 * Tue Jun 05 2018 Jeremy Cline <jeremy@jcline.org>
 - Enable CONFIG_SCSI_DH on s390x (rhbz 1586189)
 
