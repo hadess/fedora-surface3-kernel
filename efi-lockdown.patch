@@ -1550,14 +1550,14 @@ diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
 index 0244973ee544..7457f2676c6d 100644
 --- a/kernel/bpf/syscall.c
 +++ b/kernel/bpf/syscall.c
-@@ -2031,6 +2031,9 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
+@@ -2333,6 +2333,9 @@ SYSCALL_DEFINE3(bpf, int, cmd, union bpf_attr __user *, uattr, unsigned int, siz
  	if (sysctl_unprivileged_bpf_disabled && !capable(CAP_SYS_ADMIN))
  		return -EPERM;
 
 +	if (kernel_is_locked_down("BPF"))
 +		return -EPERM;
 +
- 	err = check_uarg_tail_zero(uattr, sizeof(attr), size);
+ 	err = bpf_check_uarg_tail_zero(uattr, sizeof(attr), size);
  	if (err)
  		return err;
 -- 
