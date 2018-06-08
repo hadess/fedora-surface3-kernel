@@ -565,22 +565,21 @@ index d89bebf85421..da6f55c96a61 100644
 
  	for (i = 0; i < measure_entries; i++)
  		list_add_tail(&dont_measure_rules[i].list, &ima_default_rules);
-@@ -471,11 +478,23 @@ void __init ima_init_policy(void)
-
+@@ -487,12 +494,24 @@ void __init ima_init_policy(void)
+ 
  	/*
  	 * Insert the appraise rules requiring file signatures, prior to
 -	 * any other appraise rules.
 +	 * any other appraise rules.  In secure boot lock-down mode, also
 +	 * require these appraise rules for custom policies.
  	 */
--	for (i = 0; i < secure_boot_entries; i++)
--		list_add_tail(&secure_boot_rules[i].list,
--			      &ima_default_rules);
-+	for (i = 0; i < secure_boot_entries; i++) {
+ 	for (i = 0; i < secure_boot_entries; i++) {
 +		struct ima_rule_entry *entry;
 +
 +		/* Include for builtin policies */
-+		list_add_tail(&secure_boot_rules[i].list, &ima_default_rules);
+ 		list_add_tail(&secure_boot_rules[i].list, &ima_default_rules);
+ 		temp_ima_appraise |=
+ 		    ima_appraise_flag(secure_boot_rules[i].func);
 +
 +		/* Include for custom policies */
 +		if (kernel_locked_down) {
@@ -589,10 +588,9 @@ index d89bebf85421..da6f55c96a61 100644
 +			if (entry)
 +				list_add_tail(&entry->list, &ima_policy_rules);
 +		}
-+	}
-
+ 	}
+ 
  	for (i = 0; i < appraise_entries; i++) {
- 		list_add_tail(&default_appraise_rules[i].list,
 -- 
 2.14.3
 
