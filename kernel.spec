@@ -559,6 +559,9 @@ Patch210: disable-i8042-check-on-apple-mac.patch
 
 Patch211: drm-i915-hush-check-crtc-state.patch
 
+Patch212: efi-secureboot.patch
+Patch213: lockdown-fix-coordination-of-kernel-module-signature-verification.patch
+
 # 300 - ARM patches
 Patch300: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
 
@@ -1843,6 +1846,9 @@ fi
 #
 #
 %changelog
+* Mon Jun 11 2018 Justin M. Forbes <jforbes@fedoraproject.org>
+- Secure Boot updates
+
 * Mon Jun 11 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc0.git6.1
 - Linux v4.17-10288-ga2225d931f75
 
