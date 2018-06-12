@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 6
+%define gitrev 7
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -583,19 +583,9 @@ Patch306: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
 
 Patch309: arm-tegra-fix-nouveau-crash.patch
 
-# https://patchwork.kernel.org/patch/10346089/
-Patch310: arm-dts-Add-am335x-pocketbeagle.patch
-
-# https://patchwork.kernel.org/patch/10354521/
-# https://patchwork.kernel.org/patch/10354187/
-# https://patchwork.kernel.org/patch/10306793/
-# https://patchwork.kernel.org/patch/10133165/
-Patch313: mvebu-a37xx-fixes.patch
-
 Patch324: bcm283x-clk-audio-fixes.patch
 
 # Enabling Patches for the RPi3+
-Patch330: bcm2837-rpi-initial-3plus-support.patch
 Patch332: bcm2837-enable-pmu.patch
 Patch333: bcm2837-lan78xx-fixes.patch
 
@@ -610,6 +600,9 @@ Patch501: Fix-for-module-sig-verification.patch
 
 # rhbz 1431375
 Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
+
+# rhbz 1589855
+Patch503: 0001-Revert-debugfs-inode-debugfs_create_dir-uses-mode-pe.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1846,6 +1839,9 @@ fi
 #
 #
 %changelog
+* Tue Jun 12 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc0.git7.1
+- Linux v4.17-11346-g8efcf34a2639
+
 * Mon Jun 11 2018 Justin M. Forbes <jforbes@fedoraproject.org>
 - Secure Boot updates
 

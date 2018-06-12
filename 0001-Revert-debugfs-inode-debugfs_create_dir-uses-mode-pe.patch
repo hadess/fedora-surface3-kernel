@@ -1,0 +1,33 @@
+From 9c625d3a4eb215369b10b075b2006f9c3035c93f Mon Sep 17 00:00:00 2001
+From: Laura Abbott <labbott@redhat.com>
+Date: Tue, 12 Jun 2018 08:48:18 -0700
+Subject: [PATCH] Revert "debugfs: inode: debugfs_create_dir uses mode
+ permission from parent"
+
+This reverts commit 95cde3c59966f6371b6bcd9e4e2da2ba64ee9775.
+
+A custom revert due to secure boot lockdown conflicts.
+
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+---
+ fs/debugfs/inode.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/fs/debugfs/inode.c b/fs/debugfs/inode.c
+index e392ca19bdd4..4daec17b8215 100644
+--- a/fs/debugfs/inode.c
++++ b/fs/debugfs/inode.c
+@@ -538,9 +538,7 @@ struct dentry *debugfs_create_dir(const char *name, struct dentry *parent)
+ 	if (unlikely(!inode))
+ 		return failed_creating(dentry);
+ 
+-	if (!parent)
+-		parent = debugfs_mount->mnt_root;
+-	inode->i_mode = S_IFDIR | ((d_inode(parent)->i_mode & 0770));
++	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+ 	inode->i_op = &debugfs_dir_inode_operations;
+ 	inode->i_fop = &simple_dir_operations;
+ 
+-- 
+2.17.0
+
