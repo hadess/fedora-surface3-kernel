@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 7
+%define gitrev 8
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -600,9 +600,6 @@ Patch501: Fix-for-module-sig-verification.patch
 
 # rhbz 1431375
 Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
-
-# rhbz 1589855
-Patch503: 0001-Revert-debugfs-inode-debugfs_create_dir-uses-mode-pe.patch
 
 # rhbz 1470995
 Patch504: kexec-bzimage-verify-pe-signature-fix.patch
@@ -1842,6 +1839,9 @@ fi
 #
 #
 %changelog
+* Wed Jun 13 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc0.git8.1
+- Linux v4.17-11782-gbe779f03d563
+
 * Wed Jun 13 2018 Jeremy Cline <jeremy@jcline.org>
 - Fix kexec_file_load pefile signature verification (rhbz 1470995)
 
