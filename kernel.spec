@@ -1842,6 +1842,9 @@ fi
 #
 #
 %changelog
+* Wed Jun 13 2018 Jeremy Cline <jeremy@jcline.org>
+- Fix kexec_file_load pefile signature verification (rhbz 1470995)
+
 * Tue Jun 12 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc0.git7.1
 - Linux v4.17-11346-g8efcf34a2639
 
