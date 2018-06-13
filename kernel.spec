@@ -604,6 +604,9 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 # rhbz 1589855
 Patch503: 0001-Revert-debugfs-inode-debugfs_create_dir-uses-mode-pe.patch
 
+# rhbz 1470995
+Patch504: kexec-bzimage-verify-pe-signature-fix.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
