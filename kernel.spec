@@ -1841,6 +1841,7 @@ fi
 %changelog
 * Fri Jun 15 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - ARM updates for 4.18, cleanup some dropped config options
+- Disable zoron driver, moved to staging for removal upstream
 
 * Thu Jun 14 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc0.git9.1
 - Linux v4.17-11928-g2837461dbe6f
