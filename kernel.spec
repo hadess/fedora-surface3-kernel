@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 9
+%define gitrev 10
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1839,6 +1839,9 @@ fi
 #
 #
 %changelog
+* Fri Jun 15 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc0.git10.1
+- Linux v4.17-12074-g4c5e8fc62d6a
+
 * Fri Jun 15 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - ARM updates for 4.18, cleanup some dropped config options
 - Disable zoron driver, moved to staging for removal upstream
