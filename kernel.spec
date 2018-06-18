@@ -329,6 +329,7 @@ Summary: The Linux kernel
 %define with_up 0
 %define with_pae 0
 %define with_debuginfo 0
+%define with_debug 0
 %define _enable_debug_packages 0
 %endif
 
