@@ -669,7 +669,7 @@ index a6e43a5806a1..9c1709a05037 100644
 -	}
 
 -	/* Not having a signature is only an error if we're strict. */
--	if (err == -ENOKEY && !sig_enforce)
+-	if (err == -ENOKEY && !is_module_sig_enforced())
 -		err = 0;
 +		/* We don't permit modules to be loaded into trusted kernels
 +		 * without a valid signature on them, but if we're not
