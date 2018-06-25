@@ -1840,6 +1840,10 @@ fi
 #
 #
 %changelog
+* Mon Jun 25 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Disable BFP JIT on ARMv7 as it's currently broken
+- Remove forced console on aarch64, legacy config (rhbz 1594402)
+
 * Fri Jun 22 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc1.git4.1
 - Linux v4.18-rc1-189-g894b8c000ae6
 
