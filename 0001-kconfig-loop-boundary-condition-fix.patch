@@ -1,0 +1,35 @@
+From fbeaf6c71be2273fde980395974e70eb8e1f4a80 Mon Sep 17 00:00:00 2001
+From: Jerry James <loganjerry@gmail.com>
+Date: Sat, 23 Jun 2018 22:49:04 +0200
+Subject: [PATCH] kconfig: loop boundary condition fix
+
+If buf[-1] just happens to hold the byte 0x0A, then nread can wrap around
+to (size_t)-1, leading to invalid memory accesses.
+
+This has caused segmentation faults when trying to build the latest
+kernel snapshots for i686 in Fedora:
+https://bugzilla.redhat.com/show_bug.cgi?id=1592374
+
+Signed-off-by: Jerry James <loganjerry@gmail.com>
+[alexpl@fedoraproject.org: reformatted patch for submission]
+Signed-off-by: Alexander Ploumistos <alexpl@fedoraproject.org>
+---
+ scripts/kconfig/preprocess.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/kconfig/preprocess.c b/scripts/kconfig/preprocess.c
+index 65da87fce907..5ca2df790d3c 100644
+--- a/scripts/kconfig/preprocess.c
++++ b/scripts/kconfig/preprocess.c
+@@ -156,7 +156,7 @@ static char *do_shell(int argc, char *argv[])
+ 		nread--;
+ 
+ 	/* remove trailing new lines */
+-	while (buf[nread - 1] == '\n')
++	while (nread > 0 && buf[nread - 1] == '\n')
+ 		nread--;
+ 
+ 	buf[nread] = 0;
+-- 
+2.17.1
+

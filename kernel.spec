@@ -323,7 +323,7 @@ Summary: The Linux kernel
 # Which is a BadThing(tm).
 
 # We only build kernel-headers on the following...
-%define nobuildarches i386 i686
+%define nobuildarches i386
 
 %ifarch %nobuildarches
 %define with_up 0
@@ -604,6 +604,9 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1470995
 Patch504: kexec-bzimage-verify-pe-signature-fix.patch
+
+# i686 fix
+Patch505: 0001-kconfig-loop-boundary-condition-fix.patch
 
 # END OF PATCH DEFINITIONS
 
