@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 2
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1843,6 +1843,9 @@ fi
 #
 #
 %changelog
+* Tue Jun 26 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc2.git2.1
+- Linux v4.18-rc2-44-g813835028e9a
+
 * Mon Jun 25 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc2.git1.1
 - Linux v4.18-rc2-37-g6f0d349d922b
 - Fix for aarch64 bpf (rhbz 1594447)
