@@ -1843,6 +1843,9 @@ fi
 #
 #
 %changelog
+* Tue Jun 26 2018 Laura Abbott <labbott@redhat.com>
+- Enable leds-pca9532 module (rhbz 1595163)
+
 * Tue Jun 26 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc2.git2.1
 - Linux v4.18-rc2-44-g813835028e9a
 
