@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 2
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -580,7 +580,7 @@ Patch304: ACPI-irq-Workaround-firmware-issue-on-X-Gene-based-m400.patch
 Patch305: qcom-msm89xx-fixes.patch
 
 # https://patchwork.kernel.org/project/linux-mmc/list/?submitter=71861
-Patch306: sdhci-esdhc-imx-fixes.patch
+Patch306: arm-sdhci-esdhc-imx-fixes.patch
 
 Patch307: arm-tegra-fix-nouveau-crash.patch
 
@@ -1841,6 +1841,9 @@ fi
 #
 #
 %changelog
+* Fri Jun 29 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc2.git4.1
+- Linux v4.18-rc2-207-gcd993fc4316d
+
 * Fri Jun 29 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add a possible i.MX6 sdhci fix
 
