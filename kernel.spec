@@ -579,18 +579,16 @@ Patch304: ACPI-irq-Workaround-firmware-issue-on-X-Gene-based-m400.patch
 # https://patchwork.kernel.org/patch/9820417/
 Patch305: qcom-msm89xx-fixes.patch
 
-# https://patchwork.kernel.org/patch/10173115/
-Patch306: arm-dts-imx6qdl-udoo-Disable-usbh1-to-avoid-kernel-hang.patch
+# https://patchwork.kernel.org/project/linux-mmc/list/?submitter=71861
+Patch306: sdhci-esdhc-imx-fixes.patch
 
-Patch309: arm-tegra-fix-nouveau-crash.patch
-
-Patch324: bcm283x-clk-audio-fixes.patch
+Patch307: arm-tegra-fix-nouveau-crash.patch
 
 # Enabling Patches for the RPi3+
-Patch332: bcm2837-enable-pmu.patch
-Patch333: bcm2837-lan78xx-fixes.patch
+Patch330: bcm2837-enable-pmu.patch
+Patch331: bcm2837-lan78xx-fixes.patch
 
-Patch335: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
+Patch332: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
 # 400 - IBM (ppc/s390x) patches
 
@@ -1843,6 +1841,9 @@ fi
 #
 #
 %changelog
+* Fri Jun 29 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add a possible i.MX6 sdhci fix
+
 * Thu Jun 28 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc2.git3.1
 - Linux v4.18-rc2-132-gf57494321cbf
 
