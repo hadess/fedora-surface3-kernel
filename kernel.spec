@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 2
+%global rcrev 3
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -602,9 +602,6 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 
 # rhbz 1470995
 Patch504: kexec-bzimage-verify-pe-signature-fix.patch
-
-# i686 fix
-Patch505: 0001-kconfig-loop-boundary-condition-fix.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1841,6 +1838,9 @@ fi
 #
 #
 %changelog
+* Mon Jul 02 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc3.git0.1
+- Linux v4.18-rc3
+
 * Mon Jul 02 2018 Laura Abbott <labbott@redhat.com>
 - Disable debugging options.
 
