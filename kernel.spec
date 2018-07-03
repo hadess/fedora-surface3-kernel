@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 3
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -586,7 +586,6 @@ Patch307: arm-tegra-fix-nouveau-crash.patch
 
 # Enabling Patches for the RPi3+
 Patch330: bcm2837-enable-pmu.patch
-Patch331: bcm2837-lan78xx-fixes.patch
 
 Patch332: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
@@ -1838,6 +1837,9 @@ fi
 #
 #
 %changelog
+* Tue Jul 03 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc3.git1.1
+- Linux v4.18-rc3-107-gd0fbad0aec1d
+
 * Tue Jul 03 2018 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 
