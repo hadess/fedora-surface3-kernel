@@ -607,6 +607,9 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 # rhbz 1470995
 Patch504: kexec-bzimage-verify-pe-signature-fix.patch
 
+# arm64 compile fix
+Patch505: 0001-Revert-arm64-Use-aarch64elf-and-aarch64elfb-emulatio.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
