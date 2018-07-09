@@ -589,6 +589,11 @@ Patch330: bcm2837-enable-pmu.patch
 
 Patch332: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
+# Fix for AllWinner A64 Timer Errata, still not final
+# https://patchwork.kernel.org/patch/10392891/
+Patch350: arm64-arch_timer-Workaround-for-Allwinner-A64-timer-instability.patch
+Patch351: arm64-dts-allwinner-a64-Enable-A64-timer-workaround.patch
+
 # 400 - IBM (ppc/s390x) patches
 
 # 500 - Temp fixes/CVEs etc
@@ -1837,6 +1842,9 @@ fi
 #
 #
 %changelog
+* Mon Jul  9 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add fix for AllWinner A64 timer scew errata
+
 * Fri Jul 06 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc3.git3.1
 - Linux v4.18-rc3-183-gc42c12a90545
 
