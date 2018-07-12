@@ -1845,6 +1845,9 @@ fi
 #
 #
 %changelog
+* Thu Jul 12 2018 Javier Martinez Canillas <javierm@redhat.com>
+- Drop the id field from generated BLS snippets
+
 * Thu Jul 12 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc4.git3.1
 - Linux v4.18-rc4-69-gc25c74b7476e
 
