@@ -1,0 +1,38 @@
+From b89f16785c9b5176c0af9b15eee74048daf95357 Mon Sep 17 00:00:00 2001
+From: Laura Abbott <labbott@redhat.com>
+Date: Fri, 6 Jul 2018 17:42:05 -0700
+Subject: [PATCHv2 2/7] tools: build: Use HOSTLDFLAGS with fixdep
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+To: Josh Poimboeuf <jpoimboe@redhat.com>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: linux-kbuild@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Robin Jarry <robin.jarry@6wind.com>
+
+The final link of fixdep uses LDFLAGS but not the existing HOSTLDFLAGS.
+Fix this.
+
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+---
+v2: Switch to just using HOSTLDFLAGS instead of both LDFLAGS and
+HOSTLDFLAGS.
+---
+ tools/build/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/build/Makefile b/tools/build/Makefile
+index 5eb4b5ad79cb..5edf65e684ab 100644
+--- a/tools/build/Makefile
++++ b/tools/build/Makefile
+@@ -43,7 +43,7 @@ $(OUTPUT)fixdep-in.o: FORCE
+ 	$(Q)$(MAKE) $(build)=fixdep
+ 
+ $(OUTPUT)fixdep: $(OUTPUT)fixdep-in.o
+-	$(QUIET_LINK)$(HOSTCC) $(LDFLAGS) -o $@ $<
++	$(QUIET_LINK)$(HOSTCC) $(HOSTLDFLAGS) -o $@ $<
+ 
+ FORCE:
+ 
+-- 
+2.17.1
+

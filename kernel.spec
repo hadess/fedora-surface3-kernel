@@ -610,6 +610,21 @@ Patch504: kexec-bzimage-verify-pe-signature-fix.patch
 # arm64 compile fix
 Patch505: 0001-Revert-arm64-Use-aarch64elf-and-aarch64elfb-emulatio.patch
 
+# Support for unique build ids
+# All queued in the kbuild tree
+Patch506: 0001-kbuild-Add-build-salt-to-the-kernel-and-modules.patch
+Patch507: 0002-x86-Add-build-salt-to-the-vDSO.patch
+Patch508: 0003-powerpc-Add-build-salt-to-the-vDSO.patch
+Patch509: 0004-arm64-Add-build-salt-to-the-vDSO.patch
+Patch510: 0001-tools-build-Fixup-host-c-flags.patch
+Patch511: 0002-tools-build-Use-HOSTLDFLAGS-with-fixdep.patch
+Patch512: 0003-treewide-Rename-HOSTCFLAGS-KBUILD_HOSTCFLAGS.patch
+Patch513: 0004-treewide-Rename-HOSTCXXFLAGS-to-KBUILD_HOSTCXXFLAGS.patch
+Patch514: 0005-treewide-Rename-HOSTLDFLAGS-to-KBUILD_HOSTLDFLAGS.patch
+Patch515: 0006-treewide-Rename-HOST_LOADLIBES-to-KBUILD_HOSTLDLIBS.patch
+Patch516: 0007-Kbuild-Use-HOST-FLAGS-options-from-the-command-line.patch
+
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -1171,6 +1186,21 @@ cp_vmlinux()
   eu-strip --remove-comment -o "$2" "$1"
 }
 
+# These are for host programs that get built as part of the kernel and
+# are required to be packaged in kernel-devel for building external modules.
+# Since they are userspace binaries, they are required to pickup the hardening
+# flags defined in the macros. The --build-id=uuid is a trick to get around
+# debuginfo limitations: Typically, find-debuginfo.sh will update the build
+# id of all binaries to allow for parllel debuginfo installs. The kernel
+# can't use this because it breaks debuginfo for the vDSO so we have to
+# use a special mechanism for kernel and modules to be unique. Unfortunately,
+# we still have userspace binaries which need unique debuginfo and because
+# they come from the kernel package, we can't just use find-debuginfo.sh to
+# rewrite only those binaries. The easiest option right now is just to have
+# the build id be a uuid for the host programs.
+%define build_hostcflags  %{build_cflags}
+%define build_hostldflags %{build_ldflags} -Wl,--build-id=uuid
+
 BuildKernel() {
     MakeTarget=$1
     KernelImage=$2
@@ -1221,9 +1251,12 @@ BuildKernel() {
     Arch=`head -1 .config | cut -b 3-`
     echo USING ARCH=$Arch
 
-    make %{?make_opts} ARCH=$Arch olddefconfig >/dev/null
-    %{make} %{?make_opts} ARCH=$Arch %{?_smp_mflags} $MakeTarget %{?sparse_mflags} %{?kernel_mflags}
-    %{make} %{?make_opts} ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
+    make %{?make_opts} HOSTCFLAGS="%{build_hostcflags}" HOSTLDFLAGS="%{build_hostldflags}" ARCH=$Arch olddefconfig
+
+    # This ensures build-ids are unique to allow parallel debuginfo
+    perl -p -i -e "s/^CONFIG_BUILD_SALT.*/CONFIG_BUILD_SALT=\"%{KVERREL}\"/" .config
+    %{make} %{?make_opts} HOSTCFLAGS="%{build_hostcflags}" HOSTLDFLAGS="%{build_hostldflags}" ARCH=$Arch %{?_smp_mflags} $MakeTarget %{?sparse_mflags} %{?kernel_mflags}
+    %{make} %{?make_opts} HOSTCFLAGS="%{build_hostcflags}" HOSTLDFLAGS="%{build_hostldflags}" ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
 
     mkdir -p $RPM_BUILD_ROOT/%{image_install_path}
     mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer
@@ -1845,6 +1878,9 @@ fi
 #
 #
 %changelog
+* Thu Jul 12 2018 Laura Abbott <labbott@redhat.com>
+- Proper support for parallel debuginfo and hardening flags
+
 * Thu Jul 12 2018 Javier Martinez Canillas <javierm@redhat.com>
 - Drop the id field from generated BLS snippets
 
