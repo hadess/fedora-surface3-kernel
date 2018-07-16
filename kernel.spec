@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 4
+%global rcrev 5
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -607,17 +607,12 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 # rhbz 1470995
 Patch504: kexec-bzimage-verify-pe-signature-fix.patch
 
-# arm64 compile fix
-Patch505: 0001-Revert-arm64-Use-aarch64elf-and-aarch64elfb-emulatio.patch
-
 # Support for unique build ids
 # All queued in the kbuild tree
 Patch506: 0001-kbuild-Add-build-salt-to-the-kernel-and-modules.patch
 Patch507: 0002-x86-Add-build-salt-to-the-vDSO.patch
 Patch508: 0003-powerpc-Add-build-salt-to-the-vDSO.patch
 Patch509: 0004-arm64-Add-build-salt-to-the-vDSO.patch
-Patch510: 0001-tools-build-Fixup-host-c-flags.patch
-Patch511: 0002-tools-build-Use-HOSTLDFLAGS-with-fixdep.patch
 Patch512: 0003-treewide-Rename-HOSTCFLAGS-KBUILD_HOSTCFLAGS.patch
 Patch513: 0004-treewide-Rename-HOSTCXXFLAGS-to-KBUILD_HOSTCXXFLAGS.patch
 Patch514: 0005-treewide-Rename-HOSTLDFLAGS-to-KBUILD_HOSTLDFLAGS.patch
@@ -1878,6 +1873,9 @@ fi
 #
 #
 %changelog
+* Mon Jul 16 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc5.git0.1
+- Linux v4.18-rc5
+
 * Mon Jul 16 2018 Laura Abbott <labbott@redhat.com>
 - Disable debugging options.
 
