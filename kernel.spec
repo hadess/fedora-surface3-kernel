@@ -1877,6 +1877,7 @@ fi
 %changelog
 * Tue Jul 17 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc5.git1.1
 - Linux v4.18-rc5-36-g30b06abfb92b
+- Fix aio uapi breakage (rhbz 1601529)
 
 * Tue Jul 17 2018 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
