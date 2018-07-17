@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 5
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -619,6 +619,8 @@ Patch514: 0005-treewide-Rename-HOSTLDFLAGS-to-KBUILD_HOSTLDFLAGS.patch
 Patch515: 0006-treewide-Rename-HOST_LOADLIBES-to-KBUILD_HOSTLDLIBS.patch
 Patch516: 0007-Kbuild-Use-HOST-FLAGS-options-from-the-command-line.patch
 
+# rhbz 1601529
+Patch517: aio-don-t-expose-__aio_sigset-in-uapi.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1873,6 +1875,9 @@ fi
 #
 #
 %changelog
+* Tue Jul 17 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc5.git1.1
+- Linux v4.18-rc5-36-g30b06abfb92b
+
 * Tue Jul 17 2018 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 

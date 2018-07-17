@@ -1,0 +1,79 @@
+From patchwork Wed Jul 11 13:48:46 2018
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: aio: don't expose __aio_sigset in uapi
+From: Christoph Hellwig <hch@lst.de>
+X-Patchwork-Id: 10519793
+Message-Id: <20180711134846.18944-1-hch@lst.de>
+To: viro@zeniv.linux.org.uk
+Cc: linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+ adrian@lisas.de, smueller@chronox.de, avagin@virtuozzo.com
+Date: Wed, 11 Jul 2018 15:48:46 +0200
+
+glibc uses a different defintion of sigset_t than the kernel does,
+and the current version would pull in both.  To fix this just do not
+expose the type at all - this somewhat mirrors pselect() where we
+do not even have a type for the magic sigmask argument, but just
+use pointer arithmetics.
+
+Fixes: 7a074e96 ("aio: implement io_pgetevents")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reported-by: Adrian Reber <adrian@lisas.de>
+---
+ fs/aio.c                     | 5 +++++
+ include/linux/syscalls.h     | 1 +
+ include/uapi/linux/aio_abi.h | 6 ------
+ 3 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/fs/aio.c b/fs/aio.c
+index 210df9da1283..27454594e37a 100644
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -1896,6 +1896,11 @@ SYSCALL_DEFINE5(io_getevents, aio_context_t, ctx_id,
+ 	return ret;
+ }
+ 
++struct __aio_sigset {
++	const sigset_t __user	*sigmask;
++	size_t		sigsetsize;
++};
++
+ SYSCALL_DEFINE6(io_pgetevents,
+ 		aio_context_t, ctx_id,
+ 		long, min_nr,
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index a368a68cb667..5c1a0933768e 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -11,6 +11,7 @@
+ #ifndef _LINUX_SYSCALLS_H
+ #define _LINUX_SYSCALLS_H
+ 
++struct __aio_sigset;
+ struct epoll_event;
+ struct iattr;
+ struct inode;
+diff --git a/include/uapi/linux/aio_abi.h b/include/uapi/linux/aio_abi.h
+index 3c5038b587ba..d4593a6062ef 100644
+--- a/include/uapi/linux/aio_abi.h
++++ b/include/uapi/linux/aio_abi.h
+@@ -29,7 +29,6 @@
+ 
+ #include <linux/types.h>
+ #include <linux/fs.h>
+-#include <linux/signal.h>
+ #include <asm/byteorder.h>
+ 
+ typedef __kernel_ulong_t aio_context_t;
+@@ -110,10 +109,5 @@ struct iocb {
+ #undef IFBIG
+ #undef IFLITTLE
+ 
+-struct __aio_sigset {
+-	const sigset_t __user	*sigmask;
+-	size_t		sigsetsize;
+-};
+-
+ #endif /* __LINUX__AIO_ABI_H */
+ 
