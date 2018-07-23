@@ -1192,8 +1192,14 @@ cp_vmlinux()
 # they come from the kernel package, we can't just use find-debuginfo.sh to
 # rewrite only those binaries. The easiest option right now is just to have
 # the build id be a uuid for the host programs.
+#
+# Note we need to disable these flags for cross builds because the flags
+# from redhat-rpm-config assume that host == target so target arch
+# flags cause issues with the host compiler.
+%if !%{with_cross}
 %define build_hostcflags  %{build_cflags}
 %define build_hostldflags %{build_ldflags} -Wl,--build-id=uuid
+%endif
 
 BuildKernel() {
     MakeTarget=$1
@@ -1245,12 +1251,12 @@ BuildKernel() {
     Arch=`head -1 .config | cut -b 3-`
     echo USING ARCH=$Arch
 
-    make %{?make_opts} HOSTCFLAGS="%{build_hostcflags}" HOSTLDFLAGS="%{build_hostldflags}" ARCH=$Arch olddefconfig
+    make %{?make_opts} HOSTCFLAGS="%{?build_hostcflags}" HOSTLDFLAGS="%{?build_hostldflags}" ARCH=$Arch olddefconfig
 
     # This ensures build-ids are unique to allow parallel debuginfo
     perl -p -i -e "s/^CONFIG_BUILD_SALT.*/CONFIG_BUILD_SALT=\"%{KVERREL}\"/" .config
-    %{make} %{?make_opts} HOSTCFLAGS="%{build_hostcflags}" HOSTLDFLAGS="%{build_hostldflags}" ARCH=$Arch %{?_smp_mflags} $MakeTarget %{?sparse_mflags} %{?kernel_mflags}
-    %{make} %{?make_opts} HOSTCFLAGS="%{build_hostcflags}" HOSTLDFLAGS="%{build_hostldflags}" ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
+    %{make} %{?make_opts} HOSTCFLAGS="%{?build_hostcflags}" HOSTLDFLAGS="%{?build_hostldflags}" ARCH=$Arch %{?_smp_mflags} $MakeTarget %{?sparse_mflags} %{?kernel_mflags}
+    %{make} %{?make_opts} HOSTCFLAGS="%{?build_hostcflags}" HOSTLDFLAGS="%{?build_hostldflags}" ARCH=$Arch %{?_smp_mflags} modules %{?sparse_mflags} || exit 1
 
     mkdir -p $RPM_BUILD_ROOT/%{image_install_path}
     mkdir -p $RPM_BUILD_ROOT/lib/modules/$KernelVer
