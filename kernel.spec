@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 5
+%global rcrev 6
 # The git snapshot level
-%define gitrev 4
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -618,9 +618,6 @@ Patch513: 0004-treewide-Rename-HOSTCXXFLAGS-to-KBUILD_HOSTCXXFLAGS.patch
 Patch514: 0005-treewide-Rename-HOSTLDFLAGS-to-KBUILD_HOSTLDFLAGS.patch
 Patch515: 0006-treewide-Rename-HOST_LOADLIBES-to-KBUILD_HOSTLDLIBS.patch
 Patch516: 0007-Kbuild-Use-HOST-FLAGS-options-from-the-command-line.patch
-
-# rhbz 1601529
-Patch517: aio-don-t-expose-__aio_sigset-in-uapi.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1875,6 +1872,9 @@ fi
 #
 #
 %changelog
+* Mon Jul 23 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc6.git0.1
+- Linux v4.18-rc6
+
 * Mon Jul 23 2018 Laura Abbott <labbott@redhat.com>
 - Disable debugging options.
 
