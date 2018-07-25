@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 6
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1878,6 +1878,9 @@ fi
 #
 #
 %changelog
+* Wed Jul 25 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc6.git1.1
+- Linux v4.18-rc6-93-g9981b4fb8684
+
 * Wed Jul 25 2018 Laura Abbott <labbott@redhat.com>
 - Reenable debugging options.
 
