@@ -587,7 +587,9 @@ Patch307: arm-tegra-fix-nouveau-crash.patch
 # Enabling Patches for the RPi3+
 Patch330: bcm2837-enable-pmu.patch
 
-Patch332: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
+Patch331: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
+
+Patch332: bcm2835-hwmon-Add-support-for-RPi-voltage-sensor.patch
 
 # Fix for AllWinner A64 Timer Errata, still not final
 # https://patchwork.kernel.org/patch/10392891/
@@ -1878,6 +1880,9 @@ fi
 #
 #
 %changelog
+* Thu Jul 26 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add Raspberry Pi voltage sensor driver
+
 * Wed Jul 25 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc6.git1.1
 - Linux v4.18-rc6-93-g9981b4fb8684
 
