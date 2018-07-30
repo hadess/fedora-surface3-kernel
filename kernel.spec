@@ -625,6 +625,15 @@ Patch514: 0005-treewide-Rename-HOSTLDFLAGS-to-KBUILD_HOSTLDFLAGS.patch
 Patch515: 0006-treewide-Rename-HOST_LOADLIBES-to-KBUILD_HOSTLDLIBS.patch
 Patch516: 0007-Kbuild-Use-HOST-FLAGS-options-from-the-command-line.patch
 
+# For quiet / flickerfree boot, all queued for merging into 4.19-rc1
+Patch521: 0001-printk-Make-CONSOLE_LOGLEVEL_QUIET-configurable.patch
+Patch522: 0002-printk-Export-is_console_locked.patch
+Patch523: 0003-fbcon-Call-WARN_CONSOLE_UNLOCKED-where-applicable.patch
+Patch524: 0004-console-fbcon-Add-support-for-deferred-console-takeo.patch
+Patch525: 0005-efi-bgrt-Drop-__initdata-from-bgrt_image_size.patch
+Patch526: 0006-efifb-Copy-the-ACPI-BGRT-boot-graphics-to-the-frameb.patch
+Patch527: 0007-efifb-BGRT-Do-not-copy-the-boot-graphics-for-non-nat.patch
+
 # END OF PATCH DEFINITIONS
 
 %endif
@@ -1884,6 +1893,12 @@ fi
 #
 #
 %changelog
+* Mon Jul 30 2018 Hans de Goede <hdegoede@redhat.com>
+- Add patch queued in -next to make quiet more quiet
+- Add patches queued in -next to make efifb / fbcon retain the vendor logo
+  (ACPI BRGT boot graphics) until the first text is output to the console
+- Enable support for ICN8505 touchscreen used on some Cherry Trail tablets
+
 * Fri Jul 27 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable FPGA Manager kernel framework
 
