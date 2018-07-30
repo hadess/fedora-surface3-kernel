@@ -1909,6 +1909,7 @@ fi
 * Wed Aug 01 2018 Hans de Goede <hdegoede@redhat.com>
 - Add patch fixing FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER breaking
   VT switching when combined with vgacon (rhbz#1610562)
+- Enable Apollo Lake Whiskey Cove PMIC support
 
 * Wed Aug 01 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc7.git1.1
 - Linux v4.18-rc7-90-gc1d61e7fe376
