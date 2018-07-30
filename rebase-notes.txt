@@ -1,5 +1,6 @@
 Linux 4.18 rebase notes:
 - Turn off CONFIG_BCM2835_VCHIQ
+- Turn off CONFIG_FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER (for F28 and older)
 - Drop build-id/hardening flags patches and changes
 
 
