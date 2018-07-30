@@ -122,7 +122,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 # Kernel headers are being split out into a separate package
 %define with_headers 0
@@ -1893,6 +1893,9 @@ fi
 #
 #
 %changelog
+* Mon Jul 30 2018 Laura Abbott <labbott@redhat.com>
+- Disable debugging options.
+
 * Mon Jul 30 2018 Hans de Goede <hdegoede@redhat.com>
 - Add patch queued in -next to make quiet more quiet
 - Add patches queued in -next to make efifb / fbcon retain the vendor logo
