@@ -1884,6 +1884,9 @@ fi
 #
 #
 %changelog
+* Fri Jul 27 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Enable FPGA Manager kernel framework
+
 * Fri Jul 27 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc6.git3.1
 - Linux v4.18-rc6-152-gcd3f77d74ac3
 - Disable headers in preparation for kernel headers split
