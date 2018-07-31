@@ -633,6 +633,7 @@ Patch524: 0004-console-fbcon-Add-support-for-deferred-console-takeo.patch
 Patch525: 0005-efi-bgrt-Drop-__initdata-from-bgrt_image_size.patch
 Patch526: 0006-efifb-Copy-the-ACPI-BGRT-boot-graphics-to-the-frameb.patch
 Patch527: 0007-efifb-BGRT-Do-not-copy-the-boot-graphics-for-non-nat.patch
+Patch528: 0008-console-dummycon-export-dummycon_-un-register_output.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1893,6 +1894,10 @@ fi
 #
 #
 %changelog
+* Tue Jul 31 2018 Hans de Goede <hdegoede@redhat.com>
+- Add patch to fix FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER on s390x and
+  re-enable FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER on s390x
+
 * Mon Jul 30 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc7.git0.1
 - Linux v4.18-rc7
 
