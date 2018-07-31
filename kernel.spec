@@ -595,6 +595,11 @@ Patch331: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
 Patch332: bcm2835-hwmon-Add-support-for-RPi-voltage-sensor.patch
 
+# https://patchwork.freedesktop.org/patch/240644/
+Patch333: drm-vc4-Reset-x-y-scaling-1-when-dealing-with-uniplanar-formats.patch
+# https://patchwork.freedesktop.org/patch/240917/
+Patch334: drm-vc4-Fix-the-no-scaling-case-on-multi-planar-YUV-formats.patch
+
 # Fix for AllWinner A64 Timer Errata, still not final
 # https://patchwork.kernel.org/patch/10392891/
 Patch350: arm64-arch_timer-Workaround-for-Allwinner-A64-timer-instability.patch
@@ -1894,6 +1899,9 @@ fi
 #
 #
 %changelog
+* Tue Jul 31 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add two bcm283x vc4 stability patches
+
 * Tue Jul 31 2018 Hans de Goede <hdegoede@redhat.com>
 - Add patch to fix FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER on s390x and
   re-enable FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER on s390x
