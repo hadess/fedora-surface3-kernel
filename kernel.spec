@@ -644,6 +644,8 @@ Patch525: 0005-efi-bgrt-Drop-__initdata-from-bgrt_image_size.patch
 Patch526: 0006-efifb-Copy-the-ACPI-BGRT-boot-graphics-to-the-frameb.patch
 Patch527: 0007-efifb-BGRT-Do-not-copy-the-boot-graphics-for-non-nat.patch
 Patch528: 0008-console-dummycon-export-dummycon_-un-register_output.patch
+# Deferred fbcon takeover bugfix, pending upstream
+Patch529: 0009-fbcon-Only-defer-console-takeover-if-the-current-con.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1904,6 +1906,10 @@ fi
 #
 #
 %changelog
+* Wed Aug 01 2018 Hans de Goede <hdegoede@redhat.com>
+- Add patch fixing FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER breaking
+  VT switching when combined with vgacon (rhbz#1610562)
+
 * Wed Aug 01 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc7.git1.1
 - Linux v4.18-rc7-90-gc1d61e7fe376
 
