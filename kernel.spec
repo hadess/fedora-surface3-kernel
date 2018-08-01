@@ -588,6 +588,11 @@ Patch306: arm-sdhci-esdhc-imx-fixes.patch
 
 Patch307: arm-tegra-fix-nouveau-crash.patch
 
+# https://patchwork.kernel.org/patch/10539291/
+Patch308: mmc-sunxi-allow-3.3V-DDR-when-DDR-is-available.patch
+# https://patchwork.kernel.org/patch/10540521/
+Patch309: mmc-sunxi-remove-output-of-virtual-base-address.patch
+
 # Enabling Patches for the RPi3+
 Patch330: bcm2837-enable-pmu.patch
 
@@ -1901,6 +1906,7 @@ fi
 %changelog
 * Tue Jul 31 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add two bcm283x vc4 stability patches
+- Some AllWinner MMC driver fixes
 
 * Tue Jul 31 2018 Hans de Goede <hdegoede@redhat.com>
 - Add patch to fix FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER on s390x and
