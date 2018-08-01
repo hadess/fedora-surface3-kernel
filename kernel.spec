@@ -1904,6 +1904,9 @@ fi
 #
 #
 %changelog
+* Wed Aug 01 2018 Jeremy Cline <jeremy@jcline.org>
+- Enable AEGIS and MORUS ciphers (rhbz 1610180)
+
 * Tue Jul 31 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add two bcm283x vc4 stability patches
 - Some AllWinner MMC driver fixes
