@@ -593,6 +593,8 @@ Patch308: mmc-sunxi-allow-3.3V-DDR-when-DDR-is-available.patch
 # https://patchwork.kernel.org/patch/10540521/
 Patch309: mmc-sunxi-remove-output-of-virtual-base-address.patch
 
+Patch310: arm-dts-armada388-helios4.patch
+
 # Enabling Patches for the RPi3+
 Patch330: bcm2837-enable-pmu.patch
 
@@ -1906,6 +1908,9 @@ fi
 #
 #
 %changelog
+* Thu Aug  2 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add ARM Helios4 support
+
 * Wed Aug 01 2018 Hans de Goede <hdegoede@redhat.com>
 - Add patch fixing FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER breaking
   VT switching when combined with vgacon (rhbz#1610562)
