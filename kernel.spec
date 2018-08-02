@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 7
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1908,6 +1908,9 @@ fi
 #
 #
 %changelog
+* Thu Aug 02 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc7.git2.1
+- Linux v4.18-rc7-112-g6b4703768268
+
 * Thu Aug  2 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add ARM Helios4 support
 
