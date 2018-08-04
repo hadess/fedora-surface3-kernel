@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 7
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -602,8 +602,6 @@ Patch331: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
 Patch332: bcm2835-hwmon-Add-support-for-RPi-voltage-sensor.patch
 
-# https://patchwork.freedesktop.org/patch/240644/
-Patch333: drm-vc4-Reset-x-y-scaling-1-when-dealing-with-uniplanar-formats.patch
 # https://patchwork.freedesktop.org/patch/240917/
 Patch334: drm-vc4-Fix-the-no-scaling-case-on-multi-planar-YUV-formats.patch
 
@@ -1908,6 +1906,9 @@ fi
 #
 #
 %changelog
+* Sat Aug 04 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc7.git3.1
+- Linux v4.18-rc7-178-g0b5b1f9a78b5
+
 * Thu Aug 02 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc7.git2.1
 - Linux v4.18-rc7-112-g6b4703768268
 
