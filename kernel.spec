@@ -646,6 +646,7 @@ Patch527: 0007-efifb-BGRT-Do-not-copy-the-boot-graphics-for-non-nat.patch
 Patch528: 0008-console-dummycon-export-dummycon_-un-register_output.patch
 # Deferred fbcon takeover bugfix, pending upstream
 Patch529: 0009-fbcon-Only-defer-console-takeover-if-the-current-con.patch
+Patch530: 0010-fbcon-Do-not-takeover-the-console-from-atomic-contex.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1906,6 +1907,9 @@ fi
 #
 #
 %changelog
+* Mon Aug 06 2018 Hans de Goede <hdegoede@redhat.com>
+- Add one more FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER bugfix patch
+
 * Mon Aug 06 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc8.git0.1
 - Linux v4.18-rc8
 
