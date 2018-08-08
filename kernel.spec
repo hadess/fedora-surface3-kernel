@@ -122,7 +122,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 1
+%define debugbuildsenabled 0
 
 # Kernel headers are being split out into a separate package
 %define with_headers 0
@@ -1907,6 +1907,9 @@ fi
 #
 #
 %changelog
+* Wed Aug 08 2018 Laura Abbott <labbott@redhat.com>
+- Reenable debugging options.
+
 * Mon Aug 06 2018 Hans de Goede <hdegoede@redhat.com>
 - Add one more FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER bugfix patch
 
