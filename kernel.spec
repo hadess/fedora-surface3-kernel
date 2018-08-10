@@ -1907,6 +1907,9 @@ fi
 #
 #
 %changelog
+* Fri Aug 10 2018 Hans de Goede <hdegoede@redhat.com>
+- Sync FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER bugfix with upstream
+
 * Wed Aug 08 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc8.git1.1
 - Linux v4.18-rc8-2-g1236568ee3cb
 
