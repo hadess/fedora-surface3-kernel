@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 8
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1907,6 +1907,9 @@ fi
 #
 #
 %changelog
+* Fri Aug 10 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc8.git2.1
+- Linux v4.18-rc8-4-gfedb8da96355
+
 * Fri Aug 10 2018 Hans de Goede <hdegoede@redhat.com>
 - Sync FRAMEBUFFER_CONSOLE_DEFERRED_TAKEOVER bugfix with upstream
 
