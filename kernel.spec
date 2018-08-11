@@ -595,6 +595,9 @@ Patch309: mmc-sunxi-remove-output-of-virtual-base-address.patch
 
 Patch310: arm-dts-armada388-helios4.patch
 
+# https://www.spinics.net/lists/arm-kernel/msg670137.html
+Patch311: arm64-ZynqMP-firmware-clock-drivers-core.patch
+
 # Enabling Patches for the RPi3+
 Patch330: bcm2837-enable-pmu.patch
 
@@ -1907,6 +1910,9 @@ fi
 #
 #
 %changelog
+* Sat Aug 11 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add ZYNQMP clock and firmware driver
+
 * Fri Aug 10 2018 Laura Abbott <labbott@redhat.com> - 4.18.0-0.rc8.git2.1
 - Linux v4.18-rc8-4-gfedb8da96355
 
