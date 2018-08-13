@@ -1910,6 +1910,9 @@ fi
 #
 #
 %changelog
+* Mon Aug 13 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Disable speck crypto cipher
+
 * Sat Aug 11 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add ZYNQMP clock and firmware driver
 
