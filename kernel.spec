@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -559,7 +559,6 @@ Patch210: disable-i8042-check-on-apple-mac.patch
 Patch211: drm-i915-hush-check-crtc-state.patch
 
 Patch212: efi-secureboot.patch
-Patch213: lockdown-fix-coordination-of-kernel-module-signature-verification.patch
 
 # 300 - ARM patches
 Patch300: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
@@ -579,8 +578,6 @@ Patch305: qcom-msm89xx-fixes.patch
 
 # https://patchwork.kernel.org/project/linux-mmc/list/?submitter=71861
 Patch306: arm-sdhci-esdhc-imx-fixes.patch
-
-Patch307: arm-tegra-fix-nouveau-crash.patch
 
 # https://patchwork.kernel.org/patch/10539291/
 Patch308: mmc-sunxi-allow-3.3V-DDR-when-DDR-is-available.patch
@@ -620,27 +617,10 @@ Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
 # rhbz 1470995
 Patch504: kexec-bzimage-verify-pe-signature-fix.patch
 
-# Support for unique build ids
-# All queued in the kbuild tree
-Patch506: 0001-kbuild-Add-build-salt-to-the-kernel-and-modules.patch
-Patch507: 0002-x86-Add-build-salt-to-the-vDSO.patch
-Patch508: 0003-powerpc-Add-build-salt-to-the-vDSO.patch
-Patch509: 0004-arm64-Add-build-salt-to-the-vDSO.patch
-Patch512: 0003-treewide-Rename-HOSTCFLAGS-KBUILD_HOSTCFLAGS.patch
-Patch513: 0004-treewide-Rename-HOSTCXXFLAGS-to-KBUILD_HOSTCXXFLAGS.patch
-Patch514: 0005-treewide-Rename-HOSTLDFLAGS-to-KBUILD_HOSTLDFLAGS.patch
-Patch515: 0006-treewide-Rename-HOST_LOADLIBES-to-KBUILD_HOSTLDLIBS.patch
-Patch516: 0007-Kbuild-Use-HOST-FLAGS-options-from-the-command-line.patch
-
 # For quiet / flickerfree boot, all queued for merging into 4.19-rc1
-Patch521: 0001-printk-Make-CONSOLE_LOGLEVEL_QUIET-configurable.patch
-Patch522: 0002-printk-Export-is_console_locked.patch
-Patch523: 0003-fbcon-Call-WARN_CONSOLE_UNLOCKED-where-applicable.patch
-Patch524: 0004-console-fbcon-Add-support-for-deferred-console-takeo.patch
 Patch525: 0005-efi-bgrt-Drop-__initdata-from-bgrt_image_size.patch
 Patch526: 0006-efifb-Copy-the-ACPI-BGRT-boot-graphics-to-the-frameb.patch
 Patch527: 0007-efifb-BGRT-Do-not-copy-the-boot-graphics-for-non-nat.patch
-Patch528: 0008-console-dummycon-export-dummycon_-un-register_output.patch
 # Deferred fbcon takeover bugfix, pending upstream
 Patch529: 0009-fbcon-Only-defer-console-takeover-if-the-current-con.patch
 Patch530: 0010-fbcon-Do-not-takeover-the-console-from-atomic-contex.patch
@@ -1904,6 +1884,9 @@ fi
 #
 #
 %changelog
+* Thu Aug 16 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git3.1
+- Linux v4.18-7873-gf91e654474d4
+
 * Wed Aug 15 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Drop PPC64 (Big Endian) configs
 

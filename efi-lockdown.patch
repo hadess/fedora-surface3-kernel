@@ -530,14 +530,14 @@ in secure boot lockdown mode.
 Signed-off-by: Mimi Zohar <zohar@linux.vnet.ibm.com>
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- security/integrity/ima/ima_policy.c | 39 +++++++++++++++++++++++++++----------
- 1 file changed, 29 insertions(+), 10 deletions(-)
+ security/integrity/ima/ima_policy.c | 34 +++++++++++++++++++++++------
+ 1 file changed, 27 insertions(+), 7 deletions(-)
 
 diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index d89bebf85421..da6f55c96a61 100644
+index 8c9499867c91..f8428f579924 100644
 --- a/security/integrity/ima/ima_policy.c
 +++ b/security/integrity/ima/ima_policy.c
-@@ -443,14 +443,21 @@ void ima_update_policy_flag(void)
+@@ -481,14 +481,21 @@ static int ima_appraise_flag(enum ima_hooks func)
   */
  void __init ima_init_policy(void)
  {
@@ -547,7 +547,7 @@ index d89bebf85421..da6f55c96a61 100644
 +	int appraise_entries = 0;
 +	int secure_boot_entries = 0;
 +	bool kernel_locked_down = __kernel_is_locked_down(NULL, false);
-
+ 
  	/* if !ima_policy set entries = 0 so we load NO default rules */
 -	measure_entries = ima_policy ? ARRAY_SIZE(dont_measure_rules) : 0;
 -	appraise_entries = ima_use_appraise_tcb ?
@@ -562,16 +562,17 @@ index d89bebf85421..da6f55c96a61 100644
 +
 +	if (ima_use_secure_boot || kernel_locked_down)
 +		secure_boot_entries = ARRAY_SIZE(secure_boot_rules);
-
+ 
  	for (i = 0; i < measure_entries; i++)
  		list_add_tail(&dont_measure_rules[i].list, &ima_default_rules);
-@@ -487,12 +494,24 @@ void __init ima_init_policy(void)
+@@ -509,12 +516,25 @@ void __init ima_init_policy(void)
  
  	/*
- 	 * Insert the appraise rules requiring file signatures, prior to
--	 * any other appraise rules.
-+	 * any other appraise rules.  In secure boot lock-down mode, also
-+	 * require these appraise rules for custom policies.
+ 	 * Insert the builtin "secure_boot" policy rules requiring file
+-	 * signatures, prior to any other appraise rules.
++	 * signatures, prior to any other appraise rules.  In secure boot
++	 * lock-down mode, also require these appraise rules for custom
++	 * policies.
  	 */
  	for (i = 0; i < secure_boot_entries; i++) {
 +		struct ima_rule_entry *entry;
@@ -590,9 +591,9 @@ index d89bebf85421..da6f55c96a61 100644
 +		}
  	}
  
- 	for (i = 0; i < appraise_entries; i++) {
+ 	/*
 -- 
-2.14.3
+2.17.1
 
 From 64b01ecc309c8ae79209e00dd8b95a549e5050b7 Mon Sep 17 00:00:00 2001
 From: David Howells <dhowells@redhat.com>
@@ -811,13 +812,13 @@ cc: kexec@lists.infradead.org
  1 file changed, 7 insertions(+)
 
 diff --git a/kernel/kexec.c b/kernel/kexec.c
-index aed8fb2564b3..1553ac765e73 100644
+index 68559808fdfa..041d505070e1 100644
 --- a/kernel/kexec.c
 +++ b/kernel/kexec.c
-@@ -199,6 +199,13 @@ static inline int kexec_load_check(unsigned long nr_segments,
+@@ -202,6 +202,13 @@ static inline int kexec_load_check(unsigned long nr_segments,
  	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
  		return -EPERM;
-
+ 
 +	/*
 +	 * kexec can be used to circumvent module loading restrictions, so
 +	 * prevent loading in that case
@@ -825,11 +826,11 @@ index aed8fb2564b3..1553ac765e73 100644
 +	if (kernel_is_locked_down("kexec of unsigned images"))
 +		return -EPERM;
 +
- 	/*
- 	 * Verify we have a legal set of flags
- 	 * This leaves us room for future extensions.
+ 	/* Permit LSMs and IMA to fail the kexec */
+ 	result = security_kernel_load_data(LOADING_KEXEC_IMAGE);
+ 	if (result < 0)
 -- 
-2.14.3
+2.17.1
 
 From aed8ee965258e3926be6aaeb57aef8a9a03c9989 Mon Sep 17 00:00:00 2001
 From: Josh Boyer <jwboyer@fedoraproject.org>
