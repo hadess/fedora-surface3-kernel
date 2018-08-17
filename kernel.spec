@@ -1881,6 +1881,9 @@ fi
 #
 #
 %changelog
+* Fri Aug 17 2018 Laura Abbott <labbott@redhat.com>
+- Enable CONFIG_AF_KCM (rhbz 1613819)
+
 * Fri Aug 17 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git4.1
 - Linux v4.18-8108-g5c60a7389d79
 - Re-enable AEGIS and MORUS ciphers (rhbz 1610180)
