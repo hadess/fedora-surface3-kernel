@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -613,9 +613,6 @@ Patch501: Fix-for-module-sig-verification.patch
 
 # rhbz 1431375
 Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
-
-# rhbz 1470995
-Patch504: kexec-bzimage-verify-pe-signature-fix.patch
 
 # For quiet / flickerfree boot, all queued for merging into 4.19-rc1
 Patch525: 0005-efi-bgrt-Drop-__initdata-from-bgrt_image_size.patch
@@ -1884,6 +1881,10 @@ fi
 #
 #
 %changelog
+* Fri Aug 17 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git4.1
+- Linux v4.18-8108-g5c60a7389d79
+- Re-enable AEGIS and MORUS ciphers (rhbz 1610180)
+
 * Thu Aug 16 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git3.1
 - Linux v4.18-7873-gf91e654474d4
 
