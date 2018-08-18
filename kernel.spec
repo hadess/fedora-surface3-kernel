@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 4
+%define gitrev 5
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1881,6 +1881,9 @@ fi
 #
 #
 %changelog
+* Sat Aug 18 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git5.1
+- Linux v4.18-8895-g1f7a4c73a739
+
 * Fri Aug 17 2018 Laura Abbott <labbott@redhat.com>
 - Enable CONFIG_AF_KCM (rhbz 1613819)
 
