@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 5
+%define gitrev 6
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -578,11 +578,6 @@ Patch305: qcom-msm89xx-fixes.patch
 
 # https://patchwork.kernel.org/project/linux-mmc/list/?submitter=71861
 Patch306: arm-sdhci-esdhc-imx-fixes.patch
-
-# https://patchwork.kernel.org/patch/10539291/
-Patch308: mmc-sunxi-allow-3.3V-DDR-when-DDR-is-available.patch
-# https://patchwork.kernel.org/patch/10540521/
-Patch309: mmc-sunxi-remove-output-of-virtual-base-address.patch
 
 Patch310: arm-dts-armada388-helios4.patch
 
@@ -1881,6 +1876,9 @@ fi
 #
 #
 %changelog
+* Sun Aug 19 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git6.1
+- Linux v4.18-10568-g08b5fa819970
+
 * Sat Aug 18 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git5.1
 - Linux v4.18-8895-g1f7a4c73a739
 
