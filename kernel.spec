@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 7
+%define gitrev 8
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1876,6 +1876,9 @@ fi
 #
 #
 %changelog
+* Tue Aug 21 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git8.1
+- Linux v4.18-10986-g778a33959a8a
+
 * Mon Aug 20 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git7.1
 - Linux v4.18-10721-g2ad0d5269970
 
