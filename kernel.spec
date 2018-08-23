@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 9
+%define gitrev 10
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -524,7 +524,7 @@ Patch117: lis3-improve-handling-of-null-rate.patch
 
 Patch118: scsi-sd_revalidate_disk-prevent-NULL-ptr-deref.patch
 
-Patch119: criu-no-expert.patch
+Patch119: namespaces-no-expert.patch
 
 Patch120: ath9k-rx-dma-stop-check.patch
 
@@ -1876,6 +1876,9 @@ fi
 #
 #
 %changelog
+* Thu Aug 23 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git10.1
+- Linux v4.18-11682-g815f0ddb346c
+
 * Wed Aug 22 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git9.1
 - Linux v4.18-11219-gad1d69735878
 

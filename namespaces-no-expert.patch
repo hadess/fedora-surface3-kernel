@@ -1,7 +1,7 @@
 From 235b02d70a6a9837896c2ff4ca9d03f172cc4281 Mon Sep 17 00:00:00 2001
 From: "kernel-team@fedoraproject.org" <kernel-team@fedoraproject.org>
 Date: Wed, 30 Jan 2013 10:55:31 -0500
-Subject: [PATCH] criu: no expert
+Subject: [PATCH] namespaces: no expert
 
 Bugzilla: N/A
 Upstream-status: Fedora mustard
@@ -21,15 +21,6 @@ index 2934249fba46..19d9ee8c120b 100644
 +	bool "Namespaces support"
  	depends on MULTIUSER
  	default !EXPERT
- 	help
-@@ -1321,7 +1321,7 @@ config MEMBARRIER
- 	  If unsure, say Y.
- 
- config CHECKPOINT_RESTORE
--	bool "Checkpoint/restore support" if EXPERT
-+	bool "Checkpoint/restore support"
- 	select PROC_CHILDREN
- 	default n
  	help
 -- 
 2.14.3
