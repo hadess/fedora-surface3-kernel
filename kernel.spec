@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 0
 # The git snapshot level
-%define gitrev 10
+%define gitrev 11
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -579,13 +579,8 @@ Patch305: qcom-msm89xx-fixes.patch
 # https://patchwork.kernel.org/project/linux-mmc/list/?submitter=71861
 Patch306: arm-sdhci-esdhc-imx-fixes.patch
 
-Patch310: arm-dts-armada388-helios4.patch
-
 # https://www.spinics.net/lists/arm-kernel/msg670137.html
 Patch311: arm64-ZynqMP-firmware-clock-drivers-core.patch
-
-# Enabling Patches for the RPi3+
-Patch330: bcm2837-enable-pmu.patch
 
 Patch331: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
@@ -608,14 +603,6 @@ Patch501: Fix-for-module-sig-verification.patch
 
 # rhbz 1431375
 Patch502: input-rmi4-remove-the-need-for-artifical-IRQ.patch
-
-# For quiet / flickerfree boot, all queued for merging into 4.19-rc1
-Patch525: 0005-efi-bgrt-Drop-__initdata-from-bgrt_image_size.patch
-Patch526: 0006-efifb-Copy-the-ACPI-BGRT-boot-graphics-to-the-frameb.patch
-Patch527: 0007-efifb-BGRT-Do-not-copy-the-boot-graphics-for-non-nat.patch
-# Deferred fbcon takeover bugfix, pending upstream
-Patch529: 0009-fbcon-Only-defer-console-takeover-if-the-current-con.patch
-Patch530: 0010-fbcon-Do-not-takeover-the-console-from-atomic-contex.patch
 
 # END OF PATCH DEFINITIONS
 
@@ -1876,6 +1863,9 @@ fi
 #
 #
 %changelog
+* Fri Aug 24 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git11.1
+- Linux v4.18-12721-g33e17876ea4e
+
 * Thu Aug 23 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc0.git10.1
 - Linux v4.18-11682-g815f0ddb346c
 
