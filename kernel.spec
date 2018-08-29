@@ -1863,6 +1863,9 @@ fi
 #
 #
 %changelog
+* Wed Aug 29 2018 Jeremy Cline <jeremy@jcline.org>
+- Enable the AFS module (rhbz 1616016)
+
 * Wed Aug 29 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc1.git2.1
 - Linux v4.19-rc1-95-g3f16503b7d22
 
