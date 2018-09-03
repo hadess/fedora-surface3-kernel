@@ -122,7 +122,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 # Kernel headers are being split out into a separate package
 %define with_headers 0
@@ -1863,6 +1863,9 @@ fi
 #
 #
 %changelog
+* Mon Sep 03 2018 Jeremy Cline <jcline@redhat.com>
+- Disable debugging options.
+
 * Fri Aug 31 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc1.git4.1
 - Linux v4.19-rc1-195-g4658aff6eeaa
 
