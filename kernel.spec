@@ -1863,6 +1863,9 @@ fi
 #
 #
 %changelog
+* Mon Sep  3 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Enable bcm283x VCHIQ, camera and analog audio drivers
+
 * Mon Sep 03 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc2.git0.1
 - Linux v4.19-rc2
 
