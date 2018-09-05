@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 2
 # The git snapshot level
-%define gitrev 0
+%define gitrev 1
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -122,7 +122,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 1
+%define debugbuildsenabled 0
 
 # Kernel headers are being split out into a separate package
 %define with_headers 0
@@ -1863,6 +1863,10 @@ fi
 #
 #
 %changelog
+* Wed Sep 05 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc2.git1.1
+- Linux v4.19-rc2-107-g28619527b8a7
+- Re-enable debugging options
+
 * Mon Sep  3 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Enable bcm283x VCHIQ, camera and analog audio drivers
 - ARM config updates for 4.19
