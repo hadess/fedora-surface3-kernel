@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 2
+%global rcrev 3
 # The git snapshot level
-%define gitrev 3
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -583,8 +583,6 @@ Patch306: arm-sdhci-esdhc-imx-fixes.patch
 Patch311: arm64-ZynqMP-firmware-clock-drivers-core.patch
 
 Patch331: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
-
-Patch332: bcm2835-hwmon-Add-support-for-RPi-voltage-sensor.patch
 
 # https://patchwork.freedesktop.org/patch/240917/
 Patch334: drm-vc4-Fix-the-no-scaling-case-on-multi-planar-YUV-formats.patch
@@ -1863,6 +1861,9 @@ fi
 #
 #
 %changelog
+* Mon Sep 10 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc3.git0.1
+- Linux v4.19-rc3
+
 * Mon Sep 10 2018 Jeremy Cline <jcline@redhat.com>
 - Disable debugging options.
 
