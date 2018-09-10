@@ -580,12 +580,14 @@ Patch305: qcom-msm89xx-fixes.patch
 Patch306: arm-sdhci-esdhc-imx-fixes.patch
 
 # https://www.spinics.net/lists/arm-kernel/msg670137.html
-Patch311: arm64-ZynqMP-firmware-clock-drivers-core.patch
+Patch307: arm64-ZynqMP-firmware-clock-drivers-core.patch
 
-Patch331: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
+Patch308: arm64-96boards-Rock960-CE-board-support.patch
+
+Patch330: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
 # https://patchwork.freedesktop.org/patch/240917/
-Patch334: drm-vc4-Fix-the-no-scaling-case-on-multi-planar-YUV-formats.patch
+Patch331: drm-vc4-Fix-the-no-scaling-case-on-multi-planar-YUV-formats.patch
 
 # Fix for AllWinner A64 Timer Errata, still not final
 # https://patchwork.kernel.org/patch/10392891/
