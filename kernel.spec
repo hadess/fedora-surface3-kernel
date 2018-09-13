@@ -560,6 +560,10 @@ Patch211: drm-i915-hush-check-crtc-state.patch
 
 Patch212: efi-secureboot.patch
 
+# Fix printing of "EFI stub: UEFI Secure Boot is enabled.",
+# queued upstream in efi.git/next
+Patch213: efi-x86-call-parse-options-from-efi-main.patch
+
 # 300 - ARM patches
 Patch300: arm64-Add-option-of-13-for-FORCE_MAX_ZONEORDER.patch
 
@@ -1863,6 +1867,9 @@ fi
 #
 #
 %changelog
+* Thu Sep 13 2018 Hans de Goede <hdegoede@redhat.com>
+- Add patch silencing "EFI stub: UEFI Secure Boot is enabled." at boot
+
 * Wed Sep 12 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc3.git1.1
 - Linux v4.19-rc3-21-g5e335542de83
 - Re-enable debugging options.
