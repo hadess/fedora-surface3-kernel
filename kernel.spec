@@ -588,6 +588,8 @@ Patch307: arm64-ZynqMP-firmware-clock-drivers-core.patch
 
 Patch308: arm64-96boards-Rock960-CE-board-support.patch
 
+Patch309: gpio-pxa-handle-corner-case-of-unprobed-device.patch
+
 Patch330: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
 # https://patchwork.freedesktop.org/patch/240917/
