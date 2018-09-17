@@ -122,7 +122,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 # Kernel headers are being split out into a separate package
 %define with_headers 0
@@ -1869,6 +1869,7 @@ fi
 %changelog
 * Mon Sep 17 2018 Jeremy Cline <jcline@redhat.com>
 - Stop including the i686-PAE config in the sources
+- Disable debugging options.
 
 * Fri Sep 14 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc3.git3.1
 - Linux v4.19-rc3-247-gf3c0b8ce4840
