@@ -443,8 +443,6 @@ Source24: kernel-armv7hl-lpae.config
 Source25: kernel-armv7hl-lpae-debug.config
 Source26: kernel-i686.config
 Source27: kernel-i686-debug.config
-Source28: kernel-i686-PAE.config
-Source29: kernel-i686-PAEdebug.config
 Source30: kernel-ppc64le.config
 Source31: kernel-ppc64le-debug.config
 Source32: kernel-s390x.config
@@ -1869,6 +1867,9 @@ fi
 #
 #
 %changelog
+* Mon Sep 17 2018 Jeremy Cline <jcline@redhat.com>
+- Stop including the i686-PAE config in the sources
+
 * Fri Sep 14 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc3.git3.1
 - Linux v4.19-rc3-247-gf3c0b8ce4840
 
