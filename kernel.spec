@@ -67,9 +67,9 @@ Summary: The Linux kernel
 # The next upstream release sublevel (base_sublevel+1)
 %define upstream_sublevel %(echo $((%{base_sublevel} + 1)))
 # The rc snapshot level
-%global rcrev 3
+%global rcrev 4
 # The git snapshot level
-%define gitrev 3
+%define gitrev 0
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1867,6 +1867,9 @@ fi
 #
 #
 %changelog
+* Mon Sep 17 2018 Jeremy Cline <jeremy@jcline.org> - 4.19.0-0.rc4.git0.1
+- Linux v4.19-rc4
+
 * Mon Sep 17 2018 Jeremy Cline <jcline@redhat.com>
 - Stop including the i686-PAE config in the sources
 - Disable debugging options.
