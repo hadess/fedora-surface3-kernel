@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 4
 # The git snapshot level
-%define gitrev 3
+%define gitrev 4
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -591,9 +591,6 @@ Patch308: arm64-96boards-Rock960-CE-board-support.patch
 Patch309: gpio-pxa-handle-corner-case-of-unprobed-device.patch
 
 Patch330: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
-
-# https://patchwork.freedesktop.org/patch/240917/
-Patch331: drm-vc4-Fix-the-no-scaling-case-on-multi-planar-YUV-formats.patch
 
 # Fix for AllWinner A64 Timer Errata, still not final
 # https://patchwork.kernel.org/patch/10392891/
@@ -1879,6 +1876,9 @@ fi
 #
 #
 %changelog
+* Fri Sep 21 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc4.git4.1
+- Linux v4.19-rc4-176-g211b100a5ced
+
 * Thu Sep 20 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc4.git3.1
 - Linux v4.19-rc4-137-gae596de1a0c8
 
