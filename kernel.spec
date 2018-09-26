@@ -1876,6 +1876,9 @@ fi
 #
 #
 %changelog
+* Wed Sep 26 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Add thermal trip to bcm283x (Raspberry Pi) cpufreq
+
 * Wed Sep 26 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc5.git2.1
 - Linux v4.19-rc5-143-gc307aaf3eb47
 
