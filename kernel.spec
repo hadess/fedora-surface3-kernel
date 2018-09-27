@@ -587,8 +587,9 @@ Patch306: arm-sdhci-esdhc-imx-fixes.patch
 Patch307: arm64-ZynqMP-firmware-clock-drivers-core.patch
 
 Patch308: arm64-96boards-Rock960-CE-board-support.patch
+Patch309: arm64-rockchip-add-initial-Rockpro64.patch
 
-Patch309: gpio-pxa-handle-corner-case-of-unprobed-device.patch
+Patch310: gpio-pxa-handle-corner-case-of-unprobed-device.patch
 
 Patch330: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
@@ -1878,6 +1879,7 @@ fi
 %changelog
 * Wed Sep 26 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add thermal trip to bcm283x (Raspberry Pi) cpufreq
+- Add initial RockPro64 DT support
 
 * Wed Sep 26 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc5.git2.1
 - Linux v4.19-rc5-143-gc307aaf3eb47
