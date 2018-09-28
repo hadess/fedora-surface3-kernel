@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 5
 # The git snapshot level
-%define gitrev 2
+%define gitrev 3
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1877,6 +1877,9 @@ fi
 #
 #
 %changelog
+* Fri Sep 28 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc5.git3.1
+- Linux v4.19-rc5-159-gad0371482b1e
+
 * Wed Sep 26 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Add thermal trip to bcm283x (Raspberry Pi) cpufreq
 - Add initial RockPro64 DT support
