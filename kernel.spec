@@ -1204,8 +1204,8 @@ cp_vmlinux()
 # from redhat-rpm-config assume that host == target so target arch
 # flags cause issues with the host compiler.
 %if !%{with_cross}
-%define build_hostcflags  %{build_cflags}
-%define build_hostldflags %{build_ldflags} -Wl,--build-id=uuid
+%define build_hostcflags  %{?build_cflags}
+%define build_hostldflags %{?build_ldflags} -Wl,--build-id=uuid
 %endif
 
 BuildKernel() {
