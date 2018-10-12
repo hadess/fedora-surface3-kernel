@@ -596,10 +596,8 @@ Patch310: gpio-pxa-handle-corner-case-of-unprobed-device.patch
 Patch330: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
 # Patches enabling device specific brcm firmware nvram
-Patch340: 0001-brcmfmac-Remove-firmware-loading-code-duplication.patch
-Patch341: 0002-brcmfmac-Remove-recursion-from-firmware-load-error-h.patch
-Patch342: 0003-brcmfmac-Add-support-for-first-trying-to-get-a-board.patch
-Patch343: 0004-brcmfmac-Set-board_type-used-for-nvram-file-selectio.patch
+# https://www.spinics.net/lists/linux-wireless/msg178827.html
+Patch340: brcmfmac-Remove-firmware-loading-code-duplication.patch
 
 # Fix for AllWinner A64 Timer Errata, still not final
 # https://patchwork.kernel.org/patch/10392891/
@@ -1887,6 +1885,9 @@ fi
 #
 #
 %changelog
+* Fri Oct 12 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Rebase device specific NVRAM files on brcm WiFi devices to latest
+
 * Fri Oct 12 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc7.git4.1
 - Linux v4.19-rc7-139-g6b3944e42e2e
 
