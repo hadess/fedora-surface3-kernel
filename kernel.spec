@@ -122,7 +122,7 @@ Summary: The Linux kernel
 # Set debugbuildsenabled to 1 for production (build separate debug kernels)
 #  and 0 for rawhide (all kernels are debug kernels).
 # See also 'make debug' and 'make release'.
-%define debugbuildsenabled 0
+%define debugbuildsenabled 1
 
 # Kernel headers are being split out into a separate package
 %if 0%{fedora}
@@ -1885,6 +1885,9 @@ fi
 #
 #
 %changelog
+* Mon Oct 15 2018 Jeremy Cline <jcline@redhat.com>
+- Disable debugging options.
+
 * Fri Oct 12 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Rebase device specific NVRAM files on brcm WiFi devices to latest
 
