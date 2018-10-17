@@ -69,7 +69,7 @@ Summary: The Linux kernel
 # The rc snapshot level
 %global rcrev 8
 # The git snapshot level
-%define gitrev 1
+%define gitrev 2
 # Set rpm version accordingly
 %define rpmversion 4.%{upstream_sublevel}.0
 %endif
@@ -1887,6 +1887,9 @@ fi
 #
 #
 %changelog
+* Wed Oct 17 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc8.git2.1
+- Linux v4.19-rc8-16-gc343db455eb3
+
 * Tue Oct 16 2018 Peter Robinson <pbrobinson@fedoraproject.org>
 - Fixes to Rock960 series of devices, improves stability considerably
 - Raspberry Pi graphics fix
