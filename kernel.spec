@@ -595,6 +595,8 @@ Patch310: gpio-pxa-handle-corner-case-of-unprobed-device.patch
 
 Patch330: bcm2835-cpufreq-add-CPU-frequency-control-driver.patch
 
+Patch331: bcm283x-drm-vc4-set-is_yuv-to-false-when-num_planes-1.patch
+
 # Patches enabling device specific brcm firmware nvram
 # https://www.spinics.net/lists/linux-wireless/msg178827.html
 Patch340: brcmfmac-Remove-firmware-loading-code-duplication.patch
@@ -1885,6 +1887,10 @@ fi
 #
 #
 %changelog
+* Tue Oct 16 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Fixes to Rock960 series of devices, improves stability considerably
+- Raspberry Pi graphics fix
+
 * Tue Oct 16 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc8.git1.1
 - Linux v4.19-rc8-11-gb955a910d7fd
 - Re-enable debugging options.
