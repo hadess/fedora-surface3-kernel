@@ -1887,6 +1887,9 @@ fi
 #
 #
 %changelog
+* Sat Oct 20 2018 Peter Robinson <pbrobinson@fedoraproject.org>
+- Fix network on some i.MX6 devices (rhbz 1628209)
+
 * Fri Oct 19 2018 Jeremy Cline <jcline@redhat.com> - 4.19.0-0.rc8.git4.1
 - Linux v4.19-rc8-95-g91b15613ce7f
 - Enable pinctrl-cannonlake (rhbz 1641057)
